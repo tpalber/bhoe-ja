@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <img
+      src="../favicon.ico"
+      alt="bhoe-ja"
+      width="75"
+      style="margin-left: 5%;"
+    />
+    <span style="margin-left: 0.5rem;">{{ title }}</span>
+
+    <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+      <button mat-icon-button (click)="openAboutSheet()">
+        <mat-icon>contact_support</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

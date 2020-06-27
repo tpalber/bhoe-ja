@@ -1,0 +1,18 @@
+<mat-card
+  *ngFor="let article of articles"
+  style="width: 75%; margin-top: 1%; margin-left: 5%; cursor: pointer;"
+  (click)="openLink(article.link)"
+>
+  <mat-card-header>
+    <mat-card-title>{{ article.title }}</mat-card-title>
+
+    <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+      <app-label>{{ article.source }}</app-label>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    {{ article.description }}
+  </mat-card-content>
+</mat-card>
+<app-loading [isLoading]="isLoading"></app-loading>
