@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FeedService } from '../service/feed.service';
 import { Article } from '../models/article';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-feed',

@@ -1,8 +1,9 @@
-import { Scrapper } from '../scrapper';
+import { Scraper } from '../scraper';
 import * as cheerio from 'cheerio';
-import { Article } from '../../models/article';
+import Article, { IArticle } from '../../models/article';
+import { Util } from '../../util';
 
-export class PhayulScrapper extends Scrapper {
+export class PhayulScraper extends Scraper {
   public static site: string = 'Phayul';
   public static baseUrl: string = 'https://www.phayul.com/';
 
@@ -12,30 +13,33 @@ export class PhayulScrapper extends Scrapper {
 
   public static getSiteUrl(): string {
     const currentDate: Date = new Date();
-    return `${
-      PhayulScrapper.baseUrl
-    }${currentDate.getFullYear()}/${currentDate.getMonth()}/`;
+    return `${PhayulScraper.baseUrl}${currentDate.getFullYear()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getDate()}/`;
   }
 
-  getData(html: any): Article[] {
-    const data: Article[] = [];
+  async getData(html: any): Promise<IArticle[]> {
+    const data: IArticle[] = [];
+    const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);
     $('article').each((i: number, elem: any) => {
       if (
         $(elem).find('h2 a').text() !== '' ||
         $(elem).find('h2 a').attr('href')
       ) {
-        data.push({
+        let article: IArticle = new Article({
           title: $(elem).find('h2 a').text().trim(),
-          source: PhayulScrapper.site,
+          source: PhayulScraper.site,
           link: $(elem).find('h2 a').attr('href') || 'broken link',
+          date: currentDate,
           description: $(elem).find('p').text(),
         });
+        data.push(article);
       }
     });
     console.log(
-      `***** Number of ${PhayulScrapper.site} articles: ${data.length}`
+      `***** Number of ${PhayulScraper.site} articles: ${data.length}`
     );
-    return data;
+    return Promise.all(data);
   }
 }

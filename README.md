@@ -17,14 +17,14 @@ Find your latest Tibetan news from different sources in one area.
 
 #### Future Roadmap
 
-- User interface (Angular to create a webpage)
 - Support more sites
   - VOA, RFA, Voice of Tibet
-- Persist scrapped news
-  - Persist news on first access to the site every x hours
+- Persist scraped news on API end-point
   - Retrive from persisted data if applicable
 - Publish to a web service
-- Create scheduled jobs that runs twice a day and saves the scrapped news
+- Bookmark news and save it to browser's cache (Window.localStorage)
+- Create scheduled jobs that runs twice a day and saves the scraped news
+- Create a Tibetan version of this web app
 
 #### Contribution
 

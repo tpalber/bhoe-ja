@@ -8,7 +8,6 @@ import { AboutComponent } from '../shared/about/about.component';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {
   public title: string = 'BHOE JA';
@@ -17,7 +16,7 @@ export class HeaderComponent {
 
   public openAboutSheet(): void {
     const config: MatBottomSheetConfig = {
-      // panelClass: 'width: 50px',
+      panelClass: 'bottom-sheet',
     };
     this.bottomSheet.open(AboutComponent, config);
   }

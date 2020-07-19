@@ -15,7 +15,7 @@ export class FeedService {
   }
 
   getArticles(): Observable<Article[]> {
-    return this.http.get<Article[]>(`http://localhost:3000/`);
+    return this.http.get<Article[]>(`http://localhost:3000/articles`);
   }
 
   mockArticles: Article[] = [
@@ -37,7 +37,7 @@ export class FeedService {
     {
       title:
         'China capitalizing on the devastation it has engineered, says CTA Information Secretary',
-      source: 'Phayul',
+      source: 'Tibet Post',
       link: 'https://www.phayul.com/2020/04/28/43253/',
       description:
         'By Tenzin Dharpo DHARAMSHALA, Apr. 28: The global Covid-19 pandemic that originated in Wuhan, China has become a “Trojan horse” to “global hegemony” for the Chinese government, the Secretary for the exile Tibetan government’s information and international relation wing, Tsewang Gyalpo Arya said Monday. “Even after all the chaos and pandemic it has created, China […]',
@@ -52,7 +52,7 @@ export class FeedService {
     },
     {
       title: 'Testing Title',
-      source: 'Phayul',
+      source: 'Tibet Post',
       link: 'https://www.phayul.com/2020/04/28/43250/',
       description: undefined,
     },
