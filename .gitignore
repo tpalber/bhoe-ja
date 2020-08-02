@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Environment variables
+.env
+
 # Server compilted output
 server/build/
 server/node_modules/

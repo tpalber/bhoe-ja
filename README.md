@@ -2,6 +2,14 @@
 
 Find your latest Tibetan news from different sources in one area.
 
+### Supported News Sites
+
+- [Phayul](https://www.phayul.com/)
+- [Radio Free Asia](https://www.rfa.org/english/news/tibet)
+- [Tibet Post](http://www.thetibetpost.com/en/)
+- [Tibet Times](http://tibettimes.net/)
+- [Voice Of Tibet](https://vot.org/)
+
 ### Development
 
 [Angular](https://angular.io/start) application with a [Node.js](https://nodejs.org/en/) server that uses [Typescript](https://www.typescriptlang.org/) to 'web scrap` different Tibetan news sources.
@@ -17,18 +25,12 @@ Find your latest Tibetan news from different sources in one area.
 
 #### Future Roadmap
 
-- Support more sites
-  - VOA, RFA, Voice of Tibet
-- Persist scraped news on API end-point
-  - Retrive from persisted data if applicable
+- Support getting news links using provided API
+  - Google API to get YouTube videos from Tibetan news channels
+  - Videos section for all the videos
 - Publish to a web service
 - Bookmark news and save it to browser's cache (Window.localStorage)
-- Create scheduled jobs that runs twice a day and saves the scraped news
-- Create a Tibetan version of this web app
-
-#### Contribution
-
-- TODO
+- Separate news in Tibetan and English into different sections
 
 #### UI Development
 
@@ -39,6 +41,10 @@ Find your latest Tibetan news from different sources in one area.
 #### Server Development
 
 - Navigate to `server` folder
-- Run `npm run serve` for a dev server. App server will be lisitening on `http://localhost:3000/` and will automatically reload if you change any of the source files.
+- Run `npm run serve` for a dev server. App server will be lisitening on `http://localhost:3000/api/` and will automatically reload if you change any of the source files.
+
+#### Contribution
+
+- TODO
 
 ##### Contact tpalber7@gmail.com for any contributions or questions.

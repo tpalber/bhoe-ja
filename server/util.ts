@@ -4,7 +4,7 @@ export class Util {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
-  static getDate(diff: number) {
+  static getDate(diff: number): Date {
     const date: Date = this.getCurrentDate();
     date.setDate(date.getDate() + diff);
     return date;

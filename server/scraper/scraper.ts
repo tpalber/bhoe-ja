@@ -7,7 +7,7 @@ export abstract class Scraper {
     this.url = url;
   }
 
-  abstract async getData(data: any): Promise<IArticle[]>;
+  abstract async getData(html: any): Promise<IArticle[]>;
 
   public async initiate(): Promise<IArticle[]> {
     console.debug(`***** GET ${this.url}`);
@@ -19,10 +19,11 @@ export abstract class Scraper {
             let savedArticles: Promise<IArticle>[] = [];
             articles.forEach((article) => {
               savedArticles.push(
-                article.save().catch((error) => {
-                  console.debug(
-                    `Failed to save Article, most likely exists already. ${error}`
-                  );
+                article.save().catch((error: any) => {
+                  // Ignore E11000 duplicate key error index
+                  if (error.code && error.code !== 11000) {
+                    console.error(`Failed to save Article: ${error}`);
+                  }
                   return article;
                 })
               );

@@ -12,6 +12,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './shared/loading/loading.component';
 import { AboutComponent } from './shared/about/about.component';
 import { LabelComponent } from './shared/label/label.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FeedService } from './service/feed.service';
+import { ContextService } from './service/context.service';
 
 @NgModule({
   declarations: [
@@ -29,8 +32,9 @@ import { LabelComponent } from './shared/label/label.component';
     FlexLayoutModule,
     HttpClientModule,
     MaterialModule,
+    ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [ContextService, FeedService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

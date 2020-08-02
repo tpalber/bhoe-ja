@@ -3,17 +3,17 @@ import * as cheerio from 'cheerio';
 import Article, { IArticle } from '../../models/article';
 import { Util } from '../../util';
 
-export class PhayulScraper extends Scraper {
-  public static site: string = 'Phayul';
-  public static baseUrl: string = 'https://www.phayul.com/';
+export class TibetTimesScraper extends Scraper {
+  public static site: string = 'Tibet Times';
+  public static baseUrl: string = 'http://tibettimes.net/';
 
   constructor() {
-    super(PhayulScraper.getSiteUrl());
+    super(TibetTimesScraper.getSiteUrl());
   }
 
   public static getSiteUrl(): string {
     const currentDate: Date = new Date();
-    return `${PhayulScraper.baseUrl}${currentDate.getFullYear()}/${
+    return `${TibetTimesScraper.baseUrl}${currentDate.getFullYear()}/${
       currentDate.getMonth() + 1
     }/${currentDate.getDate()}/`;
   }
@@ -24,21 +24,21 @@ export class PhayulScraper extends Scraper {
     const $ = cheerio.load(html);
     $('article').each((i: number, elem: any) => {
       if (
-        $(elem).find('h2 a').text() !== '' &&
-        $(elem).find('h2 a').attr('href')
+        $(elem).find('h1 a').text() !== '' &&
+        $(elem).find('h1 a').attr('href')
       ) {
         let article: IArticle = new Article({
-          title: $(elem).find('h2 a').text().trim(),
-          source: PhayulScraper.site,
-          link: $(elem).find('h2 a').attr('href'),
+          title: $(elem).find('h1 a').text().trim(),
+          source: TibetTimesScraper.site,
+          link: $(elem).find('h1 a').attr('href'),
           date: currentDate,
-          description: $(elem).find('p').text().trim(),
+          description: $(elem).find('.entry-summary').text().trim(),
         });
         data.push(article);
       }
     });
     console.log(
-      `***** Number of ${PhayulScraper.site} articles: ${data.length}`
+      `***** Number of ${TibetTimesScraper.site} articles: ${data.length}`
     );
     return Promise.all(data);
   }

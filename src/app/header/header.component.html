@@ -13,9 +13,32 @@
     >
 
     <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+      <button mat-icon-button (click)="openDateRangeSelector()">
+        <mat-icon>date_range</mat-icon>
+      </button>
+      <!-- <button mat-icon-button (click)="openAboutSheet()">
+        <mat-icon>contact_support</mat-icon>
+      </button> -->
+
       <button mat-icon-button (click)="openAboutSheet()">
         <mat-icon>contact_support</mat-icon>
       </button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
+
+<mat-expansion-panel [expanded]="dateRangeSelector">
+  <mat-form-field appearance="standard">
+    <mat-label>Select a date range</mat-label>
+    <mat-date-range-input
+      [formGroup]="dateRangeForm"
+      [rangePicker]="picker"
+      [max]="currentDate"
+    >
+      <input matStartDate formControlName="start" placeholder="Start date" />
+      <input matEndDate formControlName="end" placeholder="End date" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+  </mat-form-field>
+</mat-expansion-panel>

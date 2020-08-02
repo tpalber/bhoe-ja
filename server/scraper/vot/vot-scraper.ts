@@ -3,22 +3,19 @@ import * as cheerio from 'cheerio';
 import Article, { IArticle } from '../../models/article';
 import { Util } from '../../util';
 
-export class PhayulScraper extends Scraper {
-  public static site: string = 'Phayul';
-  public static baseUrl: string = 'https://www.phayul.com/';
+export class VOTScraper extends Scraper {
+  public static site: string = 'Voice Of Tibet';
+  public static baseUrl: string = 'https://vot.org/category/top-stories/';
 
   constructor() {
-    super(PhayulScraper.getSiteUrl());
+    super(VOTScraper.getSiteUrl());
   }
 
   public static getSiteUrl(): string {
-    const currentDate: Date = new Date();
-    return `${PhayulScraper.baseUrl}${currentDate.getFullYear()}/${
-      currentDate.getMonth() + 1
-    }/${currentDate.getDate()}/`;
+    return VOTScraper.baseUrl;
   }
 
-  async getData(html: any): Promise<IArticle[]> {
+  getData(html: any): Promise<import('../../models/article').IArticle[]> {
     const data: IArticle[] = [];
     const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);
@@ -29,17 +26,15 @@ export class PhayulScraper extends Scraper {
       ) {
         let article: IArticle = new Article({
           title: $(elem).find('h2 a').text().trim(),
-          source: PhayulScraper.site,
+          source: VOTScraper.site,
           link: $(elem).find('h2 a').attr('href'),
           date: currentDate,
-          description: $(elem).find('p').text().trim(),
+          description: $(elem).find('.post_content').text().trim(),
         });
         data.push(article);
       }
     });
-    console.log(
-      `***** Number of ${PhayulScraper.site} articles: ${data.length}`
-    );
+    console.log(`***** Number of ${VOTScraper.site} articles: ${data.length}`);
     return Promise.all(data);
   }
 }
