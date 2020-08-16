@@ -1,6 +1,6 @@
 # Bhoe Ja ☕️
 
-Find your latest Tibetan news from different sources in one area.
+Bhoe Ja is an open source project that enable users to find the latest Tibetan news from different sources across the web.
 
 ### Supported News Sites
 
@@ -12,7 +12,8 @@ Find your latest Tibetan news from different sources in one area.
 
 ### Development
 
-[Angular](https://angular.io/start) application with a [Node.js](https://nodejs.org/en/) server that uses [Typescript](https://www.typescriptlang.org/) to 'web scrap` different Tibetan news sources.
+[MEAN]() development statck to 'web scrap' different Tibetan news sources and display the list of articles in a web application.
+Both UI and server side code base uses [Typescript](https://www.typescriptlang.org/).
 
 #### Getting Started
 
@@ -42,9 +43,5 @@ Find your latest Tibetan news from different sources in one area.
 
 - Navigate to `server` folder
 - Run `npm run serve` for a dev server. App server will be lisitening on `http://localhost:3000/api/` and will automatically reload if you change any of the source files.
-
-#### Contribution
-
-- TODO
 
 ##### Contact tpalber7@gmail.com for any contributions or questions.

@@ -1,21 +1,34 @@
-<mat-card
-  *ngFor="let article of articles"
-  style="width: 75%; margin-top: 1%; margin-left: 5%; cursor: pointer;"
-  (click)="openLink(article.link)"
->
-  <mat-card-header>
-    <mat-card-title>{{ article.title }}</mat-card-title>
-    <mat-card-subtitle>{{
-      article.date | date: "shortDate"
-    }}</mat-card-subtitle>
+<app-infinite-scroll (scrolled)="onScroll()" [isLoading]="isLoading">
+  <mat-card
+    *ngFor="let article of articles"
+    style="cursor: pointer; margin-top: 1%;"
+    [ngClass]="{ 'web-screen': !isSmallScreen }"
+    (click)="openLink(article.link)"
+  >
+    <mat-card-header>
+      <mat-card-title>{{ article.title }}</mat-card-title>
+      <mat-card-subtitle>{{
+        article.date | date: "shortDate"
+      }}</mat-card-subtitle>
 
-    <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-      <app-label style="margin-right: 1rem;">{{ article.source }}</app-label>
-    </div>
-  </mat-card-header>
+      <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+        <!-- TODO: Fix label on small screen and long titles -->
+        <app-label style="margin-right: 1rem;">{{ article.source }}</app-label>
+      </div>
+    </mat-card-header>
 
-  <mat-card-content>
-    {{ article.description }}
-  </mat-card-content>
-</mat-card>
-<app-loading [isLoading]="isLoading"></app-loading>
+    <mat-card-content>
+      {{ article.description }}
+    </mat-card-content>
+  </mat-card>
+  <div
+    *ngIf="!isLoading && articles.length === 0"
+    style="text-align: center; padding: 24px;"
+    class="mat-body"
+  >
+    <mat-card-content>
+      No articles found with your selected filter(s)
+    </mat-card-content>
+  </div>
+  <app-loading [isLoading]="isLoading"></app-loading>
+</app-infinite-scroll>

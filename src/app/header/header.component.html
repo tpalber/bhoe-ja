@@ -3,23 +3,23 @@
     <img
       src="../favicon.ico"
       alt="bhoe-ja"
-      width="75"
-      style="margin-left: 5%;"
+      [width]="isSmallScreen ? 60 : 75"
+      [ngClass]="{ 'margin-left-5': !isSmallScreen }"
     />
     <span style="margin-left: 0.5rem; margin-right: 2rem;">{{ title }}</span>
-    <div style="border-left: solid; height: 70%;"></div>
-    <span style="margin-left: 2rem; font-weight: lighter;"
-      >All your Tibetan news in one place</span
-    >
-
+    <ng-container *ngIf="!isSmallScreen">
+      <div style="border-left: solid; height: 70%;"></div>
+      <span style="margin-left: 2rem; font-weight: normal;"
+        >All your Tibetan news in one place</span
+      >
+    </ng-container>
     <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-      <button mat-icon-button (click)="openDateRangeSelector()">
+      <button mat-icon-button (click)="openFilterPanel()">
         <mat-icon>date_range</mat-icon>
       </button>
-      <!-- <button mat-icon-button (click)="openAboutSheet()">
-        <mat-icon>contact_support</mat-icon>
-      </button> -->
-
+      <button mat-icon-button (click)="openFilterPanel()">
+        <mat-icon>search</mat-icon>
+      </button>
       <button mat-icon-button (click)="openAboutSheet()">
         <mat-icon>contact_support</mat-icon>
       </button>
@@ -27,18 +27,35 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-expansion-panel [expanded]="dateRangeSelector">
-  <mat-form-field appearance="standard">
-    <mat-label>Select a date range</mat-label>
-    <mat-date-range-input
-      [formGroup]="dateRangeForm"
-      [rangePicker]="picker"
-      [max]="currentDate"
-    >
-      <input matStartDate formControlName="start" placeholder="Start date" />
-      <input matEndDate formControlName="end" placeholder="End date" />
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
-  </mat-form-field>
+<!-- TODO: Fix spacing on smaller screen. Maybe move search to separate expansion panel -->
+<mat-expansion-panel [expanded]="filterPanel">
+  <div [ngClass]="{ 'width-100': !isSmallScreen }">
+    <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly">
+      <mat-form-field appearance="standard" style="width: 200px;">
+        <mat-label>Select a date range</mat-label>
+        <mat-date-range-input
+          [formGroup]="filterForm"
+          [rangePicker]="picker"
+          [max]="currentDate"
+        >
+          <input
+            matStartDate
+            formControlName="start"
+            placeholder="Start date"
+          />
+          <input matEndDate formControlName="end" placeholder="End date" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field appearance="standard">
+        <input
+          matInput
+          [formControl]="searchForm"
+          placeholder="Search for articles"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
 </mat-expansion-panel>

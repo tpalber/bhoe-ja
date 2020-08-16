@@ -15,6 +15,7 @@ import { LabelComponent } from './shared/label/label.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FeedService } from './service/feed.service';
 import { ContextService } from './service/context.service';
+import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ContextService } from './service/context.service';
     LoadingComponent,
     AboutComponent,
     LabelComponent,
+    InfiniteScrollComponent,
   ],
   imports: [
     AppRoutingModule,

@@ -5,14 +5,19 @@ import { Subject, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ContextService {
-  private context = new Subject<{ start?: Date; end?: Date }>();
+  private context = new Subject<{
+    start?: Date;
+    end?: Date;
+    search?: string;
+  }>();
 
   public context$: Observable<{
     start?: Date;
     end?: Date;
+    search?: string;
   }> = this.context.asObservable();
 
-  public setDateRange(startDate?: Date, endDate?: Date) {
-    this.context.next({ start: startDate, end: endDate });
+  public setContext(startDate?: Date, endDate?: Date, searchValue?: string) {
+    this.context.next({ start: startDate, end: endDate, search: searchValue });
   }
 }

@@ -7,52 +7,97 @@ import { AboutComponent } from '../shared/about/about.component';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ContextService } from '../service/context.service';
+import {
+  BreakpointObserver,
+  Breakpoints,
+  BreakpointState,
+} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   public readonly title: string = 'BHOE JA';
   public readonly currentDate: Date = new Date();
-  public dateRangeSelector: boolean = false;
-  public dateRangeForm: FormGroup;
+  public filterPanel: boolean = false;
+  public filterForm: FormGroup;
+  public searchForm: FormControl;
+  public isSmallScreen: boolean = true;
 
+  private windowSubscription$?: Subscription;
   private startDateSubscription$: Subscription | undefined;
   private endDateSubscription$: Subscription | undefined;
+  private searchSubscription$: Subscription | undefined;
   private startDate: Date | undefined;
   private endDate: Date | undefined;
+  private searchValue: string | undefined;
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private contextService: ContextService,
     private formBuilder: FormBuilder,
     private bottomSheet: MatBottomSheet
   ) {
-    this.dateRangeForm = this.formBuilder.group({
+    this.filterForm = this.formBuilder.group({
       start: new FormControl({ value: null, disabled: true }),
       end: new FormControl({ value: new Date(), disabled: true }),
     });
+    this.searchForm = new FormControl();
   }
   public ngOnInit(): void {
-    const startFormControl: any = this.dateRangeForm.get('start');
+    const startFormControl: any = this.filterForm.get('start');
     if (startFormControl) {
       this.startDateSubscription$ = startFormControl.valueChanges.subscribe(
         (val: Date) => {
           this.startDate = val;
-          this.contextService.setDateRange(this.startDate, this.endDate);
+          this.contextService.setContext(
+            this.startDate,
+            this.endDate,
+            this.searchValue
+          );
         }
       );
     }
 
-    const endFormControl: any = this.dateRangeForm.get('end');
+    const endFormControl: any = this.filterForm.get('end');
     if (endFormControl) {
       this.endDateSubscription$ = endFormControl.valueChanges.subscribe(
         (val: Date) => {
           this.endDate = val;
-          this.contextService.setDateRange(this.startDate, this.endDate);
+          this.contextService.setContext(
+            this.startDate,
+            this.endDate,
+            this.searchValue
+          );
         }
       );
     }
+
+    this.searchSubscription$ = this.searchForm.valueChanges.subscribe(
+      (val: string) => {
+        this.searchValue = val;
+        this.contextService.setContext(
+          this.startDate,
+          this.endDate,
+          this.searchValue
+        );
+      }
+    );
+
+    this.windowSubscription$ = this.breakpointObserver
+      .observe([Breakpoints.Web, Breakpoints.WebLandscape])
+      .subscribe((state: BreakpointState) => {
+        if (
+          state.breakpoints[Breakpoints.Web] ||
+          state.breakpoints[Breakpoints.WebLandscape]
+        ) {
+          this.isSmallScreen = false;
+        } else {
+          this.isSmallScreen = true;
+        }
+      });
   }
 
   public ngOnDestroy(): void {
@@ -61,6 +106,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     if (this.endDateSubscription$) {
       this.endDateSubscription$.unsubscribe();
+    }
+    if (this.searchSubscription$) {
+      this.searchSubscription$.unsubscribe();
+    }
+    if (this.windowSubscription$) {
+      this.windowSubscription$.unsubscribe();
     }
   }
 
@@ -71,7 +122,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.bottomSheet.open(AboutComponent, config);
   }
 
-  public openDateRangeSelector(): void {
-    this.dateRangeSelector = !this.dateRangeSelector;
+  public openFilterPanel(): void {
+    this.filterPanel = !this.filterPanel;
   }
 }

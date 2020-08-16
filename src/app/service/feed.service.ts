@@ -12,15 +12,26 @@ export class FeedService {
 
   getMockArticles(): Observable<Article[]> {
     return of(this.mockArticles);
+    // return of([]);
   }
 
-  getArticles(startDate?: Date, endDate?: Date): Observable<Article[]> {
+  getArticles(
+    offset: number,
+    startDate?: Date,
+    endDate?: Date,
+    searchValue?: string
+  ): Observable<Article[]> {
     let params: HttpParams = new HttpParams();
+    params = params.set('offset', offset.toString());
     if (startDate) {
       params = params.set('date[$gte]', startDate.toISOString());
     }
     if (endDate) {
       params = params.set('date[$lte]', endDate.toISOString());
+    }
+    if (searchValue) {
+      params = params.set('title[$regex]', searchValue);
+      params = params.set('title[$options]', 'i');
     }
 
     return this.http.get<Article[]>(`http://localhost:3000/api/articles`, {
