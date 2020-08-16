@@ -37,7 +37,7 @@ export class PhayulScraper extends Scraper {
         data.push(article);
       }
     });
-    console.log(
+    console.info(
       `***** Number of ${PhayulScraper.site} articles: ${data.length}`
     );
     return Promise.all(data);

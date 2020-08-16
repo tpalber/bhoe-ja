@@ -34,7 +34,7 @@ export class RFAScraper extends Scraper {
         data.push(article);
       }
     });
-    console.log(`***** Number of ${RFAScraper.site} articles: ${data.length}`);
+    console.info(`***** Number of ${RFAScraper.site} articles: ${data.length}`);
     return Promise.all(data);
   }
 

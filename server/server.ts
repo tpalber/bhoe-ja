@@ -52,7 +52,7 @@ function appStartup(): void {
   });
   initializeAppRoutes(app);
   app.listen(port, function () {
-    console.info(`BhoeJa ☕️ app server is listening on localhost:${port}`);
+    console.info(`Bhoe Ja ☕️ app server is listening on localhost:${port}`);
     console.info(`Make API requests on http://localhost:${port}/api/`);
   });
 
@@ -179,7 +179,7 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
 }
 
 /**
- * Get 10 articles from the DB, that's ordered by date.
+ * Get 10 articles from the DB, that's ordered by date. Default offset is 0 if not specified.
  * @param query
  * query examples:
  * date[$gte]=2020-07-01
@@ -187,8 +187,17 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
  */
 async function getArticles(query: any): Promise<IArticle[]> {
   console.debug(query);
+  let offset: number = parseInt(query.offset);
+  if (isNaN(offset)) {
+    offset = 0;
+  }
+  if (query.offset) {
+    delete query.offset;
+  }
+
   return Article.find(query)
     .sort({ date: -1 })
+    .skip(offset)
     .limit(10)
     .select('title source link date description')
     .exec();

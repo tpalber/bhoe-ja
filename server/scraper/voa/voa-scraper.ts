@@ -25,7 +25,7 @@ export class VOAScraper extends Scraper {
   async getData(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
     const $ = cheerio.load(html);
-    console.log(`***** Number of ${VOAScraper.site} articles: ${data.length}`);
+    console.info(`***** Number of ${VOAScraper.site} articles: ${data.length}`);
     return Promise.all(data);
   }
 }

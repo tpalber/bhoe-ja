@@ -31,7 +31,7 @@ export abstract class Scraper {
             return Promise.all(savedArticles);
           })
           .catch((error: any) => {
-            console.log('Error parsing HTML response.');
+            console.error('Error parsing HTML response.');
             throw error;
           });
       })

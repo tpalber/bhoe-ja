@@ -34,7 +34,7 @@ export class VOTScraper extends Scraper {
         data.push(article);
       }
     });
-    console.log(`***** Number of ${VOTScraper.site} articles: ${data.length}`);
+    console.info(`***** Number of ${VOTScraper.site} articles: ${data.length}`);
     return Promise.all(data);
   }
 }

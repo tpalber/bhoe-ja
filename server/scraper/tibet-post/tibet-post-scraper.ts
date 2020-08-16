@@ -43,7 +43,7 @@ export class TibetPostScraper extends Scraper {
         data.push(article);
       }
     });
-    console.log(
+    console.info(
       `***** Number of ${TibetPostScraper.site} articles: ${data.length}`
     );
     return Promise.all(data);
