@@ -16,7 +16,7 @@ export class RFAScraper extends Scraper {
     return RFAScraper.baseUrl;
   }
 
-  getData(html: any): Promise<import('../../models/article').IArticle[]> {
+  getArticles(html: any): Promise<import('../../models/article').IArticle[]> {
     const data: IArticle[] = [];
     const $ = cheerio.load(html);
     $('.sectionteaser').each((i: number, elem: any) => {

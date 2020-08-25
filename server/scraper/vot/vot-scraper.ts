@@ -15,7 +15,7 @@ export class VOTScraper extends Scraper {
     return VOTScraper.baseUrl;
   }
 
-  getData(html: any): Promise<import('../../models/article').IArticle[]> {
+  getArticles(html: any): Promise<import('../../models/article').IArticle[]> {
     const data: IArticle[] = [];
     const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);

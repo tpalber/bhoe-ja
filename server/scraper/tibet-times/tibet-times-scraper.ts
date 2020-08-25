@@ -18,7 +18,7 @@ export class TibetTimesScraper extends Scraper {
     }/${currentDate.getDate()}/`;
   }
 
-  async getData(html: any): Promise<IArticle[]> {
+  async getArticles(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
     const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);

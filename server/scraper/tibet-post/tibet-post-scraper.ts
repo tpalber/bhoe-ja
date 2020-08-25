@@ -24,7 +24,7 @@ export class TibetPostScraper extends Scraper {
     return `${TibetPostScraper.baseUrl}/international`;
   }
 
-  getData(html: any): Promise<IArticle[]> {
+  getArticles(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
     const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);

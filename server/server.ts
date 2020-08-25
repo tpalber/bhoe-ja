@@ -7,10 +7,11 @@ import { Connection } from 'mongoose';
 import { schedule } from 'node-cron';
 import Article, { IArticle } from './models/article';
 import { TibetPostScraper } from './scraper/tibet-post/tibet-post-scraper';
-import { Util } from './util';
 import { TibetTimesScraper } from './scraper/tibet-times/tibet-times-scraper';
 import { VOTScraper } from './scraper/vot/vot-scraper';
 import { RFAScraper } from './scraper/rfa/rfa-scraper';
+import Video, { IVideo } from './models/video';
+import { YoutubeScraper } from './scraper/youtube-scraper';
 
 let supportedNewsSites: string[] = [
   PhayulScraper.site,
@@ -56,7 +57,7 @@ function appStartup(): void {
     console.info(`Make API requests on http://localhost:${port}/api/`);
   });
 
-  // Schedule scraper to run every 30 mins
+  // Schedule article scraper to run every 30 mins
   schedule('*/30 * * * *', function () {
     console.info(`Running scraper from scheduled job: ${new Date()}`);
     scrapeSites(supportedNewsSites).then((articles) => {
@@ -64,6 +65,18 @@ function appStartup(): void {
         `${articles.length} Articles scraped and ${
           articles.filter((article) => !article.isNew).length
         } Article(s) added to DB.`
+      );
+    });
+  });
+
+  // Schedule video scraper to run every 60 mins
+  schedule('*/60 * * * *', function () {
+    console.info(`Running video scraper from scheduled job: ${new Date()}`);
+    scrapeVideos().then((videos) => {
+      console.info(
+        `${videos.length} Videos scraped and ${
+          videos.filter((video) => !video.isNew).length
+        } Video(s) added to DB.`
       );
     });
   });
@@ -118,6 +131,30 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
+  app.get('/api/videos', async function (req, res) {
+    console.info('GET /videos');
+    getVideos(req.query)
+      .then((videos) => res.json(videos))
+      .catch((error) => {
+        console.error(`Error getting videos: ${error}`);
+        res.status(500).json(error);
+      });
+  });
+
+  app.get('/api/scrape-videos', function (req, res) {
+    scrapeVideos()
+      .then((videos) => {
+        res.json(
+          `${videos.length} Videos scraped and ${
+            videos.filter((video) => !video.isNew).length
+          } Videos added to DB.`
+        );
+      })
+      .catch((error) => {
+        throw new Error(`Error scraping articles: ${error}`);
+      });
+  });
+
   app.get('/api/', async function (req, res) {
     const apiEndpoints: any = [
       {
@@ -127,7 +164,12 @@ function initializeAppRoutes(app: express.Application): void {
       {
         Endpoint: '/scrape-articles/<newsSite>',
         Description:
-          "Trigger scraper to get articles from the newsSite. You can pass in 'all' as the path param to scrape all sites.",
+          "Triggers scraper to get articles from the newsSite. You can pass in 'all' as the path param to scrape all sites.",
+      },
+      {
+        Endpoint: '/scrape-videos',
+        Description:
+          'Triggers scraper to get videos from all supported Youtube Channels.',
       },
     ];
     res.json(apiEndpoints);
@@ -167,7 +209,9 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
     }
 
     if (scrapers && scrapers.length > 0) {
-      scrapers.forEach((scraper) => articlesPromises.push(scraper.initiate()));
+      scrapers.forEach((scraper) =>
+        articlesPromises.push(scraper.scrapeArticles())
+      );
     } else {
       console.error(`Unable to find the supported site: ${site}`);
       articlesPromises.push(Promise.all([]));
@@ -175,6 +219,29 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
   });
   return Promise.all(articlesPromises).then((articles) => {
     return ([] as IArticle[]).concat(...articles);
+  });
+}
+
+/**
+ * Scrape supported news sites.
+ * @param sites array of supported sites to scrape
+ */
+async function scrapeVideos(): Promise<IVideo[]> {
+  if (!process.env.GOOGLE_API_KEY) {
+    return Promise.reject('Google API Key not specified in the .env file.');
+  }
+
+  let videosPromises: Promise<IVideo[]>[] = [];
+  for (const channel of YoutubeScraper.supportedYoutubeChannels) {
+    let scraper: YoutubeScraper = new YoutubeScraper(
+      process.env.GOOGLE_API_KEY,
+      channel.id,
+      channel.name
+    );
+    videosPromises.push(scraper.scrapeVideos());
+  }
+  return Promise.all(videosPromises).then((videos) => {
+    return ([] as IVideo[]).concat(...videos);
   });
 }
 
@@ -196,9 +263,34 @@ async function getArticles(query: any): Promise<IArticle[]> {
   }
 
   return Article.find(query)
-    .sort({ date: -1 })
+    .sort({ createdAt: -1 })
     .skip(offset)
     .limit(10)
     .select('title source link date description')
+    .exec();
+}
+
+/**
+ * Get 10 subscribed videos from Youtube API, that's ordered by date. Default offset is 0 if not specified.
+ * @param query
+ * query examples:
+ * date[$gte]=2020-07-01
+ * date[$lte]=2020-07-10
+ */
+async function getVideos(query: any): Promise<IVideo[]> {
+  console.debug(query);
+  let offset: number = parseInt(query.offset);
+  if (isNaN(offset)) {
+    offset = 0;
+  }
+  if (query.offset) {
+    delete query.offset;
+  }
+
+  return Video.find(query)
+    .sort({ date: -1 })
+    .skip(offset)
+    .limit(5)
+    .select('title source videoID date thumbnail description')
     .exec();
 }

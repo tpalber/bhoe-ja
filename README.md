@@ -10,9 +10,14 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 - [Tibet Times](http://tibettimes.net/)
 - [Voice Of Tibet](https://vot.org/)
 
+### Supported Youtube Channels
+
+- [TibetTV](https://www.youtube.com/channel/UCQG1iEjZPBw9m4HSZgyVoUg)
+- [VOA Tibetan](https://www.youtube.com/channel/UC2UlA4pbz0AYXXHba7cbu0Q)
+
 ### Development
 
-[MEAN]() development statck to 'web scrap' different Tibetan news sources and display the list of articles in a web application.
+[MEAN](<https://en.wikipedia.org/wiki/MEAN_(solution_stack)>) development statck to 'web scrap' different Tibetan news sources and display the list of articles/videos in a web application.
 Both UI and server side code base uses [Typescript](https://www.typescriptlang.org/).
 
 #### Getting Started

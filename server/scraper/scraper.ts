@@ -7,14 +7,13 @@ export abstract class Scraper {
     this.url = url;
   }
 
-  abstract async getData(html: any): Promise<IArticle[]>;
+  abstract async getArticles(html: any): Promise<IArticle[]>;
 
-  public async initiate(): Promise<IArticle[]> {
-    console.debug(`***** GET ${this.url}`);
+  public async scrapeArticles(): Promise<IArticle[]> {
     return axios
       .get(this.url)
       .then(async (response) => {
-        return this.getData(response.data)
+        return this.getArticles(response.data)
           .then((articles: IArticle[]) => {
             let savedArticles: Promise<IArticle>[] = [];
             articles.forEach((article) => {
@@ -36,7 +35,7 @@ export abstract class Scraper {
           });
       })
       .catch((error: any) => {
-        console.error(`Error getting articles from ${this.url}: ${error}`);
+        console.error(`Error getting articles from ${this.url} ${error}`);
         return Promise.all([]);
       });
   }
