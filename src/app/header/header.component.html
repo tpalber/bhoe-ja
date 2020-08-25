@@ -26,12 +26,34 @@
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
+<mat-tab-group
+  mat-align-tabs="center"
+  (selectedIndexChange)="feedTypeSelected($event)"
+>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon style="margin-right: 0.5rem;">article</mat-icon>
+      Articles
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon style="margin-right: 0.5rem;">video_library</mat-icon>
+      Vidoes
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
 
-<!-- TODO: Fix spacing on smaller screen. Maybe move search to separate expansion panel -->
+<!-- TODO: Fix spacing on smaller screen. Make height smaller. Maybe move search to separate expansion panel -->
 <mat-expansion-panel [expanded]="filterPanel">
   <div [ngClass]="{ 'width-100': !isSmallScreen }">
-    <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly">
-      <mat-form-field appearance="standard" style="width: 200px;">
+    <div
+      fxFlex
+      fxLayout="row"
+      fxLayout.xs="column"
+      fxLayoutAlign="space-evenly"
+    >
+      <mat-form-field appearance="standard">
         <mat-label>Select a date range</mat-label>
         <mat-date-range-input
           [formGroup]="filterForm"

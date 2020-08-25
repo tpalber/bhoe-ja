@@ -1,33 +1,48 @@
+<!-- TODO: Fix infinite scroll & Context after tab switch -->
 <app-infinite-scroll (scrolled)="onScroll()" [isLoading]="isLoading">
-  <mat-card
-    *ngFor="let article of articles"
-    style="cursor: pointer; margin-top: 1%;"
-    [ngClass]="{ 'web-screen': !isSmallScreen }"
-    (click)="openLink(article.link)"
-  >
-    <mat-card-header>
-      <mat-card-title>{{ article.title }}</mat-card-title>
-      <mat-card-subtitle>{{
-        article.date | date: "shortDate"
-      }}</mat-card-subtitle>
+  <ng-container *ngIf="feedType === 0; else videoFeedContent">
+    <mat-card
+      *ngFor="let article of articles"
+      style="cursor: pointer; margin-top: 1rem;"
+      [ngClass]="{ 'web-screen': !isSmallScreen }"
+      (click)="openLink(article.link)"
+    >
+      <mat-card-header>
+        <mat-card-title>{{ article.title }}</mat-card-title>
+        <mat-card-subtitle>{{
+          article.date | date: "shortDate"
+        }}</mat-card-subtitle>
 
-      <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-        <!-- TODO: Fix label on small screen and long titles -->
-        <app-label style="margin-right: 1rem;">{{ article.source }}</app-label>
-      </div>
-    </mat-card-header>
+        <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+          <app-label [ngClass]="{ 'margin-right-1': !isSmallScreen }">{{
+            getLabel(article.source)
+          }}</app-label>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        {{ article.description }}
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+  <ng-template #videoFeedContent>
+    <app-video-feed
+      [videos]="videos"
+      [isSmallScreen]="isSmallScreen"
+    ></app-video-feed>
+  </ng-template>
 
-    <mat-card-content>
-      {{ article.description }}
-    </mat-card-content>
-  </mat-card>
   <div
-    *ngIf="!isLoading && articles.length === 0"
+    *ngIf="
+      !isLoading &&
+      ((articles.length === 0 && feedType === 0) ||
+        (videos.length === 0 && feedType === 1))
+    "
     style="text-align: center; padding: 24px;"
     class="mat-body"
   >
     <mat-card-content>
-      No articles found with your selected filter(s)
+      No {{ feedType === 0 ? "articles" : "videos" }} found with your selected
+      filter(s)
     </mat-card-content>
   </div>
   <app-loading [isLoading]="isLoading"></app-loading>

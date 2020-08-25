@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { Article } from '../models/article';
+import { Video } from '../models/video';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,7 @@ export class FeedService {
     // return of([]);
   }
 
+  // TODO: Santize incoming data
   getArticles(
     offset: number,
     startDate?: Date,
@@ -35,6 +37,31 @@ export class FeedService {
     }
 
     return this.http.get<Article[]>(`http://localhost:3000/api/articles`, {
+      params: params,
+    });
+  }
+
+  // TODO: Santize incoming data
+  getVideos(
+    offset: number,
+    startDate?: Date,
+    endDate?: Date,
+    searchValue?: string
+  ): Observable<Video[]> {
+    let params: HttpParams = new HttpParams();
+    params = params.set('offset', offset.toString());
+    if (startDate) {
+      params = params.set('date[$gte]', startDate.toISOString());
+    }
+    if (endDate) {
+      params = params.set('date[$lte]', endDate.toISOString());
+    }
+    if (searchValue) {
+      params = params.set('title[$regex]', searchValue);
+      params = params.set('title[$options]', 'i');
+    }
+
+    return this.http.get<Video[]>(`http://localhost:3000/api/videos`, {
       params: params,
     });
   }

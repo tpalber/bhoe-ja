@@ -4,15 +4,17 @@ import { Util } from '../util';
 
 export class YoutubeScraper {
   public static supportedYoutubeChannels: { name: string; id: string }[] = [
+    { name: 'RFATibetan', id: 'UCmAs3jM0KZLwsglmaVMwvMg' },
     { name: 'TibetTV', id: 'UCQG1iEjZPBw9m4HSZgyVoUg' },
     { name: 'VOA Tibetan', id: 'UC2UlA4pbz0AYXXHba7cbu0Q' },
+    { name: 'Voice of Tibet', id: 'UCYg4JtszcCx83UTR-wObgFg' },
   ];
 
   private url: string;
   private channelName: string;
 
   constructor(apiKey: string, channelID: string, channelName: string) {
-    this.url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelID}&part=snippet,id&order=date&maxResults=5`;
+    this.url = `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelID}&part=snippet,id&order=date&maxResults=10`;
     this.channelName = channelName;
   }
 
@@ -55,8 +57,18 @@ export class YoutubeScraper {
 
     const videos: IVideo[] = [];
     for (const item of data.items) {
-      console.log(item);
       if (!item.id || !item.snippet) {
+        continue;
+      }
+
+      // There are many language translations for this, so we only want to keep the Tibetan video.
+      // We should also keep the English version, but it's not obvious from the title/description if one is English from others.
+      if (
+        this.channelName === 'TibetTV' &&
+        (item.snippet?.title || '').toLowerCase().indexOf('tibet this week') >=
+          0 &&
+        (item.snippet?.title || '').indexOf('Tibetan') === -1
+      ) {
         continue;
       }
 

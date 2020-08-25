@@ -291,6 +291,6 @@ async function getVideos(query: any): Promise<IVideo[]> {
     .sort({ date: -1 })
     .skip(offset)
     .limit(5)
-    .select('title source videoID date thumbnail description')
+    .select('title source videoID date thumbnailBig description')
     .exec();
 }

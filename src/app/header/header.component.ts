@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ) {
     this.filterForm = this.formBuilder.group({
       start: new FormControl({ value: null, disabled: true }),
-      end: new FormControl({ value: new Date(), disabled: true }),
+      end: new FormControl({ value: null, disabled: true }),
     });
     this.searchForm = new FormControl();
   }
@@ -86,6 +86,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     );
 
+    // TODO: Move this to ContextService
     this.windowSubscription$ = this.breakpointObserver
       .observe([Breakpoints.Web, Breakpoints.WebLandscape])
       .subscribe((state: BreakpointState) => {
@@ -124,5 +125,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public openFilterPanel(): void {
     this.filterPanel = !this.filterPanel;
+  }
+
+  public feedTypeSelected(index: number): void {
+    this.contextService.setFeedType(index);
   }
 }

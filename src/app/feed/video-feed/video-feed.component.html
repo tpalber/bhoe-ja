@@ -1,0 +1,30 @@
+<div class="row" [ngClass]="{ 'web-row-screen': !isSmallScreen }">
+  <div
+    class="column"
+    *ngFor="let video of videos"
+    [ngClass]="{ 'web-col-screen': !isSmallScreen }"
+  >
+    <mat-card
+      style="cursor: pointer; margin-top: 1%;"
+      (click)="openLink(video.videoID)"
+    >
+      <mat-card-header>
+        <mat-card-title>{{ video.title }}</mat-card-title>
+        <mat-card-subtitle>{{
+          video.date | date: "shortDate"
+        }}</mat-card-subtitle>
+
+        <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+          <app-label [ngClass]="{ 'margin-right-1': !isSmallScreen }">{{
+            getLabel(video.source)
+          }}</app-label>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <img [src]="video.thumbnailBig" alt="Video Thumbnail" />
+        <br />
+        {{ video.description }}
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

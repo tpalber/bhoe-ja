@@ -12,8 +12,10 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 
 ### Supported Youtube Channels
 
+- [RFATibetan](https://www.youtube.com/channel/UCmAs3jM0KZLwsglmaVMwvMg)
 - [TibetTV](https://www.youtube.com/channel/UCQG1iEjZPBw9m4HSZgyVoUg)
 - [VOA Tibetan](https://www.youtube.com/channel/UC2UlA4pbz0AYXXHba7cbu0Q)
+- [Voice of Tibet](https://www.youtube.com/channel/UCYg4JtszcCx83UTR-wObgFg)
 
 ### Development
 

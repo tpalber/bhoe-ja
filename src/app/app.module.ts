@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FeedService } from './service/feed.service';
 import { ContextService } from './service/context.service';
 import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
+import { VideoFeedComponent } from './feed/video-feed/video-feed.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scrol
     AboutComponent,
     LabelComponent,
     InfiniteScrollComponent,
+    VideoFeedComponent,
   ],
   imports: [
     AppRoutingModule,

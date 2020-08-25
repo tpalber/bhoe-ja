@@ -2,8 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 import { FeedService } from '../service/feed.service';
 import { Article } from '../models/article';
+import { Video } from '../models/video';
 import { ContextService } from '../service/context.service';
 import { Subscription } from 'rxjs';
+import { Util } from '../util';
 import {
   BreakpointObserver,
   Breakpoints,
@@ -18,7 +20,9 @@ import {
 export class FeedComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
   public articles: Article[] = [];
+  public videos: Video[] = [];
   public isSmallScreen: boolean = true;
+  public feedType: number = 0;
 
   private startDate?: Date;
   private endDate?: Date;
@@ -42,6 +46,8 @@ export class FeedComponent implements OnInit, OnDestroy {
           state.breakpoints[Breakpoints.WebLandscape]
         ) {
           this.isSmallScreen = false;
+        } else {
+          this.isSmallScreen = true;
         }
       });
 
@@ -50,6 +56,10 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.contextSubscription$ = this.contextService.context$
       .pipe(debounceTime(500))
       .subscribe((context) => {
+        if (this.feedType !== context.feedType) {
+          this.feedType = context.feedType;
+        }
+
         if (
           this.startDate !== context.start ||
           this.endDate !== context.end ||
@@ -58,13 +68,23 @@ export class FeedComponent implements OnInit, OnDestroy {
           this.startDate = context.start;
           this.endDate = context.end;
           this.searchValue = context.search;
-          this.loadArticles(
-            this.offset,
-            false,
-            this.startDate,
-            this.endDate,
-            this.searchValue
-          );
+          if (this.feedType === 0) {
+            this.loadArticles(
+              this.offset,
+              false,
+              this.startDate,
+              this.endDate,
+              this.searchValue
+            );
+          } else if (this.feedType === 1) {
+            this.loadVideos(
+              this.offset,
+              false,
+              this.startDate,
+              this.endDate,
+              this.searchValue
+            );
+          }
         }
       });
   }
@@ -83,13 +103,27 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   public onScroll(): void {
-    this.loadArticles(
-      this.offset,
-      true,
-      this.startDate,
-      this.endDate,
-      this.searchValue
-    );
+    if (this.feedType === 0) {
+      this.loadArticles(
+        this.offset,
+        true,
+        this.startDate,
+        this.endDate,
+        this.searchValue
+      );
+    } else if (this.feedType === 1) {
+      this.loadVideos(
+        this.offset,
+        true,
+        this.startDate,
+        this.endDate,
+        this.searchValue
+      );
+    }
+  }
+
+  public getLabel(name: string): string {
+    return Util.getLabel(name, this.isSmallScreen);
   }
 
   private loadArticles(
@@ -111,6 +145,28 @@ export class FeedComponent implements OnInit, OnDestroy {
           this.articles = articles;
         }
         this.offset = this.articles.length;
+      })
+      .finally(() => (this.isLoading = false));
+  }
+
+  private loadVideos(
+    offset: number,
+    append?: boolean,
+    startDate?: Date,
+    endDate?: Date,
+    searchValue?: string
+  ): void {
+    this.isLoading = true;
+    this.feedService
+      .getVideos(offset, startDate, endDate, searchValue)
+      .toPromise()
+      .then((videos) => {
+        if (append) {
+          this.videos = this.videos.concat(videos);
+        } else {
+          this.videos = videos;
+        }
+        this.offset = this.videos.length;
       })
       .finally(() => (this.isLoading = false));
   }
