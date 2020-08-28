@@ -61,13 +61,16 @@ export class YoutubeScraper {
         continue;
       }
 
-      // There are many language translations for this, so we only want to keep the Tibetan video.
+      // There are many language translations for Tibet This Week, so we only want to keep the Tibetan video.
+      // We don't want live or upcoming 'live' videos.
       // We should also keep the English version, but it's not obvious from the title/description if one is English from others.
       if (
-        this.channelName === 'TibetTV' &&
-        (item.snippet?.title || '').toLowerCase().indexOf('tibet this week') >=
-          0 &&
-        (item.snippet?.title || '').indexOf('Tibetan') === -1
+        (this.channelName === 'TibetTV' &&
+          (item.snippet?.title || '')
+            .toLowerCase()
+            .indexOf('tibet this week') >= 0 &&
+          (item.snippet?.title || '').indexOf('Tibetan') === -1) ||
+        (item.snippet?.liveBroadcastContent || 'none') !== 'none'
       ) {
         continue;
       }

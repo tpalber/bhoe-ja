@@ -16,7 +16,7 @@ export class RFAScraper extends Scraper {
     return RFAScraper.baseUrl;
   }
 
-  getArticles(html: any): Promise<import('../../models/article').IArticle[]> {
+  getArticles(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
     const $ = cheerio.load(html);
     $('.sectionteaser').each((i: number, elem: any) => {
@@ -54,7 +54,7 @@ export class RFAScraper extends Scraper {
           )
         : Util.getCurrentDate();
     } catch (e) {
-      console.error(`Error getting date for article: ${e}`);
+      console.warn(`Error getting date for article: ${e}`);
       return Util.getCurrentDate();
     }
   }

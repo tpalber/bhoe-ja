@@ -7,6 +7,7 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 - [Phayul](https://www.phayul.com/)
 - [Radio Free Asia](https://www.rfa.org/english/news/tibet)
 - [Tibet Post](http://www.thetibetpost.com/en/)
+- [Tibet Sun](https://www.tibetsun.com/)
 - [Tibet Times](http://tibettimes.net/)
 - [Voice Of Tibet](https://vot.org/)
 

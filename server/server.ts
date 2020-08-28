@@ -12,11 +12,13 @@ import { VOTScraper } from './scraper/vot/vot-scraper';
 import { RFAScraper } from './scraper/rfa/rfa-scraper';
 import Video, { IVideo } from './models/video';
 import { YoutubeScraper } from './scraper/youtube-scraper';
+import { TibetSunScraper } from './scraper/tibet-sun/tibet-sun-scraper';
 
 let supportedNewsSites: string[] = [
   PhayulScraper.site,
   RFAScraper.site,
   TibetPostScraper.site,
+  TibetSunScraper.site,
   TibetTimesScraper.site,
   VOTScraper.site,
 ];
@@ -33,6 +35,7 @@ appStartup();
 function appStartup(): void {
   environmentVariablesConfig();
   const port: any = process.env.PORT || 3000;
+  const uiPort: any = process.env.UI_PORT || 4200;
   const dbUri: any = process.env.ATLAS_URI || 'Unable to find Atlas URL';
 
   mongoose.connect(dbUri, {
@@ -47,7 +50,7 @@ function appStartup(): void {
 
   const app: express.Application = express();
   app.use(function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+    res.header('Access-Control-Allow-Origin', `http://localhost:${uiPort}`);
     // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
@@ -57,8 +60,8 @@ function appStartup(): void {
     console.info(`Make API requests on http://localhost:${port}/api/`);
   });
 
-  // Schedule article scraper to run every 30 mins
-  schedule('*/30 * * * *', function () {
+  // Schedule article scraper to run every hour
+  schedule('0 0 */1 * * *', function () {
     console.info(`Running scraper from scheduled job: ${new Date()}`);
     scrapeSites(supportedNewsSites).then((articles) => {
       console.info(
@@ -69,8 +72,8 @@ function appStartup(): void {
     });
   });
 
-  // Schedule video scraper to run every 60 mins
-  schedule('*/60 * * * *', function () {
+  // Schedule video scraper to run every hour
+  schedule('0 0 */1 * * *', function () {
     console.info(`Running video scraper from scheduled job: ${new Date()}`);
     scrapeVideos().then((videos) => {
       console.info(
@@ -198,6 +201,9 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
           new TibetPostScraper(TibetPostScraper.getTibetSiteUrl()),
         ];
         break;
+      case TibetSunScraper.site:
+        scrapers = [new TibetSunScraper()];
+        break;
       case TibetTimesScraper.site:
         scrapers = [new TibetTimesScraper()];
         break;
@@ -290,7 +296,7 @@ async function getVideos(query: any): Promise<IVideo[]> {
   return Video.find(query)
     .sort({ date: -1 })
     .skip(offset)
-    .limit(5)
+    .limit(6)
     .select('title source videoID date thumbnailBig description')
     .exec();
 }
