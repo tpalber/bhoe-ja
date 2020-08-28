@@ -28,6 +28,7 @@
 </mat-toolbar>
 <mat-tab-group
   mat-align-tabs="center"
+  [selectedIndex]="defaultTabIndex"
   (selectedIndexChange)="feedTypeSelected($event)"
 >
   <mat-tab>

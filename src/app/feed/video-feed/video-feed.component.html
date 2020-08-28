@@ -1,11 +1,8 @@
-<div class="row" [ngClass]="{ 'web-row-screen': !isSmallScreen }">
-  <div
-    class="column"
-    *ngFor="let video of videos"
-    [ngClass]="{ 'web-col-screen': !isSmallScreen }"
-  >
+<app-infinite-scroll (scrolled)="onScroll()" [isLoading]="isLoading">
+  <ng-container *ngIf="isSmallScreen; else webScreenTemplate">
     <mat-card
-      style="cursor: pointer; margin-top: 1%;"
+      *ngFor="let video of videos"
+      style="cursor: pointer; margin-top: 1rem;"
       (click)="openLink(video.videoID)"
     >
       <mat-card-header>
@@ -15,9 +12,7 @@
         }}</mat-card-subtitle>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-          <app-label [ngClass]="{ 'margin-right-1': !isSmallScreen }">{{
-            getLabel(video.source)
-          }}</app-label>
+          <app-label>{{ getLabel(video.source) }}</app-label>
         </div>
       </mat-card-header>
       <mat-card-content>
@@ -26,5 +21,45 @@
         {{ video.description }}
       </mat-card-content>
     </mat-card>
+  </ng-container>
+
+  <ng-template #webScreenTemplate>
+    <div class="row">
+      <div class="column" *ngFor="let video of videos">
+        <mat-card
+          style="cursor: pointer; margin-top: 1rem;"
+          (click)="openLink(video.videoID)"
+        >
+          <mat-card-header>
+            <mat-card-title>{{ video.title }}</mat-card-title>
+            <mat-card-subtitle>{{
+              video.date | date: "shortDate"
+            }}</mat-card-subtitle>
+
+            <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+              <app-label style="margin-right: 1rem;">{{
+                getLabel(video.source)
+              }}</app-label>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <img [src]="video.thumbnailBig" alt="Video Thumbnail" />
+            <br />
+            {{ video.description }}
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </ng-template>
+
+  <div
+    *ngIf="!isLoading && videos.length === 0"
+    style="text-align: center; padding: 24px;"
+    class="mat-body"
+  >
+    <mat-card-content>
+      No videos found with your selected filter(s)
+    </mat-card-content>
   </div>
-</div>
+  <app-loading [isLoading]="isLoading"></app-loading>
+</app-infinite-scroll>

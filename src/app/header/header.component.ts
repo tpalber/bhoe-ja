@@ -12,6 +12,8 @@ import {
   Breakpoints,
   BreakpointState,
 } from '@angular/cdk/layout';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-header',
@@ -25,20 +27,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public filterForm: FormGroup;
   public searchForm: FormControl;
   public isSmallScreen: boolean = true;
+  public defaultTabIndex: number = 0;
 
   private windowSubscription$?: Subscription;
-  private startDateSubscription$: Subscription | undefined;
-  private endDateSubscription$: Subscription | undefined;
-  private searchSubscription$: Subscription | undefined;
-  private startDate: Date | undefined;
-  private endDate: Date | undefined;
-  private searchValue: string | undefined;
+  private routeSubscription$?: Subscription;
+  private startDateSubscription$?: Subscription;
+  private endDateSubscription$?: Subscription;
+  private searchSubscription$?: Subscription;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private contextService: ContextService,
     private formBuilder: FormBuilder,
-    private bottomSheet: MatBottomSheet
+    private bottomSheet: MatBottomSheet,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.filterForm = this.formBuilder.group({
       start: new FormControl({ value: null, disabled: true }),
@@ -51,12 +54,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (startFormControl) {
       this.startDateSubscription$ = startFormControl.valueChanges.subscribe(
         (val: Date) => {
-          this.startDate = val;
-          this.contextService.setContext(
-            this.startDate,
-            this.endDate,
-            this.searchValue
-          );
+          this.contextService.setStartDateContext(val);
         }
       );
     }
@@ -65,28 +63,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (endFormControl) {
       this.endDateSubscription$ = endFormControl.valueChanges.subscribe(
         (val: Date) => {
-          this.endDate = val;
-          this.contextService.setContext(
-            this.startDate,
-            this.endDate,
-            this.searchValue
-          );
+          this.contextService.setEndDateContext(val);
         }
       );
     }
 
     this.searchSubscription$ = this.searchForm.valueChanges.subscribe(
       (val: string) => {
-        this.searchValue = val;
-        this.contextService.setContext(
-          this.startDate,
-          this.endDate,
-          this.searchValue
-        );
+        this.contextService.setSearchValueContext(val);
       }
     );
 
-    // TODO: Move this to ContextService
+    this.routeSubscription$ = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.defaultTabIndex =
+          (event?.url || '/articles') === '/articles' ? 0 : 1;
+      });
+
     this.windowSubscription$ = this.breakpointObserver
       .observe([Breakpoints.Web, Breakpoints.WebLandscape])
       .subscribe((state: BreakpointState) => {
@@ -98,6 +92,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         } else {
           this.isSmallScreen = true;
         }
+        this.contextService.setSmallScreenContext(this.isSmallScreen);
       });
   }
 
@@ -110,6 +105,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     if (this.searchSubscription$) {
       this.searchSubscription$.unsubscribe();
+    }
+    if (this.routeSubscription$) {
+      this.routeSubscription$.unsubscribe();
     }
     if (this.windowSubscription$) {
       this.windowSubscription$.unsubscribe();
@@ -128,6 +126,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public feedTypeSelected(index: number): void {
-    this.contextService.setFeedType(index);
+    if (index === 0) {
+      this.router.navigate(['articles'], { relativeTo: this.route });
+    } else {
+      this.router.navigate(['videos'], { relativeTo: this.route });
+    }
   }
 }

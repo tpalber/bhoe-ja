@@ -1,24 +1,17 @@
-.web-row-screen {
-  width: 75%;
-  margin-left: 5%;
-}
-
-.margin-right-1 {
-  margin-right: 1rem;
-}
-
 .column {
   float: left;
   height: 350px;
+  width: 48%;
+  margin-right: 1rem;
+}
+
+.row {
+  width: 75%;
+  margin-left: 5%;
 }
 
 .row:after {
   content: "";
   display: table;
   clear: both;
-}
-
-.web-col-screen {
-  width: 48%;
-  margin-right: 1rem;
 }

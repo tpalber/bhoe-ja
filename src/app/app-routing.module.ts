@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FeedComponent } from './feed/feed.component';
+import { VideoFeedComponent } from './feed/video-feed/video-feed.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: FeedComponent,
-  },
+  { path: '', redirectTo: '/articles', pathMatch: 'full' },
+  { path: 'articles', component: FeedComponent },
+  { path: 'videos', component: VideoFeedComponent },
 ];
 
 @NgModule({

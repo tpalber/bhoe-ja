@@ -3,8 +3,12 @@ export class Util {
     if (isSmallScreen) {
       switch (name) {
         case 'Radio Free Asia':
+        case 'RFATibetan':
           return 'RFA';
-        case 'Voice Of Tibet' || 'Voice Of Tibet':
+        case 'Tibet Times':
+          return 'Times';
+        case 'Voice Of Tibet':
+        case 'Voice of Tibet':
           return 'VOT';
         case 'VOA Tibetan':
           return 'VOA';

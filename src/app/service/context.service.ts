@@ -6,36 +6,51 @@ import { Observable, BehaviorSubject } from 'rxjs';
 })
 export class ContextService {
   private context = new BehaviorSubject<{
-    feedType: number;
     start?: Date;
     end?: Date;
     search?: string;
-  }>({ feedType: 0 });
+  }>({});
+
+  private isSmallScreenContext = new BehaviorSubject<boolean>(true);
 
   public context$: Observable<{
-    feedType: number;
     start?: Date;
     end?: Date;
     search?: string;
   }> = this.context.asObservable();
 
-  public setContext(startDate?: Date, endDate?: Date, searchValue?: string) {
+  public isSmallScreenContext$: Observable<
+    boolean
+  > = this.isSmallScreenContext.asObservable();
+
+  public setStartDateContext(startDate: Date) {
     let currentContext: any = this.context.getValue();
     this.context.next({
-      feedType: currentContext.feedType,
       start: startDate,
+      end: currentContext.end,
+      search: currentContext.search,
+    });
+  }
+
+  public setEndDateContext(endDate: Date) {
+    let currentContext: any = this.context.getValue();
+    this.context.next({
+      start: currentContext.start,
       end: endDate,
+      search: currentContext.search,
+    });
+  }
+
+  public setSearchValueContext(searchValue: string) {
+    let currentContext: any = this.context.getValue();
+    this.context.next({
+      start: currentContext.start,
+      end: currentContext.end,
       search: searchValue,
     });
   }
 
-  public setFeedType(index: number) {
-    let currentContext: any = this.context.getValue();
-    this.context.next({
-      feedType: index,
-      start: currentContext.start,
-      end: currentContext.end,
-      search: currentContext.search,
-    });
+  public setSmallScreenContext(isSmallScreen: boolean) {
+    this.isSmallScreenContext.next(isSmallScreen);
   }
 }
