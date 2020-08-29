@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.defaultTabIndex =
-          (event?.url || '/articles') === '/articles' ? 0 : 1;
+          event?.url === '/' || event?.url === '/articles' ? 0 : 1;
       });
 
     this.windowSubscription$ = this.breakpointObserver

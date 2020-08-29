@@ -34,12 +34,11 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 #### Future Roadmap
 
-- Support getting news links using provided API
-  - Google API to get YouTube videos from Tibetan news channels
-  - Videos section for all the videos
 - Publish to a web service
+- Improve site accessibility
 - Bookmark news and save it to browser's cache (Window.localStorage)
 - Separate news in Tibetan and English into different sections
+- Dark Mode with Angular Material Theming
 
 #### UI Development
 

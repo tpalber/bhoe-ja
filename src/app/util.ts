@@ -5,8 +5,6 @@ export class Util {
         case 'Radio Free Asia':
         case 'RFATibetan':
           return 'RFA';
-        case 'Tibet Times':
-          return 'Times';
         case 'Voice Of Tibet':
         case 'Voice of Tibet':
           return 'VOT';

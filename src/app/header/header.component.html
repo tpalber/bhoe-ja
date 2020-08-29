@@ -28,6 +28,7 @@
 </mat-toolbar>
 <mat-tab-group
   mat-align-tabs="center"
+  style="background-color: white;"
   [selectedIndex]="defaultTabIndex"
   (selectedIndexChange)="feedTypeSelected($event)"
 >
@@ -45,7 +46,6 @@
   </mat-tab>
 </mat-tab-group>
 
-<!-- TODO: Fix spacing on smaller screen. Make height smaller. Maybe move search to separate expansion panel -->
 <mat-expansion-panel [expanded]="filterPanel">
   <div [ngClass]="{ 'width-100': !isSmallScreen }">
     <div
