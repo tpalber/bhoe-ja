@@ -51,4 +51,4 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 - Navigate to `server` folder
 - Run `npm run serve` for a dev server. App server will be lisitening on `http://localhost:3000/api/` and will automatically reload if you change any of the source files.
 
-##### Contact tpalber7@gmail.com for any contributions or questions.
+##### Contact tpalber7@gmail.com for contributions or any questions.

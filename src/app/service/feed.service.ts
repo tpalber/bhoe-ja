@@ -4,16 +4,20 @@ import { Observable, of } from 'rxjs';
 
 import { Article } from '../models/article';
 import { Video } from '../models/video';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FeedService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string;
+
+  constructor(private http: HttpClient) {
+    this.baseUrl = environment.production ? '' : 'http://localhost:3000';
+  }
 
   getMockArticles(): Observable<Article[]> {
     return of(this.mockArticles);
-    // return of([]);
   }
 
   // TODO: Santize incoming data
@@ -36,7 +40,7 @@ export class FeedService {
       params = params.set('title[$options]', 'i');
     }
 
-    return this.http.get<Article[]>(`http://localhost:3000/api/articles`, {
+    return this.http.get<Article[]>(`${this.baseUrl}/api/articles`, {
       params: params,
     });
   }
@@ -61,7 +65,7 @@ export class FeedService {
       params = params.set('title[$options]', 'i');
     }
 
-    return this.http.get<Video[]>(`http://localhost:3000/api/videos`, {
+    return this.http.get<Video[]>(`${this.baseUrl}/api/videos`, {
       params: params,
     });
   }

@@ -49,15 +49,16 @@ function appStartup(): void {
   });
 
   const app: express.Application = express();
-  app.use(function (req, res, next) {
+  app.use(function (req: any, res: any, next: any) {
     res.header('Access-Control-Allow-Origin', `http://localhost:${uiPort}`);
-    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
   initializeAppRoutes(app);
   app.listen(port, function () {
-    console.info(`Bhoe Ja ☕️ app server is listening on localhost:${port}`);
-    console.info(`Make API requests on http://localhost:${port}/api/`);
+    console.info(
+      `Bhoe Ja ☕️ app server is listening on http://localhost:${port}`
+    );
+    console.info(`Make API requests on http://localhost:${port}/api`);
   });
 
   // Schedule article scraper to run every hour
@@ -66,7 +67,7 @@ function appStartup(): void {
     scrapeSites(supportedNewsSites).then((articles) => {
       console.info(
         `${articles.length} Articles scraped and ${
-          articles.filter((article) => !article.isNew).length
+          articles.filter((article: IArticle) => !article.isNew).length
         } Article(s) added to DB.`
       );
     });
@@ -78,7 +79,7 @@ function appStartup(): void {
     scrapeVideos().then((videos) => {
       console.info(
         `${videos.length} Videos scraped and ${
-          videos.filter((video) => !video.isNew).length
+          videos.filter((video: IVideo) => !video.isNew).length
         } Video(s) added to DB.`
       );
     });
@@ -86,20 +87,13 @@ function appStartup(): void {
 }
 
 function environmentVariablesConfig(): void {
+  // .env file might be in the current folder or server/ depending on where the app is started from
+  dotenv.config({ path: './server/.env' });
   dotenv.config();
-  let path;
-  switch (process.env.NODE_ENV) {
-    case 'production':
-      path = './server/.env.production';
-      break;
-    default:
-      path = './server/.env';
-  }
-  dotenv.config({ path: path });
 }
 
 function initializeAppRoutes(app: express.Application): void {
-  app.get('/api/articles', async function (req, res) {
+  app.get('/api/articles', async function (req: any, res: any) {
     console.info('GET /articles');
     getArticles(req.query)
       .then((articles) => res.json(articles))
@@ -109,7 +103,7 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
-  app.get('/api/scrape-articles/:newsSite', function (req, res) {
+  app.get('/api/scrape-articles/:newsSite', function (req: any, res: any) {
     let newsSites: string[] = [];
     if ('all' === req.params.newsSite) {
       newsSites = supportedNewsSites;
@@ -125,7 +119,7 @@ function initializeAppRoutes(app: express.Application): void {
       .then((articles) => {
         res.json(
           `${articles.length} Articles scraped and ${
-            articles.filter((article) => !article.isNew).length
+            articles.filter((article: IArticle) => !article.isNew).length
           } Articles added to DB.`
         );
       })
@@ -134,7 +128,7 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
-  app.get('/api/videos', async function (req, res) {
+  app.get('/api/videos', async function (req: any, res: any) {
     console.info('GET /videos');
     getVideos(req.query)
       .then((videos) => res.json(videos))
@@ -144,12 +138,12 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
-  app.get('/api/scrape-videos', function (req, res) {
+  app.get('/api/scrape-videos', function (req: any, res: any) {
     scrapeVideos()
       .then((videos) => {
         res.json(
           `${videos.length} Videos scraped and ${
-            videos.filter((video) => !video.isNew).length
+            videos.filter((video: IVideo) => !video.isNew).length
           } Videos added to DB.`
         );
       })
@@ -158,7 +152,7 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
-  app.get('/api/', async function (req, res) {
+  app.get('/api/', async function (req: any, res: any) {
     const apiEndpoints: any = [
       {
         Endpoint: '/articles',
@@ -176,6 +170,12 @@ function initializeAppRoutes(app: express.Application): void {
       },
     ];
     res.json(apiEndpoints);
+  });
+
+  // ---- SERVE STATIC FILES ---- //
+  app.get('*', express.static('build/bhoeja', { maxAge: '1y' }));
+  app.get('*', (req: any, res: any) => {
+    res.status(200).sendFile(`/`, { root: 'build/bhoeja' });
   });
 }
 

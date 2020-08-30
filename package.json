@@ -1,14 +1,15 @@
 {
   "name": "bhoe-ja",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "serve": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --output-path=server/build/bhoeja",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start": "concurrently \"ng serve\" \"server/node_modules/.bin/ts-node-dev --respawn --transpileOnly ./server/server.ts\""
+    "dev": "concurrently \"ng serve\" \"server/node_modules/.bin/ts-node-dev --respawn --transpileOnly ./server/server.ts\"",
+    "start": "concurrently \"npm run build\" \"cd server && npm run start\""
   },
   "private": true,
   "dependencies": {
