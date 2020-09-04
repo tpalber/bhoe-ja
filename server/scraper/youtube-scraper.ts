@@ -4,6 +4,11 @@ import { Util } from '../util';
 
 export class YoutubeScraper {
   public static supportedYoutubeChannels: { name: string; id: string }[] = [
+    { name: 'Dalai Lama', id: 'UCiPJ_g02LuOgOG0ZNk5j1jA' },
+    {
+      name: 'སྤྱི་ནོར་ྋགོང་ས་ྋསྐྱབས་མགོན་ཆེན་པོ་མཆོག',
+      id: 'UCprjZGYXe2TPAd2LydWhk8A',
+    },
     { name: 'RFATibetan', id: 'UCmAs3jM0KZLwsglmaVMwvMg' },
     { name: 'TibetTV', id: 'UCQG1iEjZPBw9m4HSZgyVoUg' },
     { name: 'VOA Tibetan', id: 'UC2UlA4pbz0AYXXHba7cbu0Q' },

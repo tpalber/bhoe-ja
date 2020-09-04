@@ -2,6 +2,8 @@
 
 Bhoe Ja is an open source project that enable users to find the latest Tibetan news from different sources across the web.
 
+[https://bhoeja.news](https://bhoeja.news)
+
 ### Supported News Sites
 
 - [Phayul](https://www.phayul.com/)
@@ -13,10 +15,12 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 
 ### Supported Youtube Channels
 
+- [Dalai Lama](https://www.youtube.com/channel/UCiPJ_g02LuOgOG0ZNk5j1jA)
 - [RFATibetan](https://www.youtube.com/channel/UCmAs3jM0KZLwsglmaVMwvMg)
 - [TibetTV](https://www.youtube.com/channel/UCQG1iEjZPBw9m4HSZgyVoUg)
 - [VOA Tibetan](https://www.youtube.com/channel/UC2UlA4pbz0AYXXHba7cbu0Q)
 - [Voice of Tibet](https://www.youtube.com/channel/UCYg4JtszcCx83UTR-wObgFg)
+- [སྤྱི་ནོར་ྋགོང་ས་ྋསྐྱབས་མགོན་ཆེན་པོ་མཆོག](https://www.youtube.com/channel/UCprjZGYXe2TPAd2LydWhk8A)
 
 ### Development
 
@@ -34,7 +38,6 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 #### Future Roadmap
 
-- Publish to a web service
 - Improve site accessibility
 - Bookmark news and save it to browser's cache (Window.localStorage)
 - Separate news in Tibetan and English into different sections
