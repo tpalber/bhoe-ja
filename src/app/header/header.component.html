@@ -29,7 +29,7 @@
 <mat-tab-group
   mat-align-tabs="center"
   style="background-color: white;"
-  [selectedIndex]="defaultTabIndex"
+  [selectedIndex]="tabIndex"
   (selectedIndexChange)="feedTypeSelected($event)"
 >
   <mat-tab>
@@ -41,7 +41,7 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon style="margin-right: 0.5rem;">video_library</mat-icon>
-      Vidoes
+      Videos
     </ng-template>
   </mat-tab>
 </mat-tab-group>
@@ -75,7 +75,9 @@
         <input
           matInput
           [formControl]="searchForm"
-          placeholder="Search for articles"
+          [placeholder]="
+            'Search for ' + (tabIndex === 0 ? 'articles' : 'videos')
+          "
         />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>

@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public filterForm: FormGroup;
   public searchForm: FormControl;
   public isSmallScreen: boolean = true;
-  public defaultTabIndex: number = 0;
+  public tabIndex: number = 0;
 
   private windowSubscription$?: Subscription;
   private routeSubscription$?: Subscription;
@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.routeSubscription$ = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        this.defaultTabIndex =
+        this.tabIndex =
           event?.url === '/' || event?.url === '/articles' ? 0 : 1;
       });
 
