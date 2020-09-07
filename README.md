@@ -6,6 +6,8 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 
 ### Supported News Sites
 
+- [Central Tibetan Administration](https://tibet.net/)
+- [Free Tibet](https://freetibet.org/)
 - [Phayul](https://www.phayul.com/)
 - [Radio Free Asia](https://www.rfa.org/english/news/tibet)
 - [Tibet Post](http://www.thetibetpost.com/en/)
@@ -33,7 +35,7 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 2. Install the latest version of [Node.js](https://nodejs.org/en/)
 3. Clone this repo
 4. `npm install` Installs all your dependencies for this project
-5. `npm run start` Runs the UI and the app server
+5. `npm run dev` Runs the UI and the app server
 6. Navigate to `http://localhost:4200`
 
 #### Future Roadmap
@@ -47,11 +49,21 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 - Run `npm run serve` or `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 - Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-- Run `npm run build` or `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- Run `npm run build` to build the project. The build artifacts will be stored in the `server/build/` directory.
 
 #### Server Development
 
 - Navigate to `server` folder
 - Run `npm run serve` for a dev server. App server will be lisitening on `http://localhost:3000/api/` and will automatically reload if you change any of the source files.
+
+#### Production Deployment
+
+- `npm ci` Install UI dependencies
+- `npm run build` Build the UI project and add the distribution files within server/build/
+- `cd server` Navigate to server folder
+- `npm ci` Install Server dependencies
+- `npm run tsc` Build the Server product and add the distribution files within server/build/
+- Add required build files, app.yaml or .env
+- `npm start` Start the project from the server with the UI distribution files
 
 ##### Contact tpalber7@gmail.com for contributions or any questions.

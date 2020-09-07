@@ -10,6 +10,8 @@ export class Util {
           return 'VOT';
         case 'VOA Tibetan':
           return 'VOA';
+        case 'སྤྱི་ནོར་ྋགོང་ས་ྋསྐྱབས་མགོན་ཆེན་པོ་མཆོག':
+          return 'ྋགོང་ས་མཆོག་';
         default:
           return name;
       }

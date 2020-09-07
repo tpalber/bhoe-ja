@@ -13,8 +13,12 @@ import { RFAScraper } from './scraper/rfa/rfa-scraper';
 import Video, { IVideo } from './models/video';
 import { YoutubeScraper } from './scraper/youtube-scraper';
 import { TibetSunScraper } from './scraper/tibet-sun/tibet-sun-scraper';
+import { CTAScraper } from './scraper/cta/cta-scraper';
+import { FreeTibetScraper } from './scraper/free-tibet/free-tibet-scraper';
 
 let supportedNewsSites: string[] = [
+  CTAScraper.site,
+  FreeTibetScraper.site,
   PhayulScraper.site,
   RFAScraper.site,
   TibetPostScraper.site,
@@ -188,6 +192,12 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
   sites.forEach((site) => {
     let scrapers: Scraper[] | undefined;
     switch (site) {
+      case CTAScraper.site:
+        scrapers = [new CTAScraper()];
+        break;
+      case FreeTibetScraper.site:
+        scrapers = [new FreeTibetScraper()];
+        break;
       case PhayulScraper.site:
         scrapers = [new PhayulScraper()];
         break;
