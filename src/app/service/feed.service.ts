@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { Article } from '../models/article';
 import { Video } from '../models/video';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +77,8 @@ export class FeedService {
         'CTA urge Tibetans to observe lockdown-like precautions throughout May ',
       source: 'Phayul',
       link: 'https://www.phayul.com/2020/04/30/43268/',
-      date: new Date(),
+      // date: new Date(),
+      date: '2020-09-08',
       description:
         'By Choekyi Lhamo DHARAMSHALA, Apr. 30: The Central Tibetan Administration’s President urged Tibetans to continue observing precautions after the all-India lockdown will be lifted on May 3. Dr. Lobsang Sangay urged Tibetans to refrain from travelling in order to prevent community transmission of COVID-19, throughout the next month. Cabinet minister for Home Affairs, Sonam Topgyal […]',
     },
@@ -84,7 +86,7 @@ export class FeedService {
       title: 'WHO map shows parts of Ladakh under China',
       source: 'Phayul',
       link: 'https://www.phayul.com/2020/04/29/43261/',
-      date: new Date(),
+      date: '2020-09-08',
       description:
         'By Choekyi Lhamo DHARAMSHALA,APR 29: A World Health Organization (WHO) map has shown parts of India’s Ladakh and Jammu & Kashmir (J&K) as Chinese territory on their website. A part of Ladakh (Aksai Chin) has been shown as Chinese territory accompanied with a dotted line and colour code, and J&K and the rest of India […]',
     },
@@ -93,7 +95,7 @@ export class FeedService {
         'China capitalizing on the devastation it has engineered, says CTA Information Secretary',
       source: 'Tibet Post',
       link: 'https://www.phayul.com/2020/04/28/43253/',
-      date: new Date(),
+      date: '2020-09-08',
       description:
         'By Tenzin Dharpo DHARAMSHALA, Apr. 28: The global Covid-19 pandemic that originated in Wuhan, China has become a “Trojan horse” to “global hegemony” for the Chinese government, the Secretary for the exile Tibetan government’s information and international relation wing, Tsewang Gyalpo Arya said Monday. “Even after all the chaos and pandemic it has created, China […]',
     },
@@ -102,7 +104,7 @@ export class FeedService {
         'Sweden shuts down its last Confucius classroom amid deteriorating relations',
       source: 'Phayul',
       link: 'https://www.phayul.com/2020/04/28/43250/',
-      date: new Date(),
+      date: '2020-09-08',
       description:
         'By Choekyi Lhamo DHARAMSHALA, APR 28: The Swedish government has decided to shut down its last Confucius teaching program amid concerns over Beijing’s attempt to disseminate propaganda and restrict academic freedom through these set-ups. Sweden has now become the first European nation to close all Chinese state-sponsored teaching programs which were established to promote Chinese […]',
     },
@@ -110,7 +112,7 @@ export class FeedService {
       title: 'Testing Title',
       source: 'Tibet Post',
       link: 'https://www.phayul.com/2020/04/28/43250/',
-      date: new Date(),
+      date: '2020-09-08',
       description: undefined,
     },
   ];

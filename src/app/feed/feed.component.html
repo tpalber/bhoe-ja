@@ -8,9 +8,7 @@
   >
     <mat-card-header>
       <mat-card-title>{{ article.title }}</mat-card-title>
-      <mat-card-subtitle>{{
-        article.date | date: "shortDate"
-      }}</mat-card-subtitle>
+      <mat-card-subtitle>{{ article.date | trimDateString }}</mat-card-subtitle>
 
       <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
         <app-label [ngClass]="{ 'margin-right-1': !isSmallScreen }">{{

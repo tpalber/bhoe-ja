@@ -108,6 +108,9 @@ export class FeedComponent implements OnInit, OnDestroy {
         }
         this.offset = this.articles.length;
       })
+      .catch((e) => {
+        console.error(e);
+      })
       .finally(() => (this.isLoading = false));
   }
 }

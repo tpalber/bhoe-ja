@@ -46,7 +46,7 @@ export class ContextService {
     this.context.next({
       start: currentContext.start,
       end: currentContext.end,
-      search: searchValue,
+      search: searchValue === '' ? undefined : searchValue,
     });
   }
 

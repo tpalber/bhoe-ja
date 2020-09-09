@@ -115,6 +115,9 @@ export class VideoFeedComponent {
         }
         this.offset = this.videos.length;
       })
+      .catch((e) => {
+        console.error(e);
+      })
       .finally(() => (this.isLoading = false));
   }
 }

@@ -17,6 +17,7 @@ import { FeedService } from './service/feed.service';
 import { ContextService } from './service/context.service';
 import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
 import { VideoFeedComponent } from './feed/video-feed/video-feed.component';
+import { TrimDateStringPipe } from './pipes/trim-date-string.pipe';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { VideoFeedComponent } from './feed/video-feed/video-feed.component';
     LabelComponent,
     InfiniteScrollComponent,
     VideoFeedComponent,
+    TrimDateStringPipe,
   ],
   imports: [
     AppRoutingModule,
