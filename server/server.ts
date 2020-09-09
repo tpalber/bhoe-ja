@@ -77,8 +77,8 @@ function appStartup(): void {
     });
   });
 
-  // Schedule video scraper to run every hour
-  schedule('0 0 */1 * * *', function () {
+  // Schedule video scraper to run every two hours
+  schedule('0 0 */2 * * *', function () {
     console.info(`Running video scraper from scheduled job: ${new Date()}`);
     scrapeVideos().then((videos) => {
       console.info(
@@ -91,7 +91,7 @@ function appStartup(): void {
 }
 
 function environmentVariablesConfig(): void {
-  // .env file might be in the current folder or server/ depending on where the app is started from
+  // .env file might be in the current folder or server folder depending on where the app is started from
   dotenv.config({ path: './server/.env' });
   dotenv.config();
 }
@@ -279,7 +279,7 @@ async function getArticles(query: any): Promise<IArticle[]> {
   }
 
   return Article.find(query)
-    .sort({ createdAt: -1 })
+    .sort({ date: -1 })
     .skip(offset)
     .limit(10)
     .select('title source link date description')

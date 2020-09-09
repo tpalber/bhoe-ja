@@ -15,7 +15,7 @@ export class PhayulScraper extends Scraper {
     const currentDate: Date = new Date();
     return `${PhayulScraper.baseUrl}${currentDate.getFullYear()}/${
       currentDate.getMonth() + 1
-    }/${currentDate.getDate()}/`;
+    }/`;
   }
 
   async getArticles(html: any): Promise<IArticle[]> {
