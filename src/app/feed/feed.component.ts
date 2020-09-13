@@ -5,6 +5,9 @@ import { Article } from '../models/article';
 import { ContextService } from '../service/context.service';
 import { Subscription } from 'rxjs';
 import { Util } from '../util';
+import { BookmarkService } from '../service/bookmark.service';
+import { Bookmark } from '../models/bookmark';
+import { TrimDateStringPipe } from '../pipes/trim-date-string.pipe';
 
 @Component({
   selector: 'app-feed',
@@ -24,6 +27,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   private isSmallScreenContextSubscription$?: Subscription;
 
   constructor(
+    private bookmarkService: BookmarkService,
     private contextService: ContextService,
     private feedService: FeedService
   ) {
@@ -88,6 +92,16 @@ export class FeedComponent implements OnInit, OnDestroy {
     return Util.getLabel(name, this.isSmallScreen);
   }
 
+  public toogleBookmark(article: Article): void {
+    if (article.bookmarked) {
+      article.bookmarked = false;
+      this.bookmarkService.removeArticle(article._id);
+    } else {
+      article.bookmarked = true;
+      this.bookmarkService.addArticle(article);
+    }
+  }
+
   private loadArticles(
     offset: number,
     append?: boolean,
@@ -98,9 +112,10 @@ export class FeedComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.feedService
       .getArticles(offset, startDate, endDate, searchValue)
-      // .getMockArticles()
       .toPromise()
       .then((articles) => {
+        this.setBookmarks(articles);
+
         if (append) {
           this.articles = this.articles.concat(articles);
         } else {
@@ -112,5 +127,18 @@ export class FeedComponent implements OnInit, OnDestroy {
         console.error(e);
       })
       .finally(() => (this.isLoading = false));
+  }
+
+  private setBookmarks(articles: Article[]): void {
+    const bookmarks: Bookmark[] = this.bookmarkService.getBookmarks();
+
+    articles.forEach((article) => {
+      const index: number = bookmarks.findIndex(
+        (i) => i._id === article._id && !i.isVideo
+      );
+      if (index >= 0) {
+        article.bookmarked = true;
+      }
+    });
   }
 }

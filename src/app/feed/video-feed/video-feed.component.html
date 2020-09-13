@@ -1,65 +1,108 @@
-<app-infinite-scroll (scrolled)="onScroll()" [isLoading]="isLoading">
-  <ng-container *ngIf="isSmallScreen; else webScreenTemplate">
-    <mat-card
-      *ngFor="let video of videos"
-      style="cursor: pointer; margin-top: 1rem;"
-      (click)="openLink(video.videoID)"
-    >
-      <mat-card-header>
-        <mat-card-title>{{ video.title }}</mat-card-title>
-        <mat-card-subtitle>{{
-          video.date | date: "yyyy-MM-dd"
-        }}</mat-card-subtitle>
-
-        <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-          <app-label>{{ getLabel(video.source) }}</app-label>
-        </div>
-      </mat-card-header>
-      <mat-card-content>
-        <img [src]="video.thumbnailBig" alt="Video Thumbnail" />
-        <br />
-        {{ video.description }}
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
-
-  <ng-template #webScreenTemplate>
-    <div class="row">
-      <div class="column" *ngFor="let video of videos">
-        <mat-card
-          style="cursor: pointer; margin-top: 1rem;"
-          (click)="openLink(video.videoID)"
-        >
-          <mat-card-header>
-            <mat-card-title>{{ video.title }}</mat-card-title>
-            <mat-card-subtitle>{{
-              video.date | date: "yyyy-MM-dd"
-            }}</mat-card-subtitle>
-
-            <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-              <app-label style="margin-right: 1rem;">{{
-                getLabel(video.source)
-              }}</app-label>
+<div style="padding-top: 6.5rem;">
+  <app-infinite-scroll (scrolled)="onScroll()" [isLoading]="isLoading">
+    <ng-container *ngIf="isSmallScreen; else webScreenTemplate">
+      <mat-card *ngFor="let video of videos" style="margin-top: 1rem;">
+        <mat-card-header>
+          <mat-card-title
+            (click)="openLink(video.videoID)"
+            style="cursor: pointer;"
+            >{{ video.title }}</mat-card-title
+          >
+          <mat-card-subtitle>
+            <div fxFlex fxLayout="row">
+              <span style="padding-top: 3px;">
+                {{ video.date | date: "yyyy-MM-dd" }}
+              </span>
+              <span
+                class="material-icons"
+                style="
+                  color: rgba(0, 0, 0, 0.54);
+                  padding-left: 10px;
+                  cursor: pointer;
+                "
+                (click)="toogleBookmark(video)"
+              >
+                {{ video.bookmarked ? "bookmark" : "bookmark_border" }}
+              </span>
             </div>
-          </mat-card-header>
-          <mat-card-content>
-            <img [src]="video.thumbnailBig" alt="Video Thumbnail" />
-            <br />
-            {{ video.description }}
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-  </ng-template>
+          </mat-card-subtitle>
 
-  <div
-    *ngIf="!isLoading && videos.length === 0"
-    style="text-align: center; padding: 24px;"
-    class="mat-body"
-  >
-    <mat-card-content>
-      No videos found with your selected filter(s)
-    </mat-card-content>
-  </div>
-  <app-loading [isLoading]="isLoading"></app-loading>
-</app-infinite-scroll>
+          <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+            <app-label (click)="openLink(video.videoID)">{{
+              getLabel(video.source)
+            }}</app-label>
+          </div>
+        </mat-card-header>
+        <mat-card-content
+          (click)="openLink(video.videoID)"
+          style="cursor: pointer;"
+        >
+          <img [src]="video.thumbnailBig" alt="Video Thumbnail" />
+          <br />
+          {{ video.description }}
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+
+    <ng-template #webScreenTemplate>
+      <div class="row">
+        <div class="column" *ngFor="let video of videos">
+          <mat-card style="margin-top: 1rem;">
+            <mat-card-header>
+              <mat-card-title
+                (click)="openLink(video.videoID)"
+                style="cursor: pointer;"
+                >{{ video.title }}</mat-card-title
+              >
+              <mat-card-subtitle>
+                <div fxFlex fxLayout="row">
+                  <span style="padding-top: 3px;">
+                    {{ video.date | date: "yyyy-MM-dd" }}
+                  </span>
+                  <span
+                    class="material-icons"
+                    style="
+                      color: rgba(0, 0, 0, 0.54);
+                      padding-left: 10px;
+                      cursor: pointer;
+                    "
+                    (click)="toogleBookmark(video)"
+                  >
+                    {{ video.bookmarked ? "bookmark" : "bookmark_border" }}
+                  </span>
+                </div>
+              </mat-card-subtitle>
+
+              <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+                <app-label
+                  style="margin-right: 1rem;"
+                  (click)="openLink(video.videoID)"
+                  >{{ getLabel(video.source) }}</app-label
+                >
+              </div>
+            </mat-card-header>
+            <mat-card-content
+              (click)="openLink(video.videoID)"
+              style="cursor: pointer;"
+            >
+              <img [src]="video.thumbnailBig" alt="Video Thumbnail" />
+              <br />
+              {{ video.description }}
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </ng-template>
+
+    <div
+      *ngIf="!isLoading && videos.length === 0"
+      style="text-align: center; padding: 24px;"
+      class="mat-body"
+    >
+      <mat-card-content>
+        No videos found with your selected filter(s)
+      </mat-card-content>
+    </div>
+    <app-loading [isLoading]="isLoading"></app-loading>
+  </app-infinite-scroll>
+</div>

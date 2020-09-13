@@ -14,6 +14,7 @@ import {
 } from '@angular/cdk/layout';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { BookmarkService } from '../service/bookmark.service';
 
 @Component({
   selector: 'app-header',
@@ -28,14 +29,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public searchForm: FormControl;
   public isSmallScreen: boolean = true;
   public tabIndex: number = 0;
+  public tabEnabled: boolean = true;
+  public bookmarkCount: number = 0;
 
-  private windowSubscription$?: Subscription;
-  private routeSubscription$?: Subscription;
-  private startDateSubscription$?: Subscription;
-  private endDateSubscription$?: Subscription;
-  private searchSubscription$?: Subscription;
+  private windowSubscription?: Subscription;
+  private routeSubscription?: Subscription;
+  private startDateSubscription?: Subscription;
+  private endDateSubscription?: Subscription;
+  private searchSubscription?: Subscription;
+  private bookmarkCountSubscription?: Subscription;
 
   constructor(
+    private bookmarkService: BookmarkService,
     private breakpointObserver: BreakpointObserver,
     private contextService: ContextService,
     private formBuilder: FormBuilder,
@@ -52,7 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     const startFormControl: any = this.filterForm.get('start');
     if (startFormControl) {
-      this.startDateSubscription$ = startFormControl.valueChanges.subscribe(
+      this.startDateSubscription = startFormControl.valueChanges.subscribe(
         (val: Date) => {
           this.contextService.setStartDateContext(val);
         }
@@ -61,27 +66,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     const endFormControl: any = this.filterForm.get('end');
     if (endFormControl) {
-      this.endDateSubscription$ = endFormControl.valueChanges.subscribe(
+      this.endDateSubscription = endFormControl.valueChanges.subscribe(
         (val: Date) => {
           this.contextService.setEndDateContext(val);
         }
       );
     }
 
-    this.searchSubscription$ = this.searchForm.valueChanges.subscribe(
+    this.searchSubscription = this.searchForm.valueChanges.subscribe(
       (val: string) => {
         this.contextService.setSearchValueContext(val);
       }
     );
 
-    this.routeSubscription$ = this.router.events
+    this.routeSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
+        this.tabEnabled = event?.url === '/bookmark' ? false : true;
         this.tabIndex =
           event?.url === '/' || event?.url === '/articles' ? 0 : 1;
       });
 
-    this.windowSubscription$ = this.breakpointObserver
+    this.windowSubscription = this.breakpointObserver
       .observe([Breakpoints.Web, Breakpoints.WebLandscape])
       .subscribe((state: BreakpointState) => {
         if (
@@ -94,23 +100,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
         }
         this.contextService.setSmallScreenContext(this.isSmallScreen);
       });
+
+    this.bookmarkCount = this.bookmarkService.getBookmarkCount();
+    this.bookmarkCountSubscription = this.bookmarkService.onBookmarksChange.subscribe(
+      () => {
+        this.bookmarkCount = this.bookmarkService.getBookmarkCount();
+      }
+    );
   }
 
   public ngOnDestroy(): void {
-    if (this.startDateSubscription$) {
-      this.startDateSubscription$.unsubscribe();
+    if (this.startDateSubscription) {
+      this.startDateSubscription.unsubscribe();
     }
-    if (this.endDateSubscription$) {
-      this.endDateSubscription$.unsubscribe();
+    if (this.endDateSubscription) {
+      this.endDateSubscription.unsubscribe();
     }
-    if (this.searchSubscription$) {
-      this.searchSubscription$.unsubscribe();
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
     }
-    if (this.routeSubscription$) {
-      this.routeSubscription$.unsubscribe();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
     }
-    if (this.windowSubscription$) {
-      this.windowSubscription$.unsubscribe();
+    if (this.windowSubscription) {
+      this.windowSubscription.unsubscribe();
+    }
+    if (this.bookmarkCountSubscription) {
+      this.bookmarkCountSubscription.unsubscribe();
     }
   }
 
@@ -123,6 +139,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public openFilterPanel(): void {
     this.filterPanel = !this.filterPanel;
+  }
+
+  public navigateToBookmark(): void {
+    this.router.navigate(['bookmark'], { relativeTo: this.route });
+  }
+
+  public navigateToHome(): void {
+    this.router.navigate([''], { relativeTo: this.route });
   }
 
   public feedTypeSelected(index: number): void {

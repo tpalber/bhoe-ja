@@ -1,0 +1,72 @@
+<div style="padding-top: 3.5rem;">
+  <mat-card
+    *ngFor="let bookmark of bookmarks"
+    style="margin-top: 1rem;"
+    [ngClass]="{ 'web-screen': !isSmallScreen }"
+    [@flyInOut]="'in'"
+  >
+    <mat-card-header>
+      <mat-card-title
+        (click)="openLink(bookmark.link)"
+        style="cursor: pointer;"
+      >
+        {{ bookmark.title }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        <div fxFlex fxLayout="row">
+          <span style="padding-top: 3px;">
+            {{ bookmark.date | trimDateString }}
+          </span>
+          <span
+            class="material-icons"
+            style="
+              color: rgba(0, 0, 0, 0.54);
+              padding-left: 10px;
+              cursor: pointer;
+            "
+            (click)="removeBookmark(bookmark)"
+          >
+            bookmark
+          </span>
+        </div>
+      </mat-card-subtitle>
+
+      <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+        <app-label
+          [ngClass]="{ 'margin-right-1': !isSmallScreen }"
+          (click)="openLink(bookmark.link)"
+        >
+          {{ getLabel(bookmark.source) }}
+        </app-label>
+      </div>
+    </mat-card-header>
+    <mat-card-content
+      (click)="openLink(bookmark.link)"
+      style="cursor: pointer;"
+    >
+      <ng-container *ngIf="bookmark?.isVideo">
+        <img [src]="bookmark.thumbnailBig" alt="Video Thumbnail" />
+        <br />
+      </ng-container>
+      {{ bookmark.description }}
+    </mat-card-content>
+  </mat-card>
+
+  <div
+    *ngIf="!isLoading && bookmarks.length === 0"
+    style="text-align: center; padding: 36px 24px 24px 24px;"
+    class="mat-body"
+  >
+    <mat-card-content>
+      <p>No bookmarked articles or videos</p>
+      <p>
+        Click on
+        <span class="material-icons" style="color: rgba(0, 0, 0, 0.54);">
+          bookmark_border
+        </span>
+        icon next to articles or videos to bookmark
+      </p>
+    </mat-card-content>
+  </div>
+  <app-loading [isLoading]="isLoading"></app-loading>
+</div>

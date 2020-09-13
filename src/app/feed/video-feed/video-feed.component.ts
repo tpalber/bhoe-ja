@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Video } from '../../models/video';
 import { Util } from '../../util';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ContextService } from 'src/app/service/context.service';
 import { FeedService } from 'src/app/service/feed.service';
 import { debounceTime } from 'rxjs/operators';
+import { BookmarkService } from 'src/app/service/bookmark.service';
+import { Bookmark } from 'src/app/models/bookmark';
 
 @Component({
   selector: 'app-video-feed',
@@ -25,7 +26,7 @@ export class VideoFeedComponent {
   private isSmallScreenContextSubscription$?: Subscription;
 
   constructor(
-    private sanitizer: DomSanitizer,
+    private bookmarkService: BookmarkService,
     private contextService: ContextService,
     private feedService: FeedService
   ) {
@@ -80,12 +81,6 @@ export class VideoFeedComponent {
     return Util.getLabel(name, true);
   }
 
-  public getEmbeddedLink(id: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube.com/embed/${id}`
-    );
-  }
-
   public onScroll(): void {
     this.loadVideos(
       this.offset,
@@ -94,6 +89,16 @@ export class VideoFeedComponent {
       this.endDate,
       this.searchValue
     );
+  }
+
+  public toogleBookmark(video: Video): void {
+    if (video.bookmarked) {
+      video.bookmarked = false;
+      this.bookmarkService.removeVideo(video._id);
+    } else {
+      video.bookmarked = true;
+      this.bookmarkService.addVideo(video);
+    }
   }
 
   private loadVideos(
@@ -108,6 +113,8 @@ export class VideoFeedComponent {
       .getVideos(offset, startDate, endDate, searchValue)
       .toPromise()
       .then((videos) => {
+        this.setBookmarks(videos);
+
         if (append) {
           this.videos = this.videos.concat(videos);
         } else {
@@ -119,5 +126,18 @@ export class VideoFeedComponent {
         console.error(e);
       })
       .finally(() => (this.isLoading = false));
+  }
+
+  private setBookmarks(vidoes: Video[]): void {
+    const bookmarks: Bookmark[] = this.bookmarkService.getBookmarks();
+
+    vidoes.forEach((vidoe) => {
+      const index: number = bookmarks.findIndex(
+        (i) => i._id === vidoe._id && i.isVideo
+      );
+      if (index >= 0) {
+        vidoe.bookmarked = true;
+      }
+    });
   }
 }

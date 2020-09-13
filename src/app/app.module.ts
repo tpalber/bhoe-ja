@@ -13,11 +13,14 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { AboutComponent } from './shared/about/about.component';
 import { LabelComponent } from './shared/label/label.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BookmarkService } from './service/bookmark.service';
 import { FeedService } from './service/feed.service';
 import { ContextService } from './service/context.service';
 import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
 import { VideoFeedComponent } from './feed/video-feed/video-feed.component';
 import { TrimDateStringPipe } from './pipes/trim-date-string.pipe';
+import { BookmarkComponent } from './feed/bookmark/bookmark.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,7 @@ import { TrimDateStringPipe } from './pipes/trim-date-string.pipe';
     InfiniteScrollComponent,
     VideoFeedComponent,
     TrimDateStringPipe,
+    BookmarkComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -40,7 +44,13 @@ import { TrimDateStringPipe } from './pipes/trim-date-string.pipe';
     MaterialModule,
     ReactiveFormsModule,
   ],
-  providers: [ContextService, FeedService],
+  providers: [
+    BookmarkService,
+    ContextService,
+    FeedService,
+    DatePipe,
+    TrimDateStringPipe,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
