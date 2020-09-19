@@ -32,6 +32,7 @@ export class TibetTimesScraper extends Scraper {
           source: TibetTimesScraper.site,
           link: $(elem).find('h1 a').attr('href'),
           date: currentDate,
+          inTibetan: true,
           description: $(elem).find('.entry-summary').text().trim(),
         });
         data.push(article);

@@ -29,6 +29,7 @@ export class FreeTibetScraper extends Scraper {
           link:
             FreeTibetScraper.baseUrl +
             $(elem).find('h3.node-title a').attr('href'),
+          inTibetan: false,
           date: this.parseDate(
             $(elem).find('span.date-display-single').attr('content')
           ),

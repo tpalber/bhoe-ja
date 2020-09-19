@@ -10,6 +10,7 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 - [Free Tibet](https://freetibet.org/)
 - [Phayul](https://www.phayul.com/)
 - [Radio Free Asia](https://www.rfa.org/english/news/tibet)
+- [Shambala](http://www.shambalanews.com/)
 - [Tibet Post](http://www.thetibetpost.com/en/)
 - [Tibet Sun](https://www.tibetsun.com/)
 - [Tibet Times](http://tibettimes.net/)
@@ -41,7 +42,6 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 #### Future Roadmap
 
 - Improve site accessibility
-- Bookmark news and save it to browser's cache (Window.localStorage)
 - Separate news in Tibetan and English into different sections
 - Dark Mode with Angular Material Theming
 

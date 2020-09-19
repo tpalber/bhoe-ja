@@ -29,6 +29,7 @@ export class CTAScraper extends Scraper {
           link:
             CTAScraper.baseUrl +
             $(elem).find('a.posts-item-title-link').attr('href'),
+          inTibetan: false,
           date: this.parseDate(
             $(elem).find('div.posts-item-meta-item').text().trim()
           ),

@@ -6,21 +6,23 @@ import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
 import { schedule } from 'node-cron';
 import Article, { IArticle } from './models/article';
+import Video, { IVideo } from './models/video';
 import { TibetPostScraper } from './scraper/tibet-post/tibet-post-scraper';
 import { TibetTimesScraper } from './scraper/tibet-times/tibet-times-scraper';
 import { VOTScraper } from './scraper/vot/vot-scraper';
 import { RFAScraper } from './scraper/rfa/rfa-scraper';
-import Video, { IVideo } from './models/video';
 import { YoutubeScraper } from './scraper/youtube-scraper';
 import { TibetSunScraper } from './scraper/tibet-sun/tibet-sun-scraper';
 import { CTAScraper } from './scraper/cta/cta-scraper';
 import { FreeTibetScraper } from './scraper/free-tibet/free-tibet-scraper';
+import { ShambalaScraper } from './scraper/shambala/shambala-scraper';
 
 let supportedNewsSites: string[] = [
   CTAScraper.site,
   FreeTibetScraper.site,
   PhayulScraper.site,
   RFAScraper.site,
+  ShambalaScraper.site,
   TibetPostScraper.site,
   TibetSunScraper.site,
   TibetTimesScraper.site,
@@ -202,7 +204,18 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
         scrapers = [new PhayulScraper()];
         break;
       case RFAScraper.site:
-        scrapers = [new RFAScraper()];
+        scrapers = [
+          new RFAScraper(RFAScraper.getSiteUrl()),
+          new RFAScraper(RFAScraper.getTibetanSiteUrl(), true),
+        ];
+        break;
+      case ShambalaScraper.site:
+        scrapers = [
+          new ShambalaScraper(ShambalaScraper.getSiteUrl()),
+          new ShambalaScraper(ShambalaScraper.getExileSiteUrl()),
+          new ShambalaScraper(ShambalaScraper.getInternationalSiteUrl()),
+          new ShambalaScraper(ShambalaScraper.getTibetSiteUrl()),
+        ];
         break;
       case TibetPostScraper.site:
         scrapers = [
@@ -269,7 +282,10 @@ async function scrapeVideos(): Promise<IVideo[]> {
  * date[$lte]=2020-07-10
  */
 async function getArticles(query: any): Promise<IArticle[]> {
-  console.debug(query);
+  if (!query.inTibetan || query?.inTibetan === 'false') {
+    query.$or = [{ inTibetan: { $exists: false } }, { inTibetan: false }];
+    delete query.inTibetan;
+  }
   let offset: number = parseInt(query.offset);
   if (isNaN(offset)) {
     offset = 0;
@@ -287,14 +303,13 @@ async function getArticles(query: any): Promise<IArticle[]> {
 }
 
 /**
- * Get 10 subscribed videos from Youtube API, that's ordered by date. Default offset is 0 if not specified.
+ * Get latest 6 videos from the DB, that's ordered by date. Default offset is 0 if not specified.
  * @param query
  * query examples:
  * date[$gte]=2020-07-01
  * date[$lte]=2020-07-10
  */
 async function getVideos(query: any): Promise<IVideo[]> {
-  console.debug(query);
   let offset: number = parseInt(query.offset);
   if (isNaN(offset)) {
     offset = 0;

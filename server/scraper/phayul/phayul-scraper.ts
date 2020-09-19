@@ -31,6 +31,7 @@ export class PhayulScraper extends Scraper {
           title: $(elem).find('h2 a').text().trim(),
           source: PhayulScraper.site,
           link: $(elem).find('h2 a').attr('href'),
+          inTibetan: false,
           date: currentDate,
           description: $(elem).find('p').text().trim(),
         });

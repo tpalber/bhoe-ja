@@ -6,6 +6,7 @@ export interface IArticle extends Document {
   source: string;
   link: string;
   date: Date;
+  inTibetan: boolean;
   description?: string;
 }
 
@@ -15,6 +16,7 @@ const articleSchema: Schema = new Schema(
     source: { type: String, required: true, trim: true },
     link: { type: String, required: true, trim: true, unique: true },
     date: { type: Date, required: true },
+    inTibetan: { type: Boolean, required: true, default: false },
     description: { type: String, required: false, trim: true },
   },
   {

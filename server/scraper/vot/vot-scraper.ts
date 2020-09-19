@@ -29,6 +29,7 @@ export class VOTScraper extends Scraper {
           source: VOTScraper.site,
           link: $(elem).find('h2 a').attr('href'),
           date: currentDate,
+          inTibetan: true,
           description: $(elem).find('.post_content').text().trim(),
         });
         data.push(article);

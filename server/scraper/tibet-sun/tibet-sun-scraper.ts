@@ -27,6 +27,7 @@ export class TibetSunScraper extends Scraper {
           title: $(elem).find('span.entry-title a').text().trim(),
           source: TibetSunScraper.site,
           link: $(elem).find('span.entry-title a').attr('href'),
+          inTibetan: false,
           date: this.parseDate($(elem).find('span.dateline').text()),
           description: $(elem).find('p').text().trim(),
         });
