@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { Util } from '../util';
 import { BookmarkService } from '../service/bookmark.service';
 import { Bookmark } from '../models/bookmark';
-import { TrimDateStringPipe } from '../pipes/trim-date-string.pipe';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-feed',
@@ -19,6 +19,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   public articles: Article[] = [];
   public isSmallScreen: boolean = true;
 
+  private inTibetan: boolean = false;
   private startDate?: Date;
   private endDate?: Date;
   private searchValue?: string;
@@ -27,10 +28,18 @@ export class FeedComponent implements OnInit, OnDestroy {
   private isSmallScreenContextSubscription$?: Subscription;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private bookmarkService: BookmarkService,
     private contextService: ContextService,
     private feedService: FeedService
   ) {
+    if (
+      this.activatedRoute.snapshot.data &&
+      this.activatedRoute.snapshot.data.inTibetan
+    ) {
+      this.inTibetan = this.activatedRoute.snapshot.data.inTibetan === 'true';
+    }
+
     this.isSmallScreenContextSubscription$ = this.contextService.isSmallScreenContext$.subscribe(
       (isSmallScreen) => {
         if (this.isSmallScreen !== isSmallScreen) {
@@ -111,7 +120,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   ): void {
     this.isLoading = true;
     this.feedService
-      .getArticles(offset, startDate, endDate, searchValue)
+      .getArticles(offset, this.inTibetan, startDate, endDate, searchValue)
       .toPromise()
       .then((articles) => {
         this.setBookmarks(articles);

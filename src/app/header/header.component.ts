@@ -83,8 +83,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.tabEnabled = event?.url === '/bookmark' ? false : true;
-        this.tabIndex =
-          event?.url === '/' || event?.url === '/articles' ? 0 : 1;
+
+        if (event?.url === '/' || event?.url === '/articles') {
+          this.tabIndex = 1;
+        } else if (event?.url === '/tibetan-articles') {
+          this.tabIndex = 0;
+        } else if (event?.url === '/videos') {
+          this.tabIndex = 2;
+        } else {
+          this.tabIndex = 1;
+        }
       });
 
     this.windowSubscription = this.breakpointObserver
@@ -151,6 +159,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public feedTypeSelected(index: number): void {
     if (index === 0) {
+      this.router.navigate(['tibetan-articles'], { relativeTo: this.route });
+    } else if (index === 1) {
       this.router.navigate(['articles'], { relativeTo: this.route });
     } else {
       this.router.navigate(['videos'], { relativeTo: this.route });

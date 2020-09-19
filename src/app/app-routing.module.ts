@@ -7,6 +7,11 @@ import { BookmarkComponent } from './feed/bookmark/bookmark.component';
 const routes: Routes = [
   { path: '', redirectTo: '/articles', pathMatch: 'full' },
   { path: 'articles', component: FeedComponent },
+  {
+    path: 'tibetan-articles',
+    component: FeedComponent,
+    data: { inTibetan: 'true' },
+  },
   { path: 'videos', component: VideoFeedComponent },
   { path: 'bookmark', component: BookmarkComponent },
 ];

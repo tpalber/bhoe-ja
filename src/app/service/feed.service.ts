@@ -23,12 +23,14 @@ export class FeedService {
   // TODO: Santize incoming data
   getArticles(
     offset: number,
+    inTibetan: boolean,
     startDate?: Date,
     endDate?: Date,
     searchValue?: string
   ): Observable<Article[]> {
     let params: HttpParams = new HttpParams();
     params = params.set('offset', offset.toString());
+    params = params.set('inTibetan', inTibetan ? 'true' : 'false');
     if (startDate) {
       params = params.set('date[$gte]', startDate.toISOString());
     }

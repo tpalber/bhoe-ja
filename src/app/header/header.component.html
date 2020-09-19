@@ -50,13 +50,25 @@
   >
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon style="margin-right: 0.5rem;">article</mat-icon>
-        Articles
+        <mat-icon style="margin-right: 0.5rem;" *ngIf="!isSmallScreen">
+          article
+        </mat-icon>
+        {{ isSmallScreen ? "Tibetan" : "Tibetan Articles" }}
       </ng-template>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
-        <mat-icon style="margin-right: 0.5rem;">video_library</mat-icon>
+        <mat-icon style="margin-right: 0.5rem;" *ngIf="!isSmallScreen">
+          article
+        </mat-icon>
+        {{ isSmallScreen ? "English" : "English Articles" }}
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon style="margin-right: 0.5rem;" *ngIf="!isSmallScreen">
+          video_library
+        </mat-icon>
         Videos
       </ng-template>
     </mat-tab>
