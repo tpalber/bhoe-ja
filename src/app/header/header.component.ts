@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
 import {
   MatBottomSheet,
   MatBottomSheetConfig,
@@ -14,7 +14,8 @@ import {
 } from '@angular/cdk/layout';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { BookmarkService } from '../service/bookmark.service';
+import { StorageService } from '../service/storage.service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -31,21 +32,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public tabIndex: number = 0;
   public tabEnabled: boolean = true;
   public bookmarkCount: number = 0;
+  public isDarkMode: boolean = false;
 
-  private windowSubscription?: Subscription;
-  private routeSubscription?: Subscription;
-  private startDateSubscription?: Subscription;
-  private endDateSubscription?: Subscription;
-  private searchSubscription?: Subscription;
-  private bookmarkCountSubscription?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
-    private bookmarkService: BookmarkService,
+    @Inject(DOCUMENT) private document: Document,
+    private storageService: StorageService,
     private breakpointObserver: BreakpointObserver,
     private contextService: ContextService,
     private formBuilder: FormBuilder,
     private bottomSheet: MatBottomSheet,
     private route: ActivatedRoute,
+    private renderer: Renderer2,
     private router: Router
   ) {
     this.filterForm = this.formBuilder.group({
@@ -54,88 +53,94 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
     this.searchForm = new FormControl();
   }
+
   public ngOnInit(): void {
     const startFormControl: any = this.filterForm.get('start');
     if (startFormControl) {
-      this.startDateSubscription = startFormControl.valueChanges.subscribe(
-        (val: Date) => {
+      this.subscriptions.push(
+        startFormControl.valueChanges.subscribe((val: Date) => {
           this.contextService.setStartDateContext(val);
-        }
+        })
       );
     }
 
     const endFormControl: any = this.filterForm.get('end');
     if (endFormControl) {
-      this.endDateSubscription = endFormControl.valueChanges.subscribe(
-        (val: Date) => {
+      this.subscriptions.push(
+        endFormControl.valueChanges.subscribe((val: Date) => {
           this.contextService.setEndDateContext(val);
-        }
+        })
       );
     }
 
-    this.searchSubscription = this.searchForm.valueChanges.subscribe(
-      (val: string) => {
+    this.subscriptions.push(
+      this.searchForm.valueChanges.subscribe((val: string) => {
         this.contextService.setSearchValueContext(val);
-      }
+      })
     );
 
-    this.routeSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.tabEnabled = event?.url === '/bookmark' ? false : true;
+    this.subscriptions.push(
+      this.router.events
+        .pipe(filter((event) => event instanceof NavigationEnd))
+        .subscribe((event: any) => {
+          this.tabEnabled = event?.url === '/bookmark' ? false : true;
 
-        if (event?.url === '/' || event?.url === '/articles') {
-          this.tabIndex = 1;
-        } else if (event?.url === '/tibetan-articles') {
-          this.tabIndex = 0;
-        } else if (event?.url === '/videos') {
-          this.tabIndex = 2;
-        } else {
-          this.tabIndex = 1;
-        }
-      });
+          if (event?.url === '/' || event?.url === '/articles') {
+            this.tabIndex = 1;
+          } else if (event?.url === '/tibetan-articles') {
+            this.tabIndex = 0;
+          } else if (event?.url === '/videos') {
+            this.tabIndex = 2;
+          } else {
+            this.tabIndex = 1;
+          }
+        })
+    );
 
-    this.windowSubscription = this.breakpointObserver
-      .observe([Breakpoints.Web, Breakpoints.WebLandscape])
-      .subscribe((state: BreakpointState) => {
-        if (
-          state.breakpoints[Breakpoints.Web] ||
-          state.breakpoints[Breakpoints.WebLandscape]
-        ) {
-          this.isSmallScreen = false;
-        } else {
-          this.isSmallScreen = true;
-        }
-        this.contextService.setSmallScreenContext(this.isSmallScreen);
-      });
+    this.subscriptions.push(
+      this.breakpointObserver
+        .observe([Breakpoints.Web, Breakpoints.WebLandscape])
+        .subscribe((state: BreakpointState) => {
+          if (
+            state.breakpoints[Breakpoints.Web] ||
+            state.breakpoints[Breakpoints.WebLandscape]
+          ) {
+            this.isSmallScreen = false;
+          } else {
+            this.isSmallScreen = true;
+          }
+          this.contextService.setSmallScreenContext(this.isSmallScreen);
+        })
+    );
 
-    this.bookmarkCount = this.bookmarkService.getBookmarkCount();
-    this.bookmarkCountSubscription = this.bookmarkService.onBookmarksChange.subscribe(
-      () => {
-        this.bookmarkCount = this.bookmarkService.getBookmarkCount();
-      }
+    this.bookmarkCount = this.storageService.getBookmarkCount();
+    this.subscriptions.push(
+      this.storageService.onBookmarksChange.subscribe(() => {
+        this.bookmarkCount = this.storageService.getBookmarkCount();
+      })
+    );
+
+    this.isDarkMode = this.storageService.getDarkMode();
+    this.renderer.setAttribute(
+      this.document.body,
+      'class',
+      this.isDarkMode ? 'bhoeja-dark' : 'bhoeja-light'
+    );
+
+    this.subscriptions.push(
+      this.storageService.onDarkModeChange.subscribe(() => {
+        this.isDarkMode = this.storageService.getDarkMode();
+        this.renderer.setAttribute(
+          this.document.body,
+          'class',
+          this.isDarkMode ? 'bhoeja-dark' : 'bhoeja-light'
+        );
+      })
     );
   }
 
   public ngOnDestroy(): void {
-    if (this.startDateSubscription) {
-      this.startDateSubscription.unsubscribe();
-    }
-    if (this.endDateSubscription) {
-      this.endDateSubscription.unsubscribe();
-    }
-    if (this.searchSubscription) {
-      this.searchSubscription.unsubscribe();
-    }
-    if (this.routeSubscription) {
-      this.routeSubscription.unsubscribe();
-    }
-    if (this.windowSubscription) {
-      this.windowSubscription.unsubscribe();
-    }
-    if (this.bookmarkCountSubscription) {
-      this.bookmarkCountSubscription.unsubscribe();
-    }
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   public openAboutSheet(): void {

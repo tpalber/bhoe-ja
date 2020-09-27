@@ -1,50 +1,45 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <img
-      src="../favicon.ico"
-      alt="bhoe-ja"
-      [width]="isSmallScreen ? 60 : 75"
-      style="cursor: pointer;"
-      [ngClass]="{ 'margin-left-5': !isSmallScreen }"
-      (click)="navigateToHome()"
-    />
-    <span
-      (click)="navigateToHome()"
-      style="margin-left: 0.5rem; margin-right: 2rem; cursor: pointer;"
-      >{{ title }}</span
-    >
-    <ng-container *ngIf="!isSmallScreen">
-      <div style="border-left: solid; height: 70%;"></div>
-      <span style="margin-left: 2rem; font-weight: normal;"
-        >All the latest Tibetan news in one place</span
-      >
-    </ng-container>
-    <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-      <button mat-icon-button (click)="navigateToBookmark()">
-        <ng-container *ngIf="bookmarkCount > 0; else elseBookmarkTemplate">
-          <mat-icon [matBadge]="bookmarkCount" matBadgeColor="warn">
-            bookmark
-          </mat-icon>
-        </ng-container>
-        <ng-template #elseBookmarkTemplate>
-          <mat-icon>
-            bookmark
-          </mat-icon>
-        </ng-template>
-      </button>
-      <button mat-icon-button (click)="openFilterPanel()">
-        <mat-icon>filter_alt</mat-icon>
-      </button>
-      <button mat-icon-button (click)="openAboutSheet()">
-        <mat-icon>contact_support</mat-icon>
-      </button>
-    </div>
-  </mat-toolbar-row>
+<mat-toolbar color="primary" style="height: 57px;">
+  <img
+    src="../favicon.ico"
+    alt="bhoe-ja"
+    [width]="isSmallScreen ? 60 : 75"
+    style="cursor: pointer; object-fit: contain;"
+    [ngClass]="{ 'margin-left-5': !isSmallScreen }"
+    (click)="navigateToHome()"
+  />
+  <span
+    (click)="navigateToHome()"
+    style="margin-left: 0.5rem; margin-right: 2rem; cursor: pointer;"
+    >{{ title }}</span
+  >
+  <span style="margin-left: 2rem; font-weight: normal;" *ngIf="!isSmallScreen"
+    >All the latest Tibetan news in one place</span
+  >
+  <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+    <button mat-icon-button (click)="navigateToBookmark()">
+      <ng-container *ngIf="bookmarkCount > 0; else elseBookmarkTemplate">
+        <mat-icon [matBadge]="bookmarkCount" matBadgeColor="warn">
+          bookmark
+        </mat-icon>
+      </ng-container>
+      <ng-template #elseBookmarkTemplate>
+        <mat-icon>
+          bookmark
+        </mat-icon>
+      </ng-template>
+    </button>
+    <button mat-icon-button (click)="openFilterPanel()">
+      <mat-icon>filter_alt</mat-icon>
+    </button>
+    <button mat-icon-button (click)="openAboutSheet()">
+      <mat-icon>contact_support</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 <ng-container *ngIf="tabEnabled">
   <mat-tab-group
     mat-align-tabs="center"
-    style="background-color: white;"
+    [ngClass]="[isDarkMode ? 'dark-background' : 'light-background']"
     [selectedIndex]="tabIndex"
     (selectedIndexChange)="feedTypeSelected($event)"
   >

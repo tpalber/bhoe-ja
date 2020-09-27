@@ -5,7 +5,7 @@ import { Article } from '../models/article';
 import { ContextService } from '../service/context.service';
 import { Subscription } from 'rxjs';
 import { Util } from '../util';
-import { BookmarkService } from '../service/bookmark.service';
+import { StorageService } from '../service/storage.service';
 import { Bookmark } from '../models/bookmark';
 import { ActivatedRoute } from '@angular/router';
 
@@ -24,12 +24,11 @@ export class FeedComponent implements OnInit, OnDestroy {
   private endDate?: Date;
   private searchValue?: string;
   private offset: number = 0;
-  private contextSubscription$?: Subscription;
-  private isSmallScreenContextSubscription$?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private bookmarkService: BookmarkService,
+    private storageService: StorageService,
     private contextService: ContextService,
     private feedService: FeedService
   ) {
@@ -40,34 +39,36 @@ export class FeedComponent implements OnInit, OnDestroy {
       this.inTibetan = this.activatedRoute.snapshot.data.inTibetan === 'true';
     }
 
-    this.isSmallScreenContextSubscription$ = this.contextService.isSmallScreenContext$.subscribe(
-      (isSmallScreen) => {
+    this.subscriptions.push(
+      this.contextService.isSmallScreenContext$.subscribe((isSmallScreen) => {
         if (this.isSmallScreen !== isSmallScreen) {
           this.isSmallScreen = isSmallScreen;
         }
-      }
+      })
     );
 
-    this.contextSubscription$ = this.contextService.context$
-      .pipe(debounceTime(500))
-      .subscribe((context) => {
-        if (
-          this.startDate !== context.start ||
-          this.endDate !== context.end ||
-          this.searchValue !== context.search
-        ) {
-          this.startDate = context.start;
-          this.endDate = context.end;
-          this.searchValue = context.search;
-          this.loadArticles(
-            this.offset,
-            false,
-            this.startDate,
-            this.endDate,
-            this.searchValue
-          );
-        }
-      });
+    this.subscriptions.push(
+      this.contextService.context$
+        .pipe(debounceTime(500))
+        .subscribe((context) => {
+          if (
+            this.startDate !== context.start ||
+            this.endDate !== context.end ||
+            this.searchValue !== context.search
+          ) {
+            this.startDate = context.start;
+            this.endDate = context.end;
+            this.searchValue = context.search;
+            this.loadArticles(
+              this.offset,
+              false,
+              this.startDate,
+              this.endDate,
+              this.searchValue
+            );
+          }
+        })
+    );
   }
 
   public ngOnInit(): void {
@@ -75,12 +76,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.contextSubscription$) {
-      this.contextSubscription$.unsubscribe();
-    }
-    if (this.isSmallScreenContextSubscription$) {
-      this.isSmallScreenContextSubscription$.unsubscribe();
-    }
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   public openLink(url: string): void {
@@ -104,10 +100,10 @@ export class FeedComponent implements OnInit, OnDestroy {
   public toogleBookmark(article: Article): void {
     if (article.bookmarked) {
       article.bookmarked = false;
-      this.bookmarkService.removeArticle(article._id);
+      this.storageService.removeArticle(article._id);
     } else {
       article.bookmarked = true;
-      this.bookmarkService.addArticle(article);
+      this.storageService.addArticle(article);
     }
   }
 
@@ -139,7 +135,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   private setBookmarks(articles: Article[]): void {
-    const bookmarks: Bookmark[] = this.bookmarkService.getBookmarks();
+    const bookmarks: Bookmark[] = this.storageService.getBookmarks();
 
     articles.forEach((article) => {
       const index: number = bookmarks.findIndex(

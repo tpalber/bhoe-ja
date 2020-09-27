@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { ContextService } from 'src/app/service/context.service';
 import { FeedService } from 'src/app/service/feed.service';
 import { debounceTime } from 'rxjs/operators';
-import { BookmarkService } from 'src/app/service/bookmark.service';
+import { StorageService } from 'src/app/service/storage.service';
 import { Bookmark } from 'src/app/models/bookmark';
 
 @Component({
@@ -26,7 +26,7 @@ export class VideoFeedComponent {
   private isSmallScreenContextSubscription$?: Subscription;
 
   constructor(
-    private bookmarkService: BookmarkService,
+    private storageService: StorageService,
     private contextService: ContextService,
     private feedService: FeedService
   ) {
@@ -94,10 +94,10 @@ export class VideoFeedComponent {
   public toogleBookmark(video: Video): void {
     if (video.bookmarked) {
       video.bookmarked = false;
-      this.bookmarkService.removeVideo(video._id);
+      this.storageService.removeVideo(video._id);
     } else {
       video.bookmarked = true;
-      this.bookmarkService.addVideo(video);
+      this.storageService.addVideo(video);
     }
   }
 
@@ -129,7 +129,7 @@ export class VideoFeedComponent {
   }
 
   private setBookmarks(vidoes: Video[]): void {
-    const bookmarks: Bookmark[] = this.bookmarkService.getBookmarks();
+    const bookmarks: Bookmark[] = this.storageService.getBookmarks();
 
     vidoes.forEach((vidoe) => {
       const index: number = bookmarks.findIndex(

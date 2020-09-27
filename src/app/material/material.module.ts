@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -29,6 +30,7 @@ const materialModules = [
   MatNativeDateModule,
   MatProgressSpinnerModule,
   MatSidenavModule,
+  MatSlideToggleModule,
   MatTabsModule,
   MatToolbarModule,
 ];

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Bookmark } from '../../models/bookmark';
 import { Subscription } from 'rxjs';
 import { ContextService } from 'src/app/service/context.service';
-import { BookmarkService } from 'src/app/service/bookmark.service';
+import { StorageService } from 'src/app/service/storage.service';
 import { Util } from 'src/app/util';
 import {
   trigger,
@@ -34,7 +34,7 @@ export class BookmarkComponent implements OnInit, OnDestroy {
 
   constructor(
     private contextService: ContextService,
-    private bookmarkService: BookmarkService
+    private storageService: StorageService
   ) {
     this.isSmallScreenContextSubscription$ = this.contextService.isSmallScreenContext$.subscribe(
       (isSmallScreen) => {
@@ -61,9 +61,9 @@ export class BookmarkComponent implements OnInit, OnDestroy {
 
   public removeBookmark(bookmark: Bookmark): void {
     if (bookmark.isVideo) {
-      this.bookmarkService.removeVideo(bookmark._id);
+      this.storageService.removeVideo(bookmark._id);
     } else {
-      this.bookmarkService.removeArticle(bookmark._id);
+      this.storageService.removeArticle(bookmark._id);
     }
   }
 
@@ -72,7 +72,7 @@ export class BookmarkComponent implements OnInit, OnDestroy {
   }
 
   private loadBookmarks(): void {
-    this.bookmarks = this.bookmarkService.getBookmarks();
+    this.bookmarks = this.storageService.getBookmarks();
     this.isLoading = false;
   }
 }

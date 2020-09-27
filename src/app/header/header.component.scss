@@ -1,7 +1,17 @@
+@import "./../../theme.scss";
+
 .margin-left-5 {
   margin-left: 5%;
 }
 
 .width-100 {
   width: 100%;
+}
+
+.light-background {
+  background-color: $light-background-color;
+}
+
+.dark-background {
+  background-color: $dark-background-color;
 }

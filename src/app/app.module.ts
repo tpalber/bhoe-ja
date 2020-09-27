@@ -13,7 +13,7 @@ import { LoadingComponent } from './shared/loading/loading.component';
 import { AboutComponent } from './shared/about/about.component';
 import { LabelComponent } from './shared/label/label.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BookmarkService } from './service/bookmark.service';
+import { StorageService } from './service/storage.service';
 import { FeedService } from './service/feed.service';
 import { ContextService } from './service/context.service';
 import { InfiniteScrollComponent } from './shared/infinite-scroll/infinite-scroll.component';
@@ -45,7 +45,7 @@ import { DatePipe } from '@angular/common';
     ReactiveFormsModule,
   ],
   providers: [
-    BookmarkService,
+    StorageService,
     ContextService,
     FeedService,
     DatePipe,

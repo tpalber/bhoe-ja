@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { StorageService } from 'src/app/service/storage.service';
 
 @Component({
   selector: 'app-about',
@@ -7,10 +8,14 @@ import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent {
-  constructor(private _bottomSheetRef: MatBottomSheetRef<AboutComponent>) {}
+  public isDarkMode: boolean;
 
-  public openLink(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
-    event.preventDefault();
+  constructor(private storageService: StorageService) {
+    this.isDarkMode = this.storageService.getDarkMode();
+  }
+
+  public onDarkModeChange({ checked }: MatSlideToggleChange): void {
+    this.isDarkMode = checked;
+    this.storageService.toggleDarkMode(this.isDarkMode);
   }
 }

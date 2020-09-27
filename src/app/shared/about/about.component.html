@@ -1,5 +1,15 @@
-<h1 class="mat-h1" style="color: #3f51b5; font-weight: bold;">
-  About BHOE JA
+<h1
+  class="mat-h1"
+  style="display: flex; justify-content: space-between; align-items: center;"
+>
+  <span>About BHOE JA</span>
+  <mat-slide-toggle
+    labelPosition="before"
+    [checked]="isDarkMode"
+    (change)="onDarkModeChange($event)"
+  >
+    <span class="material-icons">nights_stay</span>
+  </mat-slide-toggle>
 </h1>
 <p>
   <span style="font-style: italic;"

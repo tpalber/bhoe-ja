@@ -1,7 +1,14 @@
+@import "./../../../theme.scss";
+
 .row {
   display: flex;
 }
 
 .column {
   flex: 50%;
+}
+
+.mat-h1 {
+  color: $primary;
+  font-weight: bold;
 }

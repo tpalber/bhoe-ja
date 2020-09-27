@@ -9,18 +9,22 @@ import { DatePipe } from '@angular/common';
 @Injectable({
   providedIn: 'root',
 })
-export class BookmarkService {
-  private readonly storageKey: string = 'BhoejaBookmarks';
+export class StorageService {
+  private readonly bookmarkStorageKey: string = 'BhoejaBookmarks';
+  private readonly darkModeStorageKey: string = 'BhoejaDarkMode';
   private storage: Storage = window.localStorage;
   private bookmarks: Bookmark[] = [];
+  private darkMode: boolean = false;
 
   public onBookmarksChange: Subject<Bookmark[]> = new Subject<Bookmark[]>();
+  public onDarkModeChange: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private trimDatePipe: TrimDateStringPipe,
     private datePipe: DatePipe
   ) {
-    this.restore();
+    this.restoreBookmarks();
+    this.restoreDarkMode();
   }
 
   public addArticle(article: Article): void {
@@ -37,7 +41,7 @@ export class BookmarkService {
 
     this.bookmarks.push(bookmark);
     this.onBookmarksChange.next(this.bookmarks);
-    this.save();
+    this.saveBookmark();
   }
 
   public removeArticle(id: string): void {
@@ -47,7 +51,7 @@ export class BookmarkService {
     if (index !== -1) {
       this.bookmarks.splice(index, 1);
       this.onBookmarksChange.next(this.bookmarks);
-      this.save();
+      this.saveBookmark();
     }
   }
 
@@ -67,7 +71,7 @@ export class BookmarkService {
 
     this.bookmarks.push(bookmark);
     this.onBookmarksChange.next(this.bookmarks);
-    this.save();
+    this.saveBookmark();
   }
 
   public removeVideo(id: string): void {
@@ -77,7 +81,7 @@ export class BookmarkService {
     if (index !== -1) {
       this.bookmarks.splice(index, 1);
       this.onBookmarksChange.next(this.bookmarks);
-      this.save();
+      this.saveBookmark();
     }
   }
 
@@ -89,33 +93,89 @@ export class BookmarkService {
     return this.bookmarks.length;
   }
 
-  private clear(): void {
-    this.bookmarks = [];
-    this.onBookmarksChange.next(this.bookmarks);
-    this.save();
+  public toggleDarkMode(enabled: boolean): void {
+    this.darkMode = enabled;
+    this.onDarkModeChange.next(this.darkMode);
+    this.saveDarkMode();
   }
 
-  private save(): void {
+  public getDarkMode(): boolean {
+    return this.darkMode;
+  }
+
+  private clearBookmarks(): void {
+    this.bookmarks = [];
+    this.onBookmarksChange.next(this.bookmarks);
+    this.saveBookmark();
+  }
+
+  private saveBookmark(): void {
     this.storage.setItem(
-      this.storageKey,
+      this.bookmarkStorageKey,
       JSON.stringify({ bookmarks: this.getBookmarks() })
     );
   }
 
-  private restore(): void {
+  private restoreBookmarks(): void {
     try {
-      if (!this.storage.getItem(this.storageKey)) {
-        this.clear();
+      if (!this.storage.getItem(this.bookmarkStorageKey)) {
+        this.clearBookmarks();
       }
-      const sc = JSON.parse(this.storage.getItem(this.storageKey) || '');
-      if (!(sc.hasOwnProperty('bookmarks') && Array.isArray(sc.bookmarks))) {
-        this.clear();
+
+      const _bookmarks = JSON.parse(
+        this.storage.getItem(this.bookmarkStorageKey) || ''
+      );
+      if (
+        !(
+          _bookmarks.hasOwnProperty('bookmarks') &&
+          Array.isArray(_bookmarks.bookmarks)
+        )
+      ) {
+        this.clearBookmarks();
       }
-      this.bookmarks = sc.bookmarks;
+      this.bookmarks = _bookmarks.bookmarks;
       this.onBookmarksChange.next(this.bookmarks);
     } catch (e) {
       console.error(`Error restoring bhoe ja bookmarks: ${e}`);
-      this.clear();
+      this.clearBookmarks();
+    }
+  }
+
+  private clearDarkMode(): void {
+    this.darkMode = false;
+    this.onDarkModeChange.next(this.darkMode);
+    this.saveDarkMode();
+  }
+
+  private saveDarkMode(): void {
+    this.storage.setItem(
+      this.darkModeStorageKey,
+      JSON.stringify({ darkMode: this.darkMode })
+    );
+  }
+
+  private restoreDarkMode(): void {
+    try {
+      if (!this.storage.getItem(this.darkModeStorageKey)) {
+        this.clearDarkMode();
+      }
+
+      const _darkMode = JSON.parse(
+        this.storage.getItem(this.darkModeStorageKey) || ''
+      );
+      if (
+        !(
+          _darkMode.hasOwnProperty('darkMode') &&
+          typeof _darkMode.darkMode === 'boolean'
+        )
+      ) {
+        this.clearDarkMode();
+      }
+      this.darkMode = _darkMode.darkMode;
+      this.onDarkModeChange.next(this.darkMode);
+    } catch (e) {
+      console.error(`Error restoring bhoe ja dark mode: ${e}`);
+      this.clearDarkMode();
     }
   }
 }
