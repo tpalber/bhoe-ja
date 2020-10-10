@@ -36,7 +36,8 @@ appStartup();
  * - Get environment variables defined in .env file
  * - Connect to MongoDB
  * - Create a Express web server
- * - Schedule a cron job to run the scraper every 30 mins
+ * - Schedule a cron job to run the article scraper every hour
+ * - Schedule a cron job to run the video scraper every 2 hours
  */
 function appStartup(): void {
   environmentVariablesConfig();
@@ -68,7 +69,7 @@ function appStartup(): void {
   });
 
   // Schedule article scraper to run every hour
-  schedule('0 0 */1 * * *', function () {
+  schedule('0 0 0-23 * * *', function () {
     console.info(`Running scraper from scheduled job: ${new Date()}`);
     scrapeSites(supportedNewsSites).then((articles) => {
       console.info(
@@ -80,7 +81,7 @@ function appStartup(): void {
   });
 
   // Schedule video scraper to run every two hours
-  schedule('0 0 */2 * * *', function () {
+  schedule('0 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', function () {
     console.info(`Running video scraper from scheduled job: ${new Date()}`);
     scrapeVideos().then((videos) => {
       console.info(
@@ -293,6 +294,10 @@ async function getArticles(query: any): Promise<IArticle[]> {
   if (query.offset) {
     delete query.offset;
   }
+  if (query.source) {
+    let sources: string[] = JSON.parse(query.source);
+    query.source = { $in: sources };
+  }
 
   return Article.find(query)
     .sort({ date: -1 })
@@ -316,6 +321,10 @@ async function getVideos(query: any): Promise<IVideo[]> {
   }
   if (query.offset) {
     delete query.offset;
+  }
+  if (query.source) {
+    let sources: string[] = JSON.parse(query.source);
+    query.source = { $in: sources };
   }
 
   return Video.find(query)
