@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
-import { Article } from '../models/article';
-import { Video } from '../models/video';
+import { Article, Video } from '../models';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -20,13 +19,13 @@ export class FeedService {
     return of(this.mockArticles);
   }
 
-  // TODO: Santize incoming data
   getArticles(
     offset: number,
     inTibetan: boolean,
     startDate?: Date,
     endDate?: Date,
-    searchValue?: string
+    searchValue?: string,
+    sourceFilters?: string[]
   ): Observable<Article[]> {
     let params: HttpParams = new HttpParams();
     params = params.set('offset', offset.toString());
@@ -41,18 +40,21 @@ export class FeedService {
       params = params.set('title[$regex]', searchValue);
       params = params.set('title[$options]', 'i');
     }
+    if (sourceFilters && sourceFilters.length > 0) {
+      params = params.set('source', JSON.stringify(sourceFilters));
+    }
 
     return this.http.get<Article[]>(`${this.baseUrl}/api/articles`, {
       params: params,
     });
   }
 
-  // TODO: Santize incoming data
   getVideos(
     offset: number,
     startDate?: Date,
     endDate?: Date,
-    searchValue?: string
+    searchValue?: string,
+    sourceFilters?: string[]
   ): Observable<Video[]> {
     let params: HttpParams = new HttpParams();
     params = params.set('offset', offset.toString());
@@ -65,6 +67,9 @@ export class FeedService {
     if (searchValue) {
       params = params.set('title[$regex]', searchValue);
       params = params.set('title[$options]', 'i');
+    }
+    if (sourceFilters && sourceFilters.length > 0) {
+      params = params.set('source', JSON.stringify(sourceFilters));
     }
 
     return this.http.get<Video[]>(`${this.baseUrl}/api/videos`, {

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { StorageService } from 'src/app/service/storage.service';
+import { Source, sourceListing, SourceType } from '../../models';
+import { LocalStorageService } from '../../service/local-storage.service';
 
 @Component({
   selector: 'app-about',
@@ -9,8 +10,14 @@ import { StorageService } from 'src/app/service/storage.service';
 })
 export class AboutComponent {
   public isDarkMode: boolean;
+  public articleSources: Source[] = sourceListing.filter(
+    (source) => source.type === SourceType.article
+  );
+  public videoSources: Source[] = sourceListing.filter(
+    (source) => source.type === SourceType.video
+  );
 
-  constructor(private storageService: StorageService) {
+  constructor(private storageService: LocalStorageService) {
     this.isDarkMode = this.storageService.getDarkMode();
   }
 

@@ -71,38 +71,67 @@
 </ng-container>
 
 <mat-expansion-panel [expanded]="filterPanel">
-  <div [ngClass]="{ 'width-100': !isSmallScreen }">
-    <div
-      fxFlex
-      fxLayout="row"
-      fxLayout.xs="column"
-      fxLayoutAlign="space-evenly"
+  <mat-expansion-panel-header>
+    <button (click)="mep.expanded = !mep.expanded">Toggle</button>
+</mat-expansion-panel-header>
+  <div fxFlex fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-evenly">
+    <mat-form-field
+      appearance="standard"
+      ngClass="width-300px"
+      ngClass.xs="width-100"
     >
-      <mat-form-field appearance="standard">
-        <mat-label>Filter By Date Range</mat-label>
-        <mat-date-range-input
-          [formGroup]="filterForm"
-          [rangePicker]="picker"
-          [max]="currentDate"
-        >
-          <input
-            matStartDate
-            formControlName="start"
-            placeholder="Start date"
-          />
-          <input matEndDate formControlName="end" placeholder="End date" />
-        </mat-date-range-input>
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
-      </mat-form-field>
-      <mat-form-field appearance="standard">
-        <input
-          matInput
-          [formControl]="searchForm"
-          placeholder="Filter By Title"
-        />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-    </div>
+      <mat-label>Filter By Date Range</mat-label>
+      <mat-date-range-input
+        [formGroup]="filterForm"
+        [rangePicker]="picker"
+        [max]="currentDate"
+      >
+        <input matStartDate formControlName="start" placeholder="Start date" />
+        <input matEndDate formControlName="end" placeholder="End date" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+    </mat-form-field>
+    <mat-form-field
+      appearance="standard"
+      ngClass="width-300px"
+      ngClass.xs="width-100"
+    >
+      <input
+        matInput
+        [formControl]="searchForm"
+        placeholder="Filter By Title"
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <mat-form-field
+      appearance="standard"
+      ngClass="width-300px"
+      ngClass.xs="width-100"
+    >
+      <mat-label>Filter By News Source</mat-label>
+      <mat-select [formControl]="sourcesForm" multiple>
+        <mat-select-trigger>
+          {{ sourcesForm.value ? sourcesForm.value[0] : "" }}
+          <span
+            *ngIf="sourcesForm.value?.length > 1"
+            class="example-additional-selection"
+          >
+            (+{{ sourcesForm.value.length - 1 }}
+            {{ sourcesForm.value?.length === 2 ? "other" : "others" }})
+          </span>
+        </mat-select-trigger>
+        <mat-optgroup label="Articles">
+          <mat-option *ngFor="let source of articleSourceList" [value]="source">
+            {{ source }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup label="Videos">
+          <mat-option *ngFor="let source of videoSourceList" [value]="source">
+            {{ source }}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
   </div>
 </mat-expansion-panel>

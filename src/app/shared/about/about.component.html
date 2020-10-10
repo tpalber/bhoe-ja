@@ -36,27 +36,9 @@
   <div class="column">
     <h4 class="mat-h4" style="font-weight: bold;">News Sources</h4>
     <ul>
-      <li><a href="https://tibet.net/" target="_blank">CTA</a></li>
-      <li><a href="https://freetibet.org/" target="_blank">Free Tibet</a></li>
-      <li><a href="https://www.phayul.com/" target="_blank">Phayul</a></li>
-      <li>
-        <a href="https://www.rfa.org/english/news/tibet" target="_blank">
-          Radio Free Asia
-        </a>
+      <li *ngFor="let source of articleSources">
+        <a [href]="source.url" target="_blank">{{ source.name }}</a>
       </li>
-      <li>
-        <a href="http://www.shambalanews.com/" target="_blank">Shambala</a>
-      </li>
-      <li>
-        <a href="http://www.thetibetpost.com/en/" target="_blank">Tibet Post</a>
-      </li>
-      <li>
-        <a href="https://www.tibetsun.com/" target="_blank">Tibet Sun</a>
-      </li>
-      <li>
-        <a href="http://tibettimes.net/" target="_blank">Tibet Times</a>
-      </li>
-      <li><a href="https://vot.org/" target="_blank">Voice Of Tibet</a></li>
     </ul>
   </div>
   <div class="column">
@@ -64,47 +46,8 @@
       Youtube Channels
     </h4>
     <ul>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UCiPJ_g02LuOgOG0ZNk5j1jA"
-          target="_blank"
-          >Dalai Lama</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UCmAs3jM0KZLwsglmaVMwvMg"
-          target="_blank"
-          >RFATibetan</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UCQG1iEjZPBw9m4HSZgyVoUg"
-          target="_blank"
-          >TibetTV</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UC2UlA4pbz0AYXXHba7cbu0Q"
-          target="_blank"
-          >VOA Tibetan</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UCYg4JtszcCx83UTR-wObgFg"
-          target="_blank"
-          >Voice of Tibet</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://www.youtube.com/channel/UCprjZGYXe2TPAd2LydWhk8A"
-          target="_blank"
-          >སྤྱི་ནོར་ྋགོང་ས་ྋསྐྱབས་མགོན་ཆེན་པོ་མཆོག</a
-        >
+      <li *ngFor="let source of videoSources">
+        <a [href]="source.url" target="_blank">{{ source.name }}</a>
       </li>
     </ul>
   </div>

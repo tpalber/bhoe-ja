@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   MatBottomSheet,
   MatBottomSheetConfig,
@@ -6,16 +6,18 @@ import {
 import { AboutComponent } from '../shared/about/about.component';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ContextService } from '../service/context.service';
-import {
-  BreakpointObserver,
-  Breakpoints,
-  BreakpointState,
-} from '@angular/cdk/layout';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { StorageService } from '../service/storage.service';
-import { DOCUMENT } from '@angular/common';
+import { debounceTime, filter } from 'rxjs/operators';
+import { LocalStorageService } from '../service/local-storage.service';
+import { sourceListing, SourceType } from '../models';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.state';
+import {
+  UpdateEndDateSearchFilters,
+  UpdateSearchSourceFilters,
+  UpdateSearchValueFilters,
+  UpdateStartDateSearchFilters,
+} from '../actions';
 
 @Component({
   selector: 'app-header',
@@ -25,58 +27,78 @@ import { DOCUMENT } from '@angular/common';
 export class HeaderComponent implements OnInit, OnDestroy {
   public readonly title: string = 'BHOE JA';
   public readonly currentDate: Date = new Date();
+  public readonly articleSourceList: string[] = sourceListing
+    .filter((source) => source.type === SourceType.article)
+    .map((source) => source.name);
+  public readonly videoSourceList: string[] = sourceListing
+    .filter((source) => source.type === SourceType.video)
+    .map((source) => source.name);
+
   public filterPanel: boolean = false;
-  public filterForm: FormGroup;
-  public searchForm: FormControl;
   public isSmallScreen: boolean = true;
   public tabIndex: number = 0;
   public tabEnabled: boolean = true;
   public bookmarkCount: number = 0;
   public isDarkMode: boolean = false;
+  public filterForm: FormGroup;
+  public searchForm: FormControl;
+  public sourcesForm: FormControl;
 
   private subscriptions: Subscription[] = [];
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private storageService: StorageService,
-    private breakpointObserver: BreakpointObserver,
-    private contextService: ContextService,
+    private localStorageService: LocalStorageService,
     private formBuilder: FormBuilder,
     private bottomSheet: MatBottomSheet,
     private route: ActivatedRoute,
-    private renderer: Renderer2,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) {
     this.filterForm = this.formBuilder.group({
       start: new FormControl({ value: null, disabled: true }),
       end: new FormControl({ value: null, disabled: true }),
     });
     this.searchForm = new FormControl();
+    this.sourcesForm = new FormControl();
   }
 
   public ngOnInit(): void {
     const startFormControl: any = this.filterForm.get('start');
     if (startFormControl) {
       this.subscriptions.push(
-        startFormControl.valueChanges.subscribe((val: Date) => {
-          this.contextService.setStartDateContext(val);
-        })
+        startFormControl.valueChanges
+          .pipe(debounceTime(500))
+          .subscribe((val: Date) => {
+            this.store.dispatch(new UpdateStartDateSearchFilters(val));
+          })
       );
     }
 
     const endFormControl: any = this.filterForm.get('end');
     if (endFormControl) {
       this.subscriptions.push(
-        endFormControl.valueChanges.subscribe((val: Date) => {
-          this.contextService.setEndDateContext(val);
-        })
+        endFormControl.valueChanges
+          .pipe(debounceTime(500))
+          .subscribe((val: Date) => {
+            this.store.dispatch(new UpdateEndDateSearchFilters(val));
+          })
       );
     }
 
     this.subscriptions.push(
-      this.searchForm.valueChanges.subscribe((val: string) => {
-        this.contextService.setSearchValueContext(val);
-      })
+      this.searchForm.valueChanges
+        .pipe(debounceTime(500))
+        .subscribe((val: string) => {
+          this.store.dispatch(new UpdateSearchValueFilters(val));
+        })
+    );
+
+    this.subscriptions.push(
+      this.sourcesForm.valueChanges
+        .pipe(debounceTime(500))
+        .subscribe((val: string[]) => {
+          this.store.dispatch(new UpdateSearchSourceFilters(val));
+        })
     );
 
     this.subscriptions.push(
@@ -98,43 +120,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.breakpointObserver
-        .observe([Breakpoints.Web, Breakpoints.WebLandscape])
-        .subscribe((state: BreakpointState) => {
-          if (
-            state.breakpoints[Breakpoints.Web] ||
-            state.breakpoints[Breakpoints.WebLandscape]
-          ) {
-            this.isSmallScreen = false;
-          } else {
-            this.isSmallScreen = true;
-          }
-          this.contextService.setSmallScreenContext(this.isSmallScreen);
-        })
-    );
-
-    this.bookmarkCount = this.storageService.getBookmarkCount();
-    this.subscriptions.push(
-      this.storageService.onBookmarksChange.subscribe(() => {
-        this.bookmarkCount = this.storageService.getBookmarkCount();
+      this.store.select('isSmallScreen').subscribe((isSmallScreen: boolean) => {
+        this.isSmallScreen = isSmallScreen;
       })
     );
 
-    this.isDarkMode = this.storageService.getDarkMode();
-    this.renderer.setAttribute(
-      this.document.body,
-      'class',
-      this.isDarkMode ? 'bhoeja-dark' : 'bhoeja-light'
+    this.isDarkMode = this.localStorageService.getDarkMode();
+    this.subscriptions.push(
+      this.localStorageService.onDarkModeChange.subscribe(() => {
+        this.isDarkMode = this.localStorageService.getDarkMode();
+      })
     );
 
+    this.bookmarkCount = this.localStorageService.getBookmarkCount();
     this.subscriptions.push(
-      this.storageService.onDarkModeChange.subscribe(() => {
-        this.isDarkMode = this.storageService.getDarkMode();
-        this.renderer.setAttribute(
-          this.document.body,
-          'class',
-          this.isDarkMode ? 'bhoeja-dark' : 'bhoeja-light'
-        );
+      this.localStorageService.onBookmarksChange.subscribe(() => {
+        this.bookmarkCount = this.localStorageService.getBookmarkCount();
       })
     );
   }

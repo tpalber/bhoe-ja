@@ -1,76 +1,65 @@
-import { Component } from '@angular/core';
-import { Video } from '../../models/video';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Util } from '../../util';
 import { Subscription } from 'rxjs';
-import { ContextService } from 'src/app/service/context.service';
 import { FeedService } from 'src/app/service/feed.service';
-import { debounceTime } from 'rxjs/operators';
-import { StorageService } from 'src/app/service/storage.service';
-import { Bookmark } from 'src/app/models/bookmark';
+import { LocalStorageService } from 'src/app/service/local-storage.service';
+import { Bookmark, Video } from '../../models';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../app.state';
 
 @Component({
   selector: 'app-video-feed',
   templateUrl: './video-feed.component.html',
   styleUrls: ['./video-feed.component.scss'],
 })
-export class VideoFeedComponent {
+export class VideoFeedComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
-  public videos: Video[] = [];
   public isSmallScreen: boolean = true;
+  public videos: Video[] = [];
 
   private startDate?: Date;
   private endDate?: Date;
   private searchValue?: string;
+  private sourceFilters?: string[];
   private offset: number = 0;
-  private contextSubscription$?: Subscription;
-  private isSmallScreenContextSubscription$?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
-    private storageService: StorageService,
-    private contextService: ContextService,
-    private feedService: FeedService
+    private storageService: LocalStorageService,
+    private feedService: FeedService,
+    private store: Store<AppState>
   ) {
-    this.isSmallScreenContextSubscription$ = this.contextService.isSmallScreenContext$.subscribe(
-      (isSmallScreen) => {
-        if (this.isSmallScreen !== isSmallScreen) {
-          this.isSmallScreen = isSmallScreen;
-        }
-      }
+    this.subscriptions.push(
+      this.store.select('isSmallScreen').subscribe((isSmallScreen: boolean) => {
+        this.isSmallScreen = isSmallScreen;
+      })
     );
 
-    this.contextSubscription$ = this.contextService.context$
-      .pipe(debounceTime(500))
-      .subscribe((context) => {
+    this.subscriptions.push(
+      this.store.select('searchFilters').subscribe((context) => {
         if (
-          this.startDate !== context.start ||
-          this.endDate !== context.end ||
-          this.searchValue !== context.search
+          this.startDate !== context.startDate ||
+          this.endDate !== context.endDate ||
+          this.searchValue !== context.search ||
+          JSON.stringify(this.sourceFilters) !== JSON.stringify(context.sources)
         ) {
-          this.startDate = context.start;
-          this.endDate = context.end;
+          this.offset = 0;
+          this.startDate = context.startDate;
+          this.endDate = context.endDate;
           this.searchValue = context.search;
-          this.loadVideos(
-            this.offset,
-            false,
-            this.startDate,
-            this.endDate,
-            this.searchValue
-          );
+          this.sourceFilters = context.sources;
+          this.loadVideos();
         }
-      });
+      })
+    );
   }
 
   public ngOnInit(): void {
-    this.loadVideos(this.offset);
+    this.loadVideos();
   }
 
   public ngOnDestroy(): void {
-    if (this.contextSubscription$) {
-      this.contextSubscription$.unsubscribe();
-    }
-    if (this.isSmallScreenContextSubscription$) {
-      this.isSmallScreenContextSubscription$.unsubscribe();
-    }
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   public openLink(id: string): void {
@@ -82,13 +71,7 @@ export class VideoFeedComponent {
   }
 
   public onScroll(): void {
-    this.loadVideos(
-      this.offset,
-      true,
-      this.startDate,
-      this.endDate,
-      this.searchValue
-    );
+    this.loadVideos(true);
   }
 
   public toogleBookmark(video: Video): void {
@@ -101,16 +84,16 @@ export class VideoFeedComponent {
     }
   }
 
-  private loadVideos(
-    offset: number,
-    append?: boolean,
-    startDate?: Date,
-    endDate?: Date,
-    searchValue?: string
-  ): void {
+  private loadVideos(append?: boolean): void {
     this.isLoading = true;
     this.feedService
-      .getVideos(offset, startDate, endDate, searchValue)
+      .getVideos(
+        this.offset,
+        this.startDate,
+        this.endDate,
+        this.searchValue,
+        this.sourceFilters
+      )
       .toPromise()
       .then((videos) => {
         this.setBookmarks(videos);

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Article } from '../models/article';
-import { Bookmark } from '../models/bookmark';
-import { Video } from '../models/video';
+import { Article, Bookmark, Video } from '../models';
 import { Subject } from 'rxjs';
 import { TrimDateStringPipe } from '../pipes/trim-date-string.pipe';
 import { DatePipe } from '@angular/common';
@@ -9,7 +7,7 @@ import { DatePipe } from '@angular/common';
 @Injectable({
   providedIn: 'root',
 })
-export class StorageService {
+export class LocalStorageService {
   private readonly bookmarkStorageKey: string = 'BhoejaBookmarks';
   private readonly darkModeStorageKey: string = 'BhoejaDarkMode';
   private storage: Storage = window.localStorage;

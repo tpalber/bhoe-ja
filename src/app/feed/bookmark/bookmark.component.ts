@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Bookmark } from '../../models/bookmark';
+import { Bookmark } from '../../models';
 import { Subscription } from 'rxjs';
-import { ContextService } from 'src/app/service/context.service';
-import { StorageService } from 'src/app/service/storage.service';
+import { LocalStorageService } from 'src/app/service/local-storage.service';
 import { Util } from 'src/app/util';
 import {
   trigger,
@@ -11,6 +10,8 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../app.state';
 
 @Component({
   selector: 'app-bookmark',
@@ -30,18 +31,16 @@ export class BookmarkComponent implements OnInit, OnDestroy {
   public bookmarks: Bookmark[] = [];
   public isSmallScreen: boolean = true;
 
-  private isSmallScreenContextSubscription$?: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
-    private contextService: ContextService,
-    private storageService: StorageService
+    private localStorageService: LocalStorageService,
+    private store: Store<AppState>
   ) {
-    this.isSmallScreenContextSubscription$ = this.contextService.isSmallScreenContext$.subscribe(
-      (isSmallScreen) => {
-        if (this.isSmallScreen !== isSmallScreen) {
-          this.isSmallScreen = isSmallScreen;
-        }
-      }
+    this.subscriptions.push(
+      this.store.select('isSmallScreen').subscribe((isSmallScreen: boolean) => {
+        this.isSmallScreen = isSmallScreen;
+      })
     );
   }
 
@@ -50,9 +49,7 @@ export class BookmarkComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.isSmallScreenContextSubscription$) {
-      this.isSmallScreenContextSubscription$.unsubscribe();
-    }
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   public openLink(url: string): void {
@@ -61,9 +58,9 @@ export class BookmarkComponent implements OnInit, OnDestroy {
 
   public removeBookmark(bookmark: Bookmark): void {
     if (bookmark.isVideo) {
-      this.storageService.removeVideo(bookmark._id);
+      this.localStorageService.removeVideo(bookmark._id);
     } else {
-      this.storageService.removeArticle(bookmark._id);
+      this.localStorageService.removeArticle(bookmark._id);
     }
   }
 
@@ -72,7 +69,7 @@ export class BookmarkComponent implements OnInit, OnDestroy {
   }
 
   private loadBookmarks(): void {
-    this.bookmarks = this.storageService.getBookmarks();
+    this.bookmarks = this.localStorageService.getBookmarks();
     this.isLoading = false;
   }
 }

@@ -1,13 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { debounceTime } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FeedService } from '../service/feed.service';
-import { Article } from '../models/article';
-import { ContextService } from '../service/context.service';
+import { Article, Bookmark } from '../models';
 import { Subscription } from 'rxjs';
 import { Util } from '../util';
-import { StorageService } from '../service/storage.service';
-import { Bookmark } from '../models/bookmark';
+import { LocalStorageService } from '../service/local-storage.service';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../app.state';
 
 @Component({
   selector: 'app-feed',
@@ -16,21 +15,22 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FeedComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
-  public articles: Article[] = [];
   public isSmallScreen: boolean = true;
+  public articles: Article[] = [];
 
   private inTibetan: boolean = false;
   private startDate?: Date;
   private endDate?: Date;
   private searchValue?: string;
+  private sourceFilters?: string[];
   private offset: number = 0;
   private subscriptions: Subscription[] = [];
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private storageService: StorageService,
-    private contextService: ContextService,
-    private feedService: FeedService
+    private storageService: LocalStorageService,
+    private feedService: FeedService,
+    private store: Store<AppState>
   ) {
     if (
       this.activatedRoute.snapshot.data &&
@@ -40,39 +40,32 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
 
     this.subscriptions.push(
-      this.contextService.isSmallScreenContext$.subscribe((isSmallScreen) => {
-        if (this.isSmallScreen !== isSmallScreen) {
-          this.isSmallScreen = isSmallScreen;
-        }
+      this.store.select('isSmallScreen').subscribe((isSmallScreen: boolean) => {
+        this.isSmallScreen = isSmallScreen;
       })
     );
 
     this.subscriptions.push(
-      this.contextService.context$
-        .pipe(debounceTime(500))
-        .subscribe((context) => {
-          if (
-            this.startDate !== context.start ||
-            this.endDate !== context.end ||
-            this.searchValue !== context.search
-          ) {
-            this.startDate = context.start;
-            this.endDate = context.end;
-            this.searchValue = context.search;
-            this.loadArticles(
-              this.offset,
-              false,
-              this.startDate,
-              this.endDate,
-              this.searchValue
-            );
-          }
-        })
+      this.store.select('searchFilters').subscribe((context) => {
+        if (
+          this.startDate !== context.startDate ||
+          this.endDate !== context.endDate ||
+          this.searchValue !== context.search ||
+          JSON.stringify(this.sourceFilters) !== JSON.stringify(context.sources)
+        ) {
+          this.offset = 0;
+          this.startDate = context.startDate;
+          this.endDate = context.endDate;
+          this.searchValue = context.search;
+          this.sourceFilters = context.sources;
+          this.loadArticles();
+        }
+      })
     );
   }
 
   public ngOnInit(): void {
-    this.loadArticles(this.offset);
+    this.loadArticles();
   }
 
   public ngOnDestroy(): void {
@@ -84,13 +77,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   public onScroll(): void {
-    this.loadArticles(
-      this.offset,
-      true,
-      this.startDate,
-      this.endDate,
-      this.searchValue
-    );
+    this.loadArticles(true);
   }
 
   public getLabel(name: string): string {
@@ -107,16 +94,17 @@ export class FeedComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadArticles(
-    offset: number,
-    append?: boolean,
-    startDate?: Date,
-    endDate?: Date,
-    searchValue?: string
-  ): void {
+  private loadArticles(append?: boolean): void {
     this.isLoading = true;
     this.feedService
-      .getArticles(offset, this.inTibetan, startDate, endDate, searchValue)
+      .getArticles(
+        this.offset,
+        this.inTibetan,
+        this.startDate,
+        this.endDate,
+        this.searchValue,
+        this.sourceFilters
+      )
       .toPromise()
       .then((articles) => {
         this.setBookmarks(articles);
