@@ -1,40 +1,19 @@
 import { Action } from '@ngrx/store';
+import { SearchFilters } from '../models';
 
-export const UPDATE_START_DATE_SEARCH_FILTERS: string =
-  '[SEARCH FILTERS] Update Start Date';
-export const UPDATE_END_DATE_SEARCH_FILTERS: string =
-  '[SEARCH FILTERS] Update End Date';
-export const UPDATE_SEARCH_VALUE_FILTERS: string =
-  '[SEARCH FILTERS] Update Search Value';
-export const UPDATE_SEARCH_SOURCE_FILTERS: string =
-  '[SEARCH FILTERS] Update Serach Source';
+export const ADD_SEARCH_FILTERS: string = '[SEARCH FILTERS] Add';
+export const REMOVE_SEARCH_FILTERS: string = '[SEARCH FILTERS] Remove';
 
-export class UpdateStartDateSearchFilters implements Action {
-  readonly type: string = UPDATE_START_DATE_SEARCH_FILTERS;
+export class AddSearchFilters implements Action {
+  readonly type: string = ADD_SEARCH_FILTERS;
 
-  constructor(public payload?: Date) {}
+  constructor(public payload?: SearchFilters) {}
 }
 
-export class UpdateEndDateSearchFilters implements Action {
-  readonly type: string = UPDATE_END_DATE_SEARCH_FILTERS;
+export class RemoveSearchFilters implements Action {
+  readonly type: string = REMOVE_SEARCH_FILTERS;
 
-  constructor(public payload?: Date) {}
+  constructor(public payload?: SearchFilters) {}
 }
 
-export class UpdateSearchValueFilters implements Action {
-  readonly type: string = UPDATE_SEARCH_VALUE_FILTERS;
-
-  constructor(public payload?: string) {}
-}
-
-export class UpdateSearchSourceFilters implements Action {
-  readonly type: string = UPDATE_SEARCH_SOURCE_FILTERS;
-
-  constructor(public payload?: string[]) {}
-}
-
-export type SearchFiltersActions =
-  | UpdateStartDateSearchFilters
-  | UpdateEndDateSearchFilters
-  | UpdateSearchValueFilters
-  | UpdateSearchSourceFilters;
+export type SearchFiltersActions = AddSearchFilters | RemoveSearchFilters;

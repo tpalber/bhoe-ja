@@ -1,6 +1,6 @@
 export interface SearchFilters {
   startDate?: Date;
   endDate?: Date;
-  search?: string;
+  searchValue?: string;
   sources?: string[];
 }

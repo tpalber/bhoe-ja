@@ -50,13 +50,13 @@ export class FeedComponent implements OnInit, OnDestroy {
         if (
           this.startDate !== context.startDate ||
           this.endDate !== context.endDate ||
-          this.searchValue !== context.search ||
+          this.searchValue !== context.searchValue ||
           JSON.stringify(this.sourceFilters) !== JSON.stringify(context.sources)
         ) {
           this.offset = 0;
           this.startDate = context.startDate;
           this.endDate = context.endDate;
-          this.searchValue = context.search;
+          this.searchValue = context.searchValue;
           this.sourceFilters = context.sources;
           this.loadArticles();
         }

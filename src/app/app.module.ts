@@ -21,6 +21,7 @@ import { BookmarkComponent } from './feed/bookmark/bookmark.component';
 import { DatePipe } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { searchFiltersReducer, smallScreenReducer } from '../app/reducers';
+import { SearchFiltersComponent } from './shared/search-filters/search-filters.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { searchFiltersReducer, smallScreenReducer } from '../app/reducers';
     VideoFeedComponent,
     TrimDateStringPipe,
     BookmarkComponent,
+    SearchFiltersComponent,
   ],
   imports: [
     AppRoutingModule,

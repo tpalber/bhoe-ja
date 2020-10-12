@@ -1,0 +1,53 @@
+<div mat-dialog-content>
+  <form [formGroup]="filterForm" fxLayout="column">
+      <mat-form-field appearance="standard">
+        <mat-label>Filter By Date Range</mat-label>
+        <mat-date-range-input
+          [rangePicker]="picker"
+          [max]="currentDate"
+        >
+          <input matStartDate formControlName="startDate" placeholder="Start date" />
+          <input matEndDate formControlName="endDate" placeholder="End date" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field appearance="standard">
+        <mat-label>Filter By News Source</mat-label>
+        <mat-select formControlName="sources" multiple>
+          <mat-select-trigger>
+            {{ filterForm.get('sources')?.value ? filterForm.get('sources')?.value[0] : "" }}
+            <span
+              *ngIf="filterForm.get('sources')?.value?.length > 1"
+              class="example-additional-selection"
+            >
+              (+{{ filterForm.get('sources')?.value.length - 1 }}
+              {{ filterForm.get('sources')?.value?.length === 2 ? "other" : "others" }})
+            </span>
+          </mat-select-trigger>
+          <mat-optgroup label="Articles">
+            <mat-option *ngFor="let source of articleSourceList" [value]="source">
+              {{ source }}
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup label="Videos">
+            <mat-option *ngFor="let source of videoSourceList" [value]="source">
+              {{ source }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="standard">
+        <input
+          matInput
+          formControlName="searchValue"
+          placeholder="Filter By Title"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClear()">Clear</button>
+  <button mat-button (click)="onDone()" cdkFocusInitial>Done</button>
+</div>
