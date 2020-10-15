@@ -4,7 +4,6 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
-import { schedule } from 'node-cron';
 import Article, { IArticle } from './models/article';
 import Video, { IVideo } from './models/video';
 import { TibetPostScraper } from './scraper/tibet-post/tibet-post-scraper';
@@ -66,30 +65,6 @@ function appStartup(): void {
       `Bhoe Ja ☕️ app server is listening on http://localhost:${port}`
     );
     console.info(`Make API requests on http://localhost:${port}/api`);
-  });
-
-  // Schedule article scraper to run every hour
-  schedule('0 0 0-23 * * *', function () {
-    console.info(`Running scraper from scheduled job: ${new Date()}`);
-    scrapeSites(supportedNewsSites).then((articles) => {
-      console.info(
-        `${articles.length} Articles scraped and ${
-          articles.filter((article: IArticle) => !article.isNew).length
-        } Article(s) added to DB.`
-      );
-    });
-  });
-
-  // Schedule video scraper to run every two hours
-  schedule('0 0 1,3,5,7,9,11,13,15,17,19,21,23 * * *', function () {
-    console.info(`Running video scraper from scheduled job: ${new Date()}`);
-    scrapeVideos().then((videos) => {
-      console.info(
-        `${videos.length} Videos scraped and ${
-          videos.filter((video: IVideo) => !video.isNew).length
-        } Video(s) added to DB.`
-      );
-    });
   });
 }
 

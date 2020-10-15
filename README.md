@@ -27,7 +27,7 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 
 ### Development
 
-[MEAN](<https://en.wikipedia.org/wiki/MEAN_(solution_stack)>) development statck to 'web scrap' different Tibetan news sources and display the list of articles/videos in a web application.
+[MEAN](<https://en.wikipedia.org/wiki/MEAN_(solution_stack)>) development stack to 'web scrape' different Tibetan news sources and display the list of articles and videos in a web application.
 Both UI and server side code base uses [Typescript](https://www.typescriptlang.org/).
 
 #### Getting Started
@@ -42,8 +42,7 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 #### Future Roadmap
 
 - Improve site accessibility
-- Separate news in Tibetan and English into different sections
-- Dark Mode with Angular Material Theming
+- Rating/Ranking of articles and videos depending on user input (More claps will result in news showing first)
 
 #### UI Development
 
@@ -58,9 +57,11 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 #### Production Deployment
 
+- `rm -rf node_modules` Remove existing UI node modules folder if exists
 - `npm ci` Install UI dependencies
 - `npm run build` Build the UI project and add the distribution files within server/build/
 - `cd server` Navigate to server folder
+- `rm -rf node_modules` Remove existing server node modules folder if exists
 - `npm ci` Install Server dependencies
 - `npm run tsc` Build the Server product and add the distribution files within server/build/
 - Add required build files, app.yaml or .env
