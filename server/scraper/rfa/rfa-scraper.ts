@@ -27,24 +27,65 @@ export class RFAScraper extends Scraper {
   getArticles(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
     const $ = cheerio.load(html);
-    $('.sectionteaser').each((i: number, elem: any) => {
-      if (
-        $(elem).find('h2 a span').text() !== '' &&
-        $(elem).find('h2 a').attr('href')
-      ) {
-        let article: IArticle = new Article({
-          title: $(elem).find('h2 a').text().trim(),
-          source: RFAScraper.site,
-          link: $(elem).find('h2 a').attr('href'),
-          inTibetan: this.inTibetan,
-          date: this.getArticleDate($(elem).find('#story_date').text().trim()),
-          description: $(elem).find('p').text().trim(),
-        });
-        data.push(article);
-      }
-    });
+    if (this.inTibetan) {
+      // Current tibetan archive markup: result items under
+      // .archive-result-text with h2.c-heading a, time.c-date[datetime]
+      // and p.c-paragraph.
+      $('.archive-result-text').each((i: number, elem: any) => {
+        const titleLink = $(elem).find('h2.c-heading a');
+        const href = titleLink.attr('href');
+        if (titleLink.text().trim() !== '' && href) {
+          const link: string = href.startsWith('http')
+            ? href
+            : 'https://www.rfa.org' + href;
+          let article: IArticle = new Article({
+            title: titleLink.text().trim(),
+            source: RFAScraper.site,
+            link,
+            inTibetan: this.inTibetan,
+            date: this.getArticleDateFromIso(
+              $(elem).find('time.c-date').attr('datetime')
+            ),
+            description: $(elem).find('p.c-paragraph').text().trim(),
+          });
+          data.push(article);
+        }
+      });
+    } else {
+      $('.sectionteaser').each((i: number, elem: any) => {
+        if (
+          $(elem).find('h2 a span').text() !== '' &&
+          $(elem).find('h2 a').attr('href')
+        ) {
+          let article: IArticle = new Article({
+            title: $(elem).find('h2 a').text().trim(),
+            source: RFAScraper.site,
+            link: $(elem).find('h2 a').attr('href'),
+            inTibetan: this.inTibetan,
+            date: this.getArticleDate(
+              $(elem).find('#story_date').text().trim()
+            ),
+            description: $(elem).find('p').text().trim(),
+          });
+          data.push(article);
+        }
+      });
+    }
     console.info(`***** Number of ${RFAScraper.site} articles: ${data.length}`);
     return Promise.all(data);
+  }
+
+  private getArticleDateFromIso(datetime?: string): Date {
+    try {
+      if (!datetime) {
+        return Util.getCurrentDate();
+      }
+      const parsed = new Date(datetime);
+      return isNaN(parsed.getTime()) ? Util.getCurrentDate() : parsed;
+    } catch (e) {
+      console.warn(`Error getting date for article: ${e}`);
+      return Util.getCurrentDate();
+    }
   }
 
   private getArticleDate(dateString: string): Date {

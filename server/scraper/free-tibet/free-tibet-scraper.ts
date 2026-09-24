@@ -18,22 +18,24 @@ export class FreeTibetScraper extends Scraper {
   getArticles(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
     const $ = cheerio.load(html);
-    $('div.views-row').each((i: number, elem: any) => {
-      if (
-        $(elem).find('h3.node-title a').text() !== '' &&
-        $(elem).find('h3.node-title a').attr('href')
-      ) {
+    $('article').each((i: number, elem: any) => {
+      const titleLink = $(elem).find('h2 a');
+      if (titleLink.text().trim() !== '' && titleLink.attr('href')) {
+        const href: string = (titleLink.attr('href') as string).trim();
         let article: IArticle = new Article({
-          title: $(elem).find('h3.node-title a').text().trim(),
+          title: titleLink.text().trim(),
           source: FreeTibetScraper.site,
-          link:
-            FreeTibetScraper.baseUrl +
-            $(elem).find('h3.node-title a').attr('href'),
+          link: href.startsWith('http')
+            ? href
+            : FreeTibetScraper.baseUrl + href,
           inTibetan: false,
-          date: this.parseDate(
-            $(elem).find('span.date-display-single').attr('content')
-          ),
-          description: $(elem).find('div.field-name-body').text().trim(),
+          date: this.parseDate($(elem).find('time').attr('datetime')),
+          description: $(elem)
+            .find('p')
+            .not('.card-featured')
+            .first()
+            .text()
+            .trim(),
         });
         data.push(article);
       }

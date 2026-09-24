@@ -22,18 +22,18 @@ export class TibetTimesScraper extends Scraper {
     const data: IArticle[] = [];
     const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);
-    $('article').each((i: number, elem: any) => {
+    $('article.jeg_post').each((i: number, elem: any) => {
       if (
-        $(elem).find('h1 a').text() !== '' &&
-        $(elem).find('h1 a').attr('href')
+        $(elem).find('h3 a').text() !== '' &&
+        $(elem).find('h3 a').attr('href')
       ) {
         let article: IArticle = new Article({
-          title: $(elem).find('h1 a').text().trim(),
+          title: $(elem).find('h3 a').text().trim(),
           source: TibetTimesScraper.site,
-          link: $(elem).find('h1 a').attr('href'),
+          link: $(elem).find('h3 a').attr('href'),
           date: currentDate,
           inTibetan: true,
-          description: $(elem).find('.entry-summary').text().trim(),
+          description: $(elem).find('.jeg_post_excerpt').text().trim(),
         });
         data.push(article);
       }

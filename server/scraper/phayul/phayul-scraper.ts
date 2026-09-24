@@ -20,20 +20,17 @@ export class PhayulScraper extends Scraper {
 
   async getArticles(html: any): Promise<IArticle[]> {
     const data: IArticle[] = [];
-    const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);
-    $('article').each((i: number, elem: any) => {
-      if (
-        $(elem).find('h2 a').text() !== '' &&
-        $(elem).find('h2 a').attr('href')
-      ) {
+    $('.tdb_module_loop').each((i: number, elem: any) => {
+      const titleLink = $(elem).find('h3.entry-title a');
+      if (titleLink.text().trim() !== '' && titleLink.attr('href')) {
         let article: IArticle = new Article({
-          title: $(elem).find('h2 a').text().trim(),
+          title: titleLink.text().trim(),
           source: PhayulScraper.site,
-          link: $(elem).find('h2 a').attr('href'),
+          link: (titleLink.attr('href') as string).trim(),
           inTibetan: false,
-          date: currentDate,
-          description: $(elem).find('p').text().trim(),
+          date: this.parseDate($(elem).find('time').attr('datetime')),
+          description: $(elem).find('.td-excerpt').text().trim(),
         });
         data.push(article);
       }
@@ -42,5 +39,18 @@ export class PhayulScraper extends Scraper {
       `***** Number of ${PhayulScraper.site} articles: ${data.length}`
     );
     return Promise.all(data);
+  }
+
+  private parseDate(datetime?: string): Date {
+    try {
+      if (!datetime) {
+        return Util.getCurrentDate();
+      }
+      const parsed = new Date(datetime);
+      return isNaN(parsed.getTime()) ? Util.getCurrentDate() : parsed;
+    } catch (e) {
+      console.warn(`Error getting date for article: ${e}`);
+      return Util.getCurrentDate();
+    }
   }
 }

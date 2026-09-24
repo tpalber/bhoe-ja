@@ -5,7 +5,7 @@ import { Util } from '../../util';
 
 export class TibetPostScraper extends Scraper {
   public static site: string = 'Tibet Post';
-  public static baseUrl: string = 'http://www.thetibetpost.com/en/news';
+  public static baseUrl: string = 'https://www.thetibetpost.com/news';
 
   constructor(url: string) {
     super(url);
@@ -36,7 +36,8 @@ export class TibetPostScraper extends Scraper {
         let article: IArticle = new Article({
           title: $(elem).find('h2 a').text().trim(),
           source: TibetPostScraper.site,
-          link: $(elem).find('h2 a').attr('href'),
+          link:
+            'https://www.thetibetpost.com' + $(elem).find('h2 a').attr('href'),
           date: currentDate,
           inTibetan: false,
           description: $(elem).find('section p').text().trim(),
