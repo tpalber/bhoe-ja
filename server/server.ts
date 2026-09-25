@@ -44,11 +44,7 @@ function appStartup(): void {
   const uiPort: any = process.env.UI_PORT || 4200;
   const dbUri: any = process.env.ATLAS_URI || 'Unable to find Atlas URL';
 
-  mongoose.connect(dbUri, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-  });
+  mongoose.connect(dbUri);
   const dbConn: Connection = mongoose.connection;
   dbConn.once('open', () => {
     console.info('MongoDB database connection established successfully.');

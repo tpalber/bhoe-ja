@@ -7,7 +7,7 @@ export abstract class Scraper {
     this.url = url;
   }
 
-  abstract async getArticles(html: any): Promise<IArticle[]>;
+  abstract getArticles(html: any): Promise<IArticle[]>;
 
   public async scrapeArticles(): Promise<IArticle[]> {
     return axios
