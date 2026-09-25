@@ -64,6 +64,7 @@
 
     /* Advanced Options */
     "skipLibCheck": true /* Skip type checking of declaration files. */,
-    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+    "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+    "types": ["node", "express", "cheerio"] /* Only auto-include @types needed by this codebase; newer @types packages use syntax TS 3.9 cannot parse. */
   }
 }
