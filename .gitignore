@@ -6,6 +6,7 @@
 # Server compilted output
 server/build/
 server/node_modules/
+server/.gcloudignore
 
 # UI compiled output
 /dist

@@ -46,7 +46,7 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 #### UI Development
 
-- Run `npm run serve` or `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Run `NODE_OPTIONS=--openssl-legacy-provider npm run serve` or `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 - Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 - Run `npm run build` to build the project. The build artifacts will be stored in the `server/build/` directory.
 
@@ -59,7 +59,7 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 - `rm -rf node_modules` Remove existing UI node modules folder if exists
 - `npm ci` Install UI dependencies
-- `npm run build` Build the UI project and add the distribution files within server/build/
+- `NODE_OPTIONS=--openssl-legacy-provider npm run build` Build the UI project and add the distribution files within server/build/
 - `cd server` Navigate to server folder
 - `rm -rf node_modules` Remove existing server node modules folder if exists
 - `npm ci` Install Server dependencies
