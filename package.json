@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "concurrently \"ng serve\" \"server/node_modules/.bin/ts-node-dev --respawn --transpileOnly ./server/server.ts\"",
+    "dev": "concurrently \"NODE_OPTIONS=--openssl-legacy-provider ng serve\" \"server/node_modules/.bin/ts-node-dev --respawn --transpileOnly ./server/server.ts\"",
     "start": "concurrently \"npm run build\" \"cd server && npm run start\""
   },
   "private": true,
