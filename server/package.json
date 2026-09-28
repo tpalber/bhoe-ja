@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "serve": "ts-node-dev --respawn --transpileOnly ./server.ts",
+    "serve": "ts-node-dev --respawn --transpile-only ./server.ts",
     "start": "node ./build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
