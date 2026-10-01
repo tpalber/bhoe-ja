@@ -60,7 +60,7 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 - `rm -rf client/node_modules` Remove existing UI node modules folder if exists
 - `cd client && npm ci` Install UI dependencies
 - `npm run build` (from the repo root) Build the React UI and add the distribution files within server/build/bhoeja/
-- `cd server` Navigate to server folder
+- `cd ../server` Navigate to server folder
 - `rm -rf node_modules` Remove existing server node modules folder if exists
 - `npm ci` Install Server dependencies
 - `npm run tsc` Build the Server product and add the distribution files within server/build/
