@@ -1,4 +1,14 @@
 {
+  "name": "bhoe-ja-client",
+  "private": true,
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "smoke": "node smoke/smoke.cjs"
+  },
+  "type": "module",
+  "version": "1.0.0",
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -29,15 +39,5 @@
     "tailwindcss": "^3.4.12",
     "typescript": "^5.5.4",
     "vite": "^5.4.8"
-  },
-  "name": "bhoe-ja-client",
-  "private": true,
-  "scripts": {
-    "build": "tsc && vite build",
-    "dev": "vite",
-    "preview": "vite preview",
-    "smoke": "node smoke/smoke.cjs"
-  },
-  "type": "module",
-  "version": "1.0.0"
+  }
 }

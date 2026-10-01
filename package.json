@@ -1,1 +1,13 @@
-{"dependencies":{"concurrently":"^5.2.0"},"name":"bhoe-ja","private":true,"scripts":{"build":"npm run build --prefix client","dev":"concurrently \"npm run dev --prefix client\" \"server/node_modules/.bin/ts-node-dev --respawn --transpile-only ./server/server.ts\"","start":"concurrently \"npm run build\" \"cd server && npm run start\""},"version":"1.0.0"}
+{
+  "dependencies": {
+    "concurrently": "^5.2.0"
+  },
+  "name": "bhoe-ja",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "dev": "concurrently \"npm run dev --prefix client\" \"server/node_modules/.bin/ts-node-dev --respawn --transpile-only ./server/server.ts\"",
+    "start": "concurrently \"npm run build\" \"cd server && npm run start\""
+  },
+  "version": "1.0.0"
+}
