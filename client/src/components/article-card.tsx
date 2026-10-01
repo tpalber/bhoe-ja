@@ -2,7 +2,7 @@ import { Bookmark } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { getSourceLabel, openLink, trimDate } from '../lib/format';
+import { getSourceLabel, trimDate } from '../lib/format';
 import { useAppStore } from '../store/app-store';
 import { useIsSmallScreen } from '../hooks/use-is-small-screen';
 import type { Article } from '../types';
@@ -17,19 +17,26 @@ export function ArticleCard({ article }: { article: Article }) {
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
-          <CardTitle
-            className="cursor-pointer hover:text-primary hover:underline"
-            onClick={() => openLink(article.link)}
-          >
-            {article.title}
+          <CardTitle className="hover:text-primary">
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {article.title}
+            </a>
           </CardTitle>
-          <Badge
-            variant="secondary"
-            className="shrink-0 cursor-pointer"
-            onClick={() => openLink(article.link)}
+          <a
+            href={article.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
           >
-            {getSourceLabel(article.source, isSmallScreen)}
-          </Badge>
+            <Badge variant="secondary" className="cursor-pointer">
+              {getSourceLabel(article.source, isSmallScreen)}
+            </Badge>
+          </a>
         </div>
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <span>{trimDate(article.date)}</span>
@@ -52,11 +59,17 @@ export function ArticleCard({ article }: { article: Article }) {
         <CardContent>
           <p
             className={cn(
-              'cursor-pointer text-sm leading-relaxed text-muted-foreground'
+              'text-sm leading-relaxed text-muted-foreground'
             )}
-            onClick={() => openLink(article.link)}
           >
-            {article.description}
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer"
+            >
+              {article.description}
+            </a>
           </p>
         </CardContent>
       )}

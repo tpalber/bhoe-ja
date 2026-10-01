@@ -2,7 +2,7 @@ import { BookmarkX } from 'lucide-react';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { getSourceLabel, openLink, trimDate } from '../lib/format';
+import { getSourceLabel, trimDate } from '../lib/format';
 import { useAppStore } from '../store/app-store';
 import { useIsSmallScreen } from '../hooks/use-is-small-screen';
 import type { Bookmark } from '../types';
@@ -14,9 +14,11 @@ function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
   return (
     <Card className="overflow-hidden">
       {bookmark.isVideo && bookmark.thumbnailBig && (
-        <div
-          className="aspect-video w-full cursor-pointer overflow-hidden"
-          onClick={() => openLink(bookmark.link)}
+        <a
+          href={bookmark.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block aspect-video w-full cursor-pointer overflow-hidden"
         >
           <img
             src={bookmark.thumbnailBig}
@@ -24,24 +26,30 @@ function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
             className="h-full w-full object-cover transition-transform hover:scale-[1.02]"
             loading="lazy"
           />
-        </div>
+        </a>
       )}
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
-          <CardTitle
-            className="cursor-pointer text-base hover:text-primary hover:underline"
-            onClick={() => openLink(bookmark.link)}
-          >
-            {bookmark.title}
+          <CardTitle className="text-base hover:text-primary">
+            <a
+              href={bookmark.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {bookmark.title}
+            </a>
           </CardTitle>
           <div className="flex shrink-0 items-center gap-1">
-            <Badge
-              variant="secondary"
-              className="cursor-pointer"
-              onClick={() => openLink(bookmark.link)}
+            <a
+              href={bookmark.link}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              {getSourceLabel(bookmark.source, isSmallScreen)}
-            </Badge>
+              <Badge variant="secondary" className="cursor-pointer">
+                {getSourceLabel(bookmark.source, isSmallScreen)}
+              </Badge>
+            </a>
             <Button
               variant="ghost"
               size="icon"
@@ -59,11 +67,15 @@ function BookmarkCard({ bookmark }: { bookmark: Bookmark }) {
       </CardHeader>
       {bookmark.description && (
         <CardContent>
-          <p
-            className="cursor-pointer text-sm leading-relaxed text-muted-foreground"
-            onClick={() => openLink(bookmark.link)}
-          >
-            {bookmark.description}
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            <a
+              href={bookmark.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer"
+            >
+              {bookmark.description}
+            </a>
           </p>
         </CardContent>
       )}

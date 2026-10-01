@@ -24,10 +24,6 @@ export function getSourceLabel(name: string, isSmallScreen: boolean): string {
   }
 }
 
-export function openLink(url: string): void {
-  window.open(url, '_blank', 'noopener,noreferrer');
-}
-
 export function youtubeUrl(videoID: string): string {
   return `https://www.youtube.com/watch?v=${videoID}`;
 }

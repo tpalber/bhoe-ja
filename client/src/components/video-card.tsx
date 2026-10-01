@@ -2,7 +2,7 @@ import { Bookmark } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { getSourceLabel, openLink, trimDate, youtubeUrl } from '../lib/format';
+import { getSourceLabel, trimDate, youtubeUrl } from '../lib/format';
 import { useAppStore } from '../store/app-store';
 import { useIsSmallScreen } from '../hooks/use-is-small-screen';
 import type { Video } from '../types';
@@ -16,9 +16,11 @@ export function VideoCard({ video }: { video: Video }) {
   return (
     <Card className="overflow-hidden">
       {video.thumbnailBig && (
-        <div
-          className="cursor-pointer aspect-video w-full overflow-hidden"
-          onClick={() => openLink(url)}
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block aspect-video w-full cursor-pointer overflow-hidden"
         >
           <img
             src={video.thumbnailBig}
@@ -26,23 +28,30 @@ export function VideoCard({ video }: { video: Video }) {
             className="h-full w-full object-cover transition-transform hover:scale-[1.02]"
             loading="lazy"
           />
-        </div>
+        </a>
       )}
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
-          <CardTitle
-            className="cursor-pointer text-base hover:text-primary hover:underline"
-            onClick={() => openLink(url)}
-          >
-            {video.title}
+          <CardTitle className="text-base hover:text-primary">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              {video.title}
+            </a>
           </CardTitle>
-          <Badge
-            variant="secondary"
-            className="shrink-0 cursor-pointer"
-            onClick={() => openLink(url)}
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0"
           >
-            {getSourceLabel(video.source, isSmallScreen)}
-          </Badge>
+            <Badge variant="secondary" className="cursor-pointer">
+              {getSourceLabel(video.source, isSmallScreen)}
+            </Badge>
+          </a>
         </div>
         <div className="flex items-center gap-1 text-sm text-muted-foreground">
           <span>{trimDate(video.date)}</span>
@@ -63,11 +72,15 @@ export function VideoCard({ video }: { video: Video }) {
       </CardHeader>
       {video.description && (
         <CardContent>
-          <p
-            className="cursor-pointer text-sm leading-relaxed text-muted-foreground"
-            onClick={() => openLink(url)}
-          >
-            {video.description}
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer"
+            >
+              {video.description}
+            </a>
           </p>
         </CardContent>
       )}
