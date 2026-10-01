@@ -1,0 +1,31 @@
+{
+    "overview": "A bipartisan United States congressional delegation led by Representative Brian Mast visited Dharamshala to meet with the 14th Dalai Lama at his residence on September 30, 2026 [3]. During this visit, the delegation toured the Tibet Museum and held discussions with the Central Tibetan Administration regarding the freedom of the Tibetan people [3]. Lawmakers explicitly reaffirmed Washington’s support for Tibet and condemned Chinese government policies, noting that recent meetings between President Trump and President Xi Jinping do not alter the United States' opposition to repression [1]. The delegation expressed bipartisan support for the Assuring the Future of Tibet Act, which aims to strengthen engagement with the Central Tibetan Administration [1]. In athletic news, Tibetan athlete Tenzin Choezom secured a gold medal in the women’s marathon race walk at the 2026 Asian Games [2]. This result followed the disqualification of the original winner, Yasmina Toxanbayeva, for using non-compliant footwear [2]. Consequently, Choezom moved into first place, while Ma Li of China and Umeno of Japan were awarded the silver and bronze medals respectively [2].",
+    "sources": [
+        {
+            "index": 1,
+            "articleId": "6abdc88da7589bc5e37b9647",
+            "title": "Bipartisan US delegation reaffirms support for Tibet, say Trump-Xi meeting does not alter Washington’s position",
+            "site": "Phayul",
+            "link": "https://phayul.com/bipartisan-us-delegation-reaffirms-support-for-tibet-say-trump-xi-meeting-does-not-alter-washingtons-position/"
+        },
+        {
+            "index": 2,
+            "articleId": "6abdc88da7589bc5e37b9648",
+            "title": "Tibetan athlete Tenzin Choezom clinches gold medal at Asian Games",
+            "site": "Phayul",
+            "link": "https://phayul.com/tibetan-athlete-tenzin-choezom-clinches-gold-medal-at-asian-games/"
+        },
+        {
+            "index": 3,
+            "articleId": "6abdc88ca7589bc5e37b95ea",
+            "title": "The Bipartisan US delegation meets with His Holiness the 14th Dalai Lama",
+            "site": "Tibet Post",
+            "link": "https://www.thetibetpost.com/news/international/the-bipartisan-us-delegation-meets-with-his-holiness-the-14th-dalai-lama"
+        }
+    ],
+    "articleCount": 3,
+    "generatedAt": "2026-10-01T02:42:23.755Z",
+    "windowStart": "2026-09-30T02:42:23.755Z",
+    "windowEnd": "2026-10-01T02:42:23.755Z",
+    "windowHours": 24
+}

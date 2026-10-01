@@ -8,6 +8,8 @@ export interface IArticle extends Document {
   date: Date;
   inTibetan: boolean;
   description?: string;
+  content?: string;
+  summary?: string;
 }
 
 const articleSchema: Schema = new Schema(
@@ -18,6 +20,8 @@ const articleSchema: Schema = new Schema(
     date: { type: Date, required: true },
     inTibetan: { type: Boolean, required: true, default: false },
     description: { type: String, required: false, trim: true },
+    content: { type: String, required: false },
+    summary: { type: String, required: false, trim: true },
   },
   {
     timestamps: true,
