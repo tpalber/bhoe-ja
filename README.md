@@ -27,17 +27,17 @@ Bhoe Ja is an open source project that enable users to find the latest Tibetan n
 
 ### Development
 
-[MEAN](<https://en.wikipedia.org/wiki/MEAN_(solution_stack)>) development stack to 'web scrape' different Tibetan news sources and display the list of articles and videos in a web application.
-Both UI and server side code base uses [Typescript](https://www.typescriptlang.org/).
+[MERN](https://en.wikipedia.org/wiki/MERN)-style development stack (MongoDB, Express, React, Node) to 'web scrape' different Tibetan news sources and display the list of articles and videos in a web application.
+Both UI and server side code base uses [Typescript](https://www.typescriptlang.org/). The UI is built with [React](https://react.dev/), [Vite](https://vite.dev/), [Tailwind CSS](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) components, and lives in `client/`.
 
 #### Getting Started
 
-1. Install the latest version of [Angular CLI](https://cli.angular.io/)
-2. Install the latest version of [Node.js](https://nodejs.org/en/)
-3. Clone this repo
-4. `npm install` Installs all your dependencies for this project
-5. `npm run dev` Runs the UI and the app server
-6. Navigate to `http://localhost:4200`
+1. Install the latest version of [Node.js](https://nodejs.org/en/)
+2. Clone this repo
+3. `npm install` Installs the root dependencies for this project
+4. `cd client && npm install` Installs the React UI dependencies
+5. `npm run dev` (from the repo root) Runs the React UI (Vite) and the app server
+6. Navigate to `http://localhost:5173` (API requests are proxied to `http://localhost:3000`)
 
 #### Future Roadmap
 
@@ -46,9 +46,9 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 #### UI Development
 
-- Run `NODE_OPTIONS=--openssl-legacy-provider npm run serve` or `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-- Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-- Run `npm run build` to build the project. The build artifacts will be stored in the `server/build/` directory.
+- Run `npm run dev --prefix client` (or `npm run dev` from the repo root, which also starts the app server) for a Vite dev server. Navigate to `http://localhost:5173/`. The app will automatically reload if you change any of the source files. `/api` requests are proxied to `http://localhost:3000`.
+- Run `npm run build` from the repo root to build the React UI. The build artifacts will be stored in the `server/build/bhoeja/` directory, served by the Express app server.
+- Run `npm run smoke --prefix client` (after a build) to boot the production bundle in jsdom and verify routing, tabs, the about sheet, dark mode, bookmark storage compatibility with the old Angular app, and that no JS errors are thrown.
 
 #### Server Development
 
@@ -57,10 +57,10 @@ Both UI and server side code base uses [Typescript](https://www.typescriptlang.o
 
 #### Production Deployment
 
-- `rm -rf node_modules` Remove existing UI node modules folder if exists
-- `npm ci` Install UI dependencies
-- `NODE_OPTIONS=--openssl-legacy-provider npm run build` Build the UI project and add the distribution files within server/build/
-- `cd server` Navigate to server folder
+- `rm -rf client/node_modules` Remove existing UI node modules folder if exists
+- `cd client && npm ci` Install UI dependencies
+- `npm run build` (from the repo root) Build the React UI and add the distribution files within server/build/bhoeja/
+- `cd ../server` Navigate to server folder
 - `rm -rf node_modules` Remove existing server node modules folder if exists
 - `npm ci` Install Server dependencies
 - `npm run tsc` Build the Server product and add the distribution files within server/build/
