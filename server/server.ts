@@ -15,6 +15,11 @@ import { TibetSunScraper } from './scraper/tibet-sun/tibet-sun-scraper';
 import { CTAScraper } from './scraper/cta/cta-scraper';
 import { FreeTibetScraper } from './scraper/free-tibet/free-tibet-scraper';
 import { ShambalaScraper } from './scraper/shambala/shambala-scraper';
+import { IDailySummary } from './models/daily-summary';
+import {
+  getLatestDailySummary,
+  updateDailySummary,
+} from './services/daily-summary-service';
 
 let supportedNewsSites: string[] = [
   CTAScraper.site,
@@ -94,7 +99,10 @@ function initializeAppRoutes(app: express.Application): void {
     }
 
     scrapeSites(newsSites)
-      .then((articles) => {
+      .then(async (articles) => {
+        await updateDailySummary().catch((error) => {
+          console.error(`Daily summary update failed: ${error}`);
+        });
         res.json(
           `${articles.length} Articles scraped and ${
             articles.filter((article: IArticle) => !article.isNew).length
@@ -103,6 +111,23 @@ function initializeAppRoutes(app: express.Application): void {
       })
       .catch((error) => {
         throw new Error(`Error scraping articles: ${error}`);
+      });
+  });
+
+  app.get('/api/daily-summary', async function (req: any, res: any) {
+    console.info('GET /daily-summary');
+    getLatestDailySummary()
+      .then((summary) => {
+        if (!summary) {
+          return res.status(404).json({
+            message: 'Daily summary has not been generated yet.',
+          });
+        }
+        return res.json(toDailySummaryResponse(summary));
+      })
+      .catch((error) => {
+        console.error(`Error getting daily summary: ${error}`);
+        res.status(500).json(error);
       });
   });
 
@@ -135,6 +160,11 @@ function initializeAppRoutes(app: express.Application): void {
       {
         Endpoint: '/articles',
         Description: 'Get list of articles',
+      },
+      {
+        Endpoint: '/daily-summary',
+        Description:
+          'Get the cached AI-generated summary of English articles from the last 24 hours.',
       },
       {
         Endpoint: '/scrape-articles/<newsSite>',
@@ -244,6 +274,24 @@ async function scrapeVideos(): Promise<IVideo[]> {
   return Promise.all(videosPromises).then((videos) => {
     return ([] as IVideo[]).concat(...videos);
   });
+}
+
+function toDailySummaryResponse(summary: IDailySummary): any {
+  return {
+    overview: summary.overview,
+    sources: summary.sources.map((source) => ({
+      index: source.index,
+      articleId: source.article.toString(),
+      title: source.title,
+      site: source.site,
+      link: source.link,
+    })),
+    articleCount: summary.articleCount,
+    generatedAt: summary.generatedAt,
+    windowStart: summary.windowStart,
+    windowEnd: summary.windowEnd,
+    windowHours: 24,
+  };
 }
 
 /**
