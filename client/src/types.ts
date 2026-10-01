@@ -7,6 +7,24 @@ export interface Article {
   description?: string;
 }
 
+export interface DailyOverviewSource {
+  index: number;
+  articleId: string;
+  title: string;
+  site: string;
+  link: string;
+}
+
+export interface DailyOverview {
+  overview: string;
+  sources: DailyOverviewSource[];
+  articleCount: number;
+  generatedAt: string;
+  windowStart: string;
+  windowEnd: string;
+  windowHours: number;
+}
+
 export interface Video {
   _id: string;
   title: string;
