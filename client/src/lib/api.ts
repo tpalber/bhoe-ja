@@ -1,4 +1,9 @@
-import type { Article, SearchFilters, Video } from '../types';
+import type {
+  Article,
+  DailySummary,
+  SearchFilters,
+  Video,
+} from '../types';
 
 function buildParams(
   offset: number,
@@ -51,4 +56,8 @@ export function fetchVideos(
 ): Promise<Video[]> {
   const qs = buildParams(offset, filters);
   return get<Video[]>(`/api/videos?${qs}`);
+}
+
+export function fetchDailySummary(): Promise<DailySummary> {
+  return get<DailySummary>('/api/daily-summary');
 }

@@ -58,3 +58,29 @@
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
 }
+
+@layer components {
+  /* Serif-italic treatment for the daily homepage headline words. */
+  .daily-serif {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: italic;
+  }
+}
+
+@keyframes daily-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.55;
+  }
+}
+
+@layer utilities {
+  .animate-daily-bounce {
+    animation: daily-bounce 2.2s ease-in-out infinite;
+  }
+}
