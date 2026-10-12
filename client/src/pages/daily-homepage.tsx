@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bookmark, ChevronDown, Info, Search } from 'lucide-react';
 import { BhoeJaSeal } from '../components/bhoe-ja-seal';
@@ -58,6 +58,8 @@ export function DailyHomepage({
   const [failed, setFailed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const summarySectionRef = useRef<HTMLElement>(null);
+  const summaryTextRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -72,6 +74,49 @@ export function DailyHomepage({
       cancelled = true;
     };
   }, []);
+
+  // Fluid summary type: binary-search the largest font size at which the full
+  // digest fits in the available space, so the whole page always fits on one
+  // screen with the 20dvh header gap intact.
+  useLayoutEffect(() => {
+    const section = summarySectionRef.current;
+    const p = summaryTextRef.current;
+    if (!section || !p) return;
+
+    const fit = () => {
+      const available = section.clientHeight;
+      if (available <= 0) return;
+      const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+      const minSize = isDesktop ? 12 : 10;
+      const maxSize = isDesktop ? 24 : 16;
+      let lo = minSize;
+      let hi = maxSize;
+      for (let i = 0; i < 10; i++) {
+        const mid = (lo + hi) / 2;
+        p.style.fontSize = `${mid}px`;
+        if (p.offsetHeight <= available) {
+          lo = mid;
+        } else {
+          hi = mid;
+        }
+      }
+      p.style.fontSize = `${lo}px`;
+      // Graceful fallback: if even the minimum size overflows (pathologically
+      // long digest), fade the bottom edge to signal continuation.
+      section.style.maskImage =
+        p.offsetHeight > available
+          ? 'linear-gradient(to bottom, black 82%, transparent)'
+          : 'none';
+    };
+
+    fit();
+    // Re-fit once webfonts settle, in case metrics shifted under fallback fonts.
+    if (document.fonts) {
+      document.fonts.ready.then(() => fit()).catch(() => {});
+    }
+    window.addEventListener('resize', fit);
+    return () => window.removeEventListener('resize', fit);
+  }, [summary, failed]);
 
   return (
     <div className="w-full overflow-hidden bg-background">
@@ -135,7 +180,7 @@ export function DailyHomepage({
           style={{ color: TEXT_YELLOW }}
         >
           {/* Header */}
-          <header className="pt-[7vh] text-center">
+          <header className="shrink-0 pt-[7vh] text-center">
             <h1 className="daily-serif flex items-center justify-center gap-1 md:gap-2 text-6xl md:text-7xl">
               <span>daily</span>
               <span style={{ color: ACCENT_CLOVER }}>
@@ -151,14 +196,24 @@ export function DailyHomepage({
           {/* Spacer: ~20% of viewport height between header and summary */}
           <div className="h-[20dvh] shrink-0" />
 
-          {/* Summary */}
-          <section className="px-7 md:px-12">
+          {/* Summary: flexes to fill available space; font size auto-fits via JS
+              so the full digest always fits on one screen */}
+          <section
+            ref={summarySectionRef}
+            className="min-h-0 flex-1 overflow-hidden px-7 md:px-12"
+          >
             {summary ? (
-              <p className="text-left text-[14px] leading-relaxed md:text-[20px]">
+              <p
+                ref={summaryTextRef}
+                className="text-left leading-relaxed"
+              >
                 <CitedOverview text={summary.overview} />
               </p>
             ) : (
-              <p className="animate-pulse text-left text-[14px] leading-relaxed opacity-70 md:text-[20px]">
+              <p
+                ref={summaryTextRef}
+                className="animate-pulse text-left leading-relaxed opacity-70"
+              >
                 {failed
                   ? "Today's briefing isn't ready yet."
                   : 'Preparing today\u2019s briefing\u2026'}
@@ -166,11 +221,8 @@ export function DailyHomepage({
             )}
           </section>
 
-          {/* Spacer pushes sources + read more to the bottom */}
-          <div className="flex-1" />
-
           {/* Divider + sources */}
-          <section className="mt-5 px-7 md:px-12">
+          <section className="mt-5 shrink-0 px-7 md:px-12">
             <hr
               className="border-t"
               style={{ borderColor: TEXT_YELLOW, opacity: 0.35 }}
@@ -204,7 +256,7 @@ export function DailyHomepage({
           </section>
 
           {/* Read more */}
-          <div className="mt-4 pb-7 text-center">
+          <div className="mt-4 shrink-0 pb-7 text-center">
             <button
               type="button"
               onClick={() => navigate('/articles')}
