@@ -273,8 +273,7 @@ export function DailyHomepage({
               className="border-t"
               style={{ borderColor: TEXT_YELLOW, opacity: 0.35 }}
             />
-            <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-left text-[13px] leading-relaxed md:text-sm">
-              <span>Sources:</span>
+            <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-left text-[11px] leading-relaxed md:text-xs">
               {summary ? (
                 summary.sources.map((source) => (
                   <span key={source.index}>
@@ -285,10 +284,7 @@ export function DailyHomepage({
                       title={`${source.title} — ${source.site}`}
                       className="no-underline hover:underline"
                     >
-                      <span
-                        className="font-semibold"
-                        style={{ color: ACCENT_CLOVER }}
-                      >
+                      <span style={{ color: ACCENT_CLOVER }}>
                         [{source.index}]
                       </span>{' '}
                       <span style={{ color: TEXT_YELLOW }}>
