@@ -57,27 +57,18 @@ function SummarySkeleton() {
   );
 }
 
-/** Small pulsing placeholder chips for the sources row while loading. */
+/** Single white pulsing placeholder bar for the sources row while loading. */
 function SourcesSkeleton() {
-  const widths = ['96px', '72px', '88px', '112px'];
   return (
     <span
-      className="inline-flex items-center gap-x-3"
+      className="inline-block h-[10px] animate-pulse rounded-full md:h-[11px]"
       role="status"
       aria-label="Loading sources"
-    >
-      {widths.map((width, i) => (
-        <span
-          key={i}
-          className="inline-block h-[10px] animate-pulse rounded-full md:h-[11px]"
-          style={{
-            width,
-            backgroundColor: 'rgba(252, 230, 80, 0.14)',
-            animationDelay: `${i * 0.15}s`,
-          }}
-        />
-      ))}
-    </span>
+      style={{
+        width: '180px',
+        backgroundColor: 'rgba(255, 255, 255, 0.14)',
+      }}
+    />
   );
 }
 
