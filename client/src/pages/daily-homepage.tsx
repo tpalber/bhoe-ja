@@ -57,6 +57,30 @@ function SummarySkeleton() {
   );
 }
 
+/** Small pulsing placeholder chips for the sources row while loading. */
+function SourcesSkeleton() {
+  const widths = ['96px', '72px', '88px', '112px'];
+  return (
+    <span
+      className="inline-flex items-center gap-x-3"
+      role="status"
+      aria-label="Loading sources"
+    >
+      {widths.map((width, i) => (
+        <span
+          key={i}
+          className="inline-block h-[10px] animate-pulse rounded-full md:h-[11px]"
+          style={{
+            width,
+            backgroundColor: 'rgba(252, 230, 80, 0.14)',
+            animationDelay: `${i * 0.15}s`,
+          }}
+        />
+      ))}
+    </span>
+  );
+}
+
 function formatDigestDate(iso?: string): string {
   const date = iso ? new Date(iso) : new Date();
   return new Intl.DateTimeFormat('en-US', {
@@ -274,7 +298,7 @@ export function DailyHomepage({
                   </span>
                 ))
               ) : (
-                <span className="opacity-60">{'\u2026'}</span>
+                <SourcesSkeleton />
               )}
             </div>
           </section>
