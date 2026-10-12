@@ -92,7 +92,7 @@ export function DailyHomepage() {
         >
           {/* Header */}
           <header className="pt-[7vh] text-center">
-            <h1 className="daily-serif flex items-center justify-center gap-3 text-5xl md:gap-4 md:text-6xl">
+            <h1 className="daily-serif flex items-center justify-center gap-1 md:gap-2 text-5xl md:text-6xl">
               <span>daily</span>
               <span style={{ color: ACCENT_CLOVER }}>
                 <BhoeJaSeal className="h-12 w-12 md:h-14 md:w-14" />
