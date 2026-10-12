@@ -288,20 +288,19 @@ export function DailyHomepage({
                         [{source.index}]
                       </span>{' '}
                       <span style={{ color: TEXT_YELLOW }}>
-                        {source.title}
+                        {source.site}: {source.title}
                       </span>
                     </a>
-                    {/* Desktop: site and date; mobile shows title only */}
-                    <span
-                      className="hidden opacity-70 md:inline"
-                      style={{ color: TEXT_YELLOW }}
-                    >
-                      {' · '}
-                      {source.site}
-                      {source.publishedAt
-                        ? `, ${formatSourceDate(source.publishedAt)}`
-                        : ''}
-                    </span>
+                    {/* Desktop: date only (site is already up front);
+                        mobile shows site + title */}
+                    {source.publishedAt && (
+                      <span
+                        className="hidden opacity-70 md:inline"
+                        style={{ color: TEXT_YELLOW }}
+                      >
+                        {`, ${formatSourceDate(source.publishedAt)}`}
+                      </span>
+                    )}
                   </span>
                 ))
               ) : (
