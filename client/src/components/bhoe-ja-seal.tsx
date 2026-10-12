@@ -32,7 +32,7 @@ export function BhoeJaSeal({ className }: { className?: string }) {
         />
         <path
           d="M1133 16Q967 201 840.0 263.5Q713 326 514 326Q323 326 135 287L43 422Q95 764 185 1090H111L180 1389H1141L1071 1090H392L346 975H1022L961 717H259L223 592Q355 614 492 614Q742 614 911.0 495.5Q1080 377 1288 45Z"
-          transform="translate(-628.50 -1597.00)"
+          transform="translate(-628.50 -1408.00)"
         />
       </g>
     </svg>
