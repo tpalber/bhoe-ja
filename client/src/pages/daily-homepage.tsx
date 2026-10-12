@@ -5,7 +5,7 @@ import { BhoeJaSeal } from '../components/bhoe-ja-seal';
 import { fetchDailySummary } from '../lib/api';
 import type { DailySummary } from '../types';
 
-const TEXT_ORANGE = '#E64C18';
+const TEXT_YELLOW = '#fce650';
 const ACCENT_CLOVER = '#7CB342';
 const GUTTER_WARM_WHITE = '#faf7ec';
 
@@ -88,7 +88,7 @@ export function DailyHomepage() {
 
         <div
           className="relative z-10 flex h-full flex-col"
-          style={{ color: TEXT_ORANGE }}
+          style={{ color: TEXT_YELLOW }}
         >
           {/* Header */}
           <header className="pt-[7vh] text-center">
@@ -126,7 +126,7 @@ export function DailyHomepage() {
           <section className="mt-5 px-7 md:px-12">
             <hr
               className="border-t"
-              style={{ borderColor: TEXT_ORANGE, opacity: 0.35 }}
+              style={{ borderColor: TEXT_YELLOW, opacity: 0.35 }}
             />
             <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-left text-[13px] leading-relaxed md:text-sm">
               <span>Sources:</span>
@@ -146,7 +146,7 @@ export function DailyHomepage() {
                       >
                         [{source.index}]
                       </span>{' '}
-                      <span style={{ color: TEXT_ORANGE }}>{source.site}</span>
+                      <span style={{ color: TEXT_YELLOW }}>{source.site}</span>
                     </a>
                   </span>
                 ))
@@ -166,7 +166,7 @@ export function DailyHomepage() {
             >
               <span
                 className="text-[11px] font-medium uppercase tracking-[0.25em]"
-                style={{ color: TEXT_ORANGE }}
+                style={{ color: TEXT_YELLOW }}
               >
                 read more
               </span>
