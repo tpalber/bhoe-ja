@@ -33,8 +33,9 @@ export function SearchDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-none bg-transparent p-0 shadow-none outline-none sm:max-w-md [&>button]:hidden">
+      <DialogContent className="border-none bg-transparent p-0 shadow-none outline-none [&>button]:hidden">
         <DialogTitle className="sr-only">Search</DialogTitle>
+        <div className="mx-auto w-[90vw] max-w-md">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -47,7 +48,7 @@ export function SearchDialog({
               placeholder="Search titles…"
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="h-14 rounded-full border border-white/40 bg-white/25 pl-6 pr-16 text-lg text-white shadow-2xl outline-none backdrop-blur-md placeholder:text-white/60 focus-visible:ring-2 focus-visible:ring-[#7CB342]"
+              className="h-14 rounded-full border border-white/40 bg-white/25 pl-6 pr-16 text-lg text-white shadow-2xl outline-none backdrop-blur-md placeholder:text-white/60 focus-visible:outline-none focus-visible:ring-0"
             />
             <button
               type="submit"
@@ -58,6 +59,7 @@ export function SearchDialog({
             </button>
           </div>
         </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
