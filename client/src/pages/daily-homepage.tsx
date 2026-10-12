@@ -33,6 +33,30 @@ function CitedOverview({ text }: { text: string }) {
   );
 }
 
+/** Pulsing yellow placeholder bars shown while the digest loads (Option B). */
+function SummarySkeleton() {
+  const widths = ['100%', '92%', '97%', '78%', '64%'];
+  return (
+    <div
+      className="flex flex-col gap-3"
+      role="status"
+      aria-label="Loading today's briefing"
+    >
+      {widths.map((width, i) => (
+        <div
+          key={i}
+          className="h-[14px] animate-pulse rounded-full md:h-[20px]"
+          style={{
+            width,
+            backgroundColor: 'rgba(252, 230, 80, 0.14)',
+            animationDelay: `${i * 0.15}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function formatDigestDate(iso?: string): string {
   const date = iso ? new Date(iso) : new Date();
   return new Intl.DateTimeFormat('en-US', {
@@ -209,15 +233,15 @@ export function DailyHomepage({
               >
                 <CitedOverview text={summary.overview} />
               </p>
-            ) : (
+            ) : failed ? (
               <p
                 ref={summaryTextRef}
-                className="animate-pulse text-left leading-relaxed opacity-70"
+                className="text-left leading-relaxed opacity-70"
               >
-                {failed
-                  ? "Today's briefing isn't ready yet."
-                  : 'Preparing today\u2019s briefing\u2026'}
+                Today&apos;s briefing isn&apos;t ready yet.
               </p>
+            ) : (
+              <SummarySkeleton />
             )}
           </section>
 
@@ -250,7 +274,7 @@ export function DailyHomepage({
                   </span>
                 ))
               ) : (
-                <span className="opacity-60">\u2026</span>
+                <span className="opacity-60">{'\u2026'}</span>
               )}
             </div>
           </section>
