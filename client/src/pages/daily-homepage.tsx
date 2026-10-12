@@ -273,10 +273,10 @@ export function DailyHomepage({
               className="border-t"
               style={{ borderColor: TEXT_YELLOW, opacity: 0.35 }}
             />
-            <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-left text-[11px] leading-relaxed md:text-xs">
+            <div className="mt-3 flex flex-col gap-y-1 text-left text-[11px] leading-relaxed md:text-xs">
               {summary ? (
                 summary.sources.map((source) => (
-                  <span key={source.index}>
+                  <div key={source.index} className="truncate">
                     <a
                       href={source.link}
                       target="_blank"
@@ -301,7 +301,7 @@ export function DailyHomepage({
                         {`, ${formatSourceDate(source.publishedAt)}`}
                       </span>
                     )}
-                  </span>
+                  </div>
                 ))
               ) : (
                 <SourcesSkeleton />
