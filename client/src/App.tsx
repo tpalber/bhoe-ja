@@ -22,7 +22,7 @@ function Site() {
   const isHomepage = location.pathname === '/';
 
   if (isHomepage) {
-    return <DailyHomepage />;
+    return <DailyHomepage filters={filters} onFiltersChange={setFilters} />;
   }
 
   return (

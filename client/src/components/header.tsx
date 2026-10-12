@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Bookmark, Info, SlidersHorizontal } from 'lucide-react';
 import { AboutSheet } from './about-sheet';
+import { BhoeJaSeal } from './bhoe-ja-seal';
 import { FilterDialog } from './filter-dialog';
 import { Button } from './ui/button';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
@@ -47,12 +48,9 @@ export function Header({ filters, onFiltersChange }: HeaderProps) {
           onClick={() => navigate('/articles')}
           aria-label="Bhoe Ja home"
         >
-          <img src="/favicon.ico" alt="bhoe-ja" className="h-8 w-8" />
+          <BhoeJaSeal className="h-8 w-8 text-primary" />
           <span className="text-lg font-bold tracking-tight text-primary">Bhoe Ja</span>
         </button>
-        <span className="ml-2 hidden text-sm text-muted-foreground md:inline">
-          All the latest Tibetan news in one place
-        </span>
 
         <div className="ml-auto flex items-center gap-1">
           <Button

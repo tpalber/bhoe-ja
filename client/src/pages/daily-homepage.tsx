@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { Bookmark, ChevronDown, Info, Search } from 'lucide-react';
 import { BhoeJaSeal } from '../components/bhoe-ja-seal';
+import { AboutSheet } from '../components/about-sheet';
+import { SearchDialog } from '../components/search-dialog';
+import { useAppStore } from '../store/app-store';
 import { fetchDailySummary } from '../lib/api';
-import type { DailySummary } from '../types';
+import { EMPTY_FILTERS, type DailySummary, type SearchFilters } from '../types';
 
 const TEXT_YELLOW = '#fce650';
 const ACCENT_CLOVER = '#7CB342';
-const GUTTER_WARM_WHITE = '#faf7ec';
 
 /** Render the overview with [N] citation markers in the accent green. */
 function CitedOverview({ text }: { text: string }) {
@@ -43,10 +45,19 @@ function formatDigestDate(iso?: string): string {
     .toUpperCase();
 }
 
-export function DailyHomepage() {
+export function DailyHomepage({
+  filters,
+  onFiltersChange,
+}: {
+  filters: SearchFilters;
+  onFiltersChange: (filters: SearchFilters) => void;
+}) {
   const navigate = useNavigate();
+  const { bookmarkCount } = useAppStore();
   const [summary, setSummary] = useState<DailySummary | null>(null);
   const [failed, setFailed] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -63,10 +74,7 @@ export function DailyHomepage() {
   }, []);
 
   return (
-    <div
-      className="w-full overflow-hidden"
-      style={{ backgroundColor: GUTTER_WARM_WHITE }}
-    >
+    <div className="w-full overflow-hidden bg-background">
       {/* Centered artwork column: 50vw on desktop, full-bleed on mobile */}
       <div
         className="relative mx-auto h-[100dvh] w-full md:w-[50vw]"
@@ -85,6 +93,42 @@ export function DailyHomepage() {
               'linear-gradient(to bottom, rgba(0,0,0,0.55), rgba(0,0,0,0.28) 35%, rgba(0,0,0,0.38) 60%, rgba(0,0,0,0.68))',
           }}
         />
+
+        {/* Floating action icons, no nav bar */}
+        <div className="absolute right-4 top-4 z-20 flex items-center gap-1 md:right-6 md:top-6">
+          <button
+            type="button"
+            aria-label="Bookmarks"
+            onClick={() => navigate('/bookmark')}
+            className="relative rounded-full p-2 transition hover:opacity-80"
+            style={{ color: TEXT_YELLOW }}
+          >
+            <Bookmark className="h-5 w-5" />
+            {bookmarkCount > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+                {bookmarkCount}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            aria-label="Search"
+            onClick={() => setSearchOpen(true)}
+            className="rounded-full p-2 transition hover:opacity-80"
+            style={{ color: TEXT_YELLOW }}
+          >
+            <Search className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            aria-label="About"
+            onClick={() => setAboutOpen(true)}
+            className="rounded-full p-2 transition hover:opacity-80"
+            style={{ color: TEXT_YELLOW }}
+          >
+            <Info className="h-5 w-5" />
+          </button>
+        </div>
 
         <div
           className="relative z-10 flex h-full flex-col"
@@ -178,6 +222,20 @@ export function DailyHomepage() {
           </div>
         </div>
       </div>
+
+      <SearchDialog
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        initialValue={filters.searchValue}
+        onSearch={(query) => {
+          onFiltersChange({
+            ...EMPTY_FILTERS,
+            searchValue: query ? query : undefined,
+          });
+          navigate('/articles');
+        }}
+      />
+      <AboutSheet open={aboutOpen} onOpenChange={setAboutOpen} />
     </div>
   );
 }
