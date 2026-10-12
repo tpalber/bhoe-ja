@@ -20,6 +20,10 @@ import { TibetPostScraper } from './scraper/tibet-post/tibet-post-scraper';
 import { TibetSunScraper } from './scraper/tibet-sun/tibet-sun-scraper';
 import { TibetTimesScraper } from './scraper/tibet-times/tibet-times-scraper';
 import { VOTScraper } from './scraper/vot/vot-scraper';
+import { TibetExpressScraper } from './scraper/tibet-express/tibet-express-scraper';
+import { TibetanReviewScraper } from './scraper/tibetan-review/tibetan-review-scraper';
+import { ICTScraper } from './scraper/ict/ict-scraper';
+import { TibetBureauScraper } from './scraper/tibet-bureau/tibet-bureau-scraper';
 
 interface Target {
   label: string;
@@ -79,6 +83,30 @@ function buildTargets(): Target[] {
 
   const vot = new VOTScraper();
   t.push({ label: 'VOT', url: VOTScraper.getSiteUrl(), scraper: vot });
+
+  const te = new TibetExpressScraper();
+  t.push({
+    label: 'Tibet Express',
+    url: TibetExpressScraper.getSiteUrl(),
+    scraper: te,
+  });
+
+  const tr = new TibetanReviewScraper();
+  t.push({
+    label: 'Tibetan Review',
+    url: TibetanReviewScraper.getSiteUrl(),
+    scraper: tr,
+  });
+
+  const ict = new ICTScraper();
+  t.push({ label: 'ICT', url: ICTScraper.getSiteUrl(), scraper: ict });
+
+  const tb = new TibetBureauScraper();
+  t.push({
+    label: 'Dalai Lama Bureau',
+    url: TibetBureauScraper.getSiteUrl(),
+    scraper: tb,
+  });
 
   return t;
 }

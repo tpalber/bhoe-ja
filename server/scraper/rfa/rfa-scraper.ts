@@ -17,7 +17,10 @@ export class RFAScraper extends Scraper {
   }
 
   public static getSiteUrl(): string {
-    return `${RFAScraper.baseUrl}english/news/tibet/story_archive`;
+    // The /english/news/tibet archive path was retired; the section now
+    // lives under /english/world/asia/tibet and its story_archive page
+    // embeds the archive feed as Fusion JSON (parsed in getArticles).
+    return `${RFAScraper.baseUrl}english/world/asia/tibet/story_archive`;
   }
 
   public static getTibetanSiteUrl(): string {
@@ -70,13 +73,107 @@ export class RFAScraper extends Scraper {
           data.push(article);
         }
       });
+      // The English story archive is now a Fusion/Arc-XP app: article items
+      // no longer render in static HTML. Fall back to the embedded
+      // story_archive_story_feed_section JSON payload in the page.
+      if (data.length === 0) {
+        this.getArticlesFromFusionJson(html).forEach((article) =>
+          data.push(article)
+        );
+      }
     }
     console.info(`***** Number of ${RFAScraper.site} articles: ${data.length}`);
     return Promise.all(data);
   }
 
-  private getArticleDateFromIso(datetime?: string): Date {
+  /**
+   * Parse articles from the embedded Fusion/Arc-XP story-archive payload.
+   * The page embeds its archive feed as JSON under
+   * "story_archive_story_feed_section": {"{query}": {"data":
+   * {"content_elements": [...]}}}. Each element carries headlines.basic,
+   * description.basic, display_date, and websites['radio-free-asia'].website_url.
+   */
+  private getArticlesFromFusionJson(html: string): IArticle[] {
+    const data: IArticle[] = [];
     try {
+      const marker = '"story_archive_story_feed_section"';
+      const markerIdx = html.indexOf(marker);
+      if (markerIdx === -1) {
+        return data;
+      }
+      const elementsKey = '"content_elements":[';
+      const elementsIdx = html.indexOf(elementsKey, markerIdx);
+      if (elementsIdx === -1) {
+        return data;
+      }
+      const arrayStart = elementsIdx + elementsKey.length - 1;
+      const arrayJson = this.extractBalancedJsonArray(html, arrayStart);
+      if (!arrayJson) {
+        return data;
+      }
+      const elements: any[] = JSON.parse(arrayJson);
+      elements.forEach((el: any) => {
+        const title = el?.headlines?.basic?.trim();
+        const websiteUrl =
+          el?.websites?.['radio-free-asia']?.website_url ||
+          el?.websites?.['radiofreeasia']?.website_url;
+        if (title && websiteUrl) {
+          const link = websiteUrl.startsWith('http')
+            ? websiteUrl
+            : 'https://www.rfa.org' + websiteUrl;
+          data.push(
+            new Article({
+              title,
+              source: RFAScraper.site,
+              link,
+              inTibetan: false,
+              date: this.getArticleDateFromIso(el?.display_date),
+              description: (el?.description?.basic || '').trim(),
+            })
+          );
+        }
+      });
+    } catch (error) {
+      console.warn(`Error parsing RFA Fusion JSON payload: ${error}`);
+    }
+    return data;
+  }
+
+  /**
+   * Extract a balanced JSON array starting at the given '[' index,
+   * respecting string literals and escapes.
+   */
+  private extractBalancedJsonArray(html: string, startIdx: number): string | null {
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    for (let i = startIdx; i < html.length; i++) {
+      const ch = html[i];
+      if (inString) {
+        if (escaped) {
+          escaped = false;
+        } else if (ch === '\\') {
+          escaped = true;
+        } else if (ch === '"') {
+          inString = false;
+        }
+      } else {
+        if (ch === '"') {
+          inString = true;
+        } else if (ch === '[') {
+          depth++;
+        } else if (ch === ']') {
+          depth--;
+          if (depth === 0) {
+            return html.substring(startIdx, i + 1);
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  private getArticleDateFromIso(datetime?: string): Date {    try {
       if (!datetime) {
         return Util.getCurrentDate();
       }

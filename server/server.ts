@@ -15,6 +15,10 @@ import { TibetSunScraper } from './scraper/tibet-sun/tibet-sun-scraper';
 import { CTAScraper } from './scraper/cta/cta-scraper';
 import { FreeTibetScraper } from './scraper/free-tibet/free-tibet-scraper';
 import { ShambalaScraper } from './scraper/shambala/shambala-scraper';
+import { TibetExpressScraper } from './scraper/tibet-express/tibet-express-scraper';
+import { TibetanReviewScraper } from './scraper/tibetan-review/tibetan-review-scraper';
+import { ICTScraper } from './scraper/ict/ict-scraper';
+import { TibetBureauScraper } from './scraper/tibet-bureau/tibet-bureau-scraper';
 import { IDailySummary } from './models/daily-summary';
 import {
   getLatestDailySummary,
@@ -24,12 +28,16 @@ import {
 let supportedNewsSites: string[] = [
   CTAScraper.site,
   FreeTibetScraper.site,
+  ICTScraper.site,
   PhayulScraper.site,
   RFAScraper.site,
   ShambalaScraper.site,
   TibetPostScraper.site,
   TibetSunScraper.site,
   TibetTimesScraper.site,
+  TibetExpressScraper.site,
+  TibetanReviewScraper.site,
+  TibetBureauScraper.site,
   VOTScraper.site,
 ];
 
@@ -202,6 +210,9 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
       case FreeTibetScraper.site:
         scrapers = [new FreeTibetScraper()];
         break;
+      case ICTScraper.site:
+        scrapers = [new ICTScraper()];
+        break;
       case PhayulScraper.site:
         scrapers = [new PhayulScraper()];
         break;
@@ -231,6 +242,15 @@ async function scrapeSites(sites: string[]): Promise<IArticle[]> {
         break;
       case TibetTimesScraper.site:
         scrapers = [new TibetTimesScraper()];
+        break;
+      case TibetExpressScraper.site:
+        scrapers = [new TibetExpressScraper()];
+        break;
+      case TibetanReviewScraper.site:
+        scrapers = [new TibetanReviewScraper()];
+        break;
+      case TibetBureauScraper.site:
+        scrapers = [new TibetBureauScraper()];
         break;
       case VOTScraper.site:
         scrapers = [new VOTScraper()];
