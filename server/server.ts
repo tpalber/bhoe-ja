@@ -305,6 +305,9 @@ function toDailySummaryResponse(summary: IDailySummary): any {
       title: source.title,
       site: source.site,
       link: source.link,
+      publishedAt: source.publishedAt
+        ? source.publishedAt.toISOString()
+        : undefined,
     })),
     articleCount: summary.articleCount,
     generatedAt: summary.generatedAt,

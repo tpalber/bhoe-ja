@@ -6,6 +6,7 @@ export interface IDailySummarySource {
   title: string;
   site: string;
   link: string;
+  publishedAt?: Date;
 }
 
 export interface IDailySummary extends Document {
@@ -29,6 +30,7 @@ const DailySummarySourceSchema: Schema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     site: { type: String, required: true, trim: true },
     link: { type: String, required: true, trim: true },
+    publishedAt: { type: Date, required: false },
   },
   { _id: false }
 );

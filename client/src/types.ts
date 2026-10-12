@@ -58,6 +58,7 @@ export interface DailySummarySource {
   title: string;
   site: string;
   link: string;
+  publishedAt?: string;
 }
 
 export interface DailySummary {

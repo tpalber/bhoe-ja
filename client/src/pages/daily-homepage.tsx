@@ -84,6 +84,13 @@ function formatDigestDate(iso?: string): string {
     .toUpperCase();
 }
 
+function formatSourceDate(iso: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(iso));
+}
+
 export function DailyHomepage({
   filters,
   onFiltersChange,
@@ -270,12 +277,12 @@ export function DailyHomepage({
               <span>Sources:</span>
               {summary ? (
                 summary.sources.map((source) => (
-                  <span key={source.index} className="whitespace-nowrap">
+                  <span key={source.index}>
                     <a
                       href={source.link}
                       target="_blank"
                       rel="noreferrer"
-                      title={source.title}
+                      title={`${source.title} — ${source.site}`}
                       className="no-underline hover:underline"
                     >
                       <span
@@ -284,8 +291,21 @@ export function DailyHomepage({
                       >
                         [{source.index}]
                       </span>{' '}
-                      <span style={{ color: TEXT_YELLOW }}>{source.site}</span>
+                      <span style={{ color: TEXT_YELLOW }}>
+                        {source.title}
+                      </span>
                     </a>
+                    {/* Desktop: site and date; mobile shows title only */}
+                    <span
+                      className="hidden opacity-70 md:inline"
+                      style={{ color: TEXT_YELLOW }}
+                    >
+                      {' · '}
+                      {source.site}
+                      {source.publishedAt
+                        ? `, ${formatSourceDate(source.publishedAt)}`
+                        : ''}
+                    </span>
                   </span>
                 ))
               ) : (

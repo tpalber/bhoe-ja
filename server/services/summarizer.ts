@@ -15,6 +15,7 @@ export interface DailySummarySource {
   title: string;
   site: string;
   link: string;
+  publishedAt: string;
 }
 
 export interface GeneratedDailySummary {
@@ -191,6 +192,7 @@ ${inputJson}`;
             title: brief.title,
             site: brief.source,
             link: brief.link,
+            publishedAt: brief.publishedAt,
           })
         ),
       };
