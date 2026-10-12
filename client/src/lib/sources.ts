@@ -12,16 +12,31 @@ export interface Source {
 // Kept identical to the Angular app's source listing.
 export const sourceListing: Source[] = [
   { name: 'CTA', url: 'https://tibet.net/', type: SourceType.Article },
+  {
+    name: 'Dalai Lama Bureau',
+    url: 'https://tibetbureau.in/',
+    type: SourceType.Article,
+  },
   { name: 'Free Tibet', url: 'https://freetibet.org/', type: SourceType.Article },
+  {
+    name: 'International Campaign for Tibet',
+    url: 'https://savetibet.org/',
+    type: SourceType.Article,
+  },
   { name: 'Phayul', url: 'https://www.phayul.com/', type: SourceType.Article },
   {
     name: 'Radio Free Asia',
-    url: 'https://www.rfa.org/english/news/tibet',
+    url: 'https://www.rfa.org/english/tibet/',
     type: SourceType.Article,
   },
   {
     name: 'Shambala',
     url: 'http://www.shambalanews.com/',
+    type: SourceType.Article,
+  },
+  {
+    name: 'Tibet Express',
+    url: 'https://tibetexpress.net/',
     type: SourceType.Article,
   },
   {
@@ -31,6 +46,11 @@ export const sourceListing: Source[] = [
   },
   { name: 'Tibet Sun', url: 'https://www.tibetsun.com/', type: SourceType.Article },
   { name: 'Tibet Times', url: 'http://tibettimes.net/', type: SourceType.Article },
+  {
+    name: 'Tibetan Review',
+    url: 'https://www.tibetanreview.net/',
+    type: SourceType.Article,
+  },
   { name: 'Voice Of Tibet', url: 'https://vot.org/', type: SourceType.Article },
   {
     name: 'Dalai Lama',
