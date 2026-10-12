@@ -29,7 +29,7 @@ export function AboutSheet({ open, onOpenChange }: AboutSheetProps) {
       <SheetContent side="bottom" className="sm:mx-auto sm:max-w-2xl">
         <SheetHeader className="text-left">
           <div className="flex items-center justify-between pr-8">
-            <SheetTitle className="text-xl">About BHOE JA</SheetTitle>
+            <SheetTitle className="text-xl text-primary">About BhoeJa</SheetTitle>
             <div className="flex items-center gap-2">
               <Moon className="h-4 w-4 text-muted-foreground" />
               <Switch
@@ -48,13 +48,13 @@ export function AboutSheet({ open, onOpenChange }: AboutSheetProps) {
 
         <div className="mt-4 flex flex-col gap-4 text-sm leading-relaxed">
           <p>
-            Bhoe Ja aims to make it easier to stay informed on the latest
+            BhoeJa aims to make it easier to stay informed on the latest
             Tibetan news from many different sources across the web. We hope to
             empower journalists by making their content more accessible to a
             wider audience than just their single news source.
           </p>
           <p>
-            Bhoe Ja uses{' '}
+            BhoeJa uses{' '}
             <a
               href="https://en.wikipedia.org/wiki/Web_scraping"
               target="_blank"
@@ -121,7 +121,7 @@ export function AboutSheet({ open, onOpenChange }: AboutSheetProps) {
           <div>
             <h4 className="mb-2 font-semibold">Contact</h4>
             <p>
-              Bhoe Ja is an open source project. Please contact{' '}
+              BhoeJa is an open source project. Please contact{' '}
               <a
                 href="mailto:tpalber7@gmail.com"
                 className="text-primary underline underline-offset-4"

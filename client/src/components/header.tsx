@@ -46,10 +46,10 @@ export function Header({ filters, onFiltersChange }: HeaderProps) {
         <button
           className="flex items-center gap-2"
           onClick={() => navigate('/')}
-          aria-label="Bhoe Ja home"
+          aria-label="BhoeJa home"
         >
           <BhoeJaSeal className="h-8 w-8 text-primary" />
-          <span className="text-lg font-bold tracking-tight text-primary">Bhoe Ja</span>
+          <span className="text-lg font-bold tracking-tight text-primary">BhoeJa</span>
         </button>
 
         <div className="ml-auto flex items-center gap-1">

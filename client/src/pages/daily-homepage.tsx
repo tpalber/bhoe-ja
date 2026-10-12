@@ -148,23 +148,26 @@ export function DailyHomepage({
             </p>
           </header>
 
-          {/* Spacer pushes the summary to roughly mid-viewport */}
-          <div className="flex-1" />
+          {/* Spacer: ~20% of viewport height between header and summary */}
+          <div className="h-[20dvh] shrink-0" />
 
           {/* Summary */}
           <section className="px-7 md:px-12">
             {summary ? (
-              <p className="text-left text-[12px] leading-relaxed md:text-[18px]">
+              <p className="text-left text-[14px] leading-relaxed md:text-[20px]">
                 <CitedOverview text={summary.overview} />
               </p>
             ) : (
-              <p className="animate-pulse text-left text-[12px] leading-relaxed opacity-70 md:text-[18px]">
+              <p className="animate-pulse text-left text-[14px] leading-relaxed opacity-70 md:text-[20px]">
                 {failed
                   ? "Today's briefing isn't ready yet."
                   : 'Preparing today\u2019s briefing\u2026'}
               </p>
             )}
           </section>
+
+          {/* Spacer pushes sources + read more to the bottom */}
+          <div className="flex-1" />
 
           {/* Divider + sources */}
           <section className="mt-5 px-7 md:px-12">
