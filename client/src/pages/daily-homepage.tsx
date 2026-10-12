@@ -110,11 +110,11 @@ export function DailyHomepage() {
           {/* Summary */}
           <section className="px-7 md:px-12">
             {summary ? (
-              <p className="text-left text-[13px] leading-relaxed md:text-[20px]">
+              <p className="text-left text-[12px] leading-relaxed md:text-[18px]">
                 <CitedOverview text={summary.overview} />
               </p>
             ) : (
-              <p className="animate-pulse text-left text-[13px] leading-relaxed opacity-70 md:text-[20px]">
+              <p className="animate-pulse text-left text-[12px] leading-relaxed opacity-70 md:text-[18px]">
                 {failed
                   ? "Today's briefing isn't ready yet."
                   : 'Preparing today\u2019s briefing\u2026'}
