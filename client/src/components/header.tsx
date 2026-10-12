@@ -45,7 +45,7 @@ export function Header({ filters, onFiltersChange }: HeaderProps) {
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4">
         <button
           className="flex items-center gap-2"
-          onClick={() => navigate('/articles')}
+          onClick={() => navigate('/')}
           aria-label="Bhoe Ja home"
         >
           <BhoeJaSeal className="h-8 w-8 text-primary" />
