@@ -10,10 +10,32 @@ export abstract class Scraper {
 
   abstract getArticles(html: any): Promise<IArticle[]>;
 
+  /**
+   * Override to send custom request headers (e.g. a browser User-Agent
+   * for sites behind bot-protection proxies).
+   */
+  protected getRequestHeaders(): Record<string, string> {
+    return {};
+  }
+
+  /**
+   * Override to add a polite delay (ms) before fetching the listing page
+   * (e.g. to honor a robots.txt crawl-delay).
+   */
+  protected getRequestDelayMs(): number {
+    return 0;
+  }
+
   public async scrapeArticles(): Promise<IArticle[]> {
     let html: any;
     try {
-      const response: any = await axios.get(this.url);
+      const delayMs = this.getRequestDelayMs();
+      if (delayMs > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
+      const response: any = await axios.get(this.url, {
+        headers: this.getRequestHeaders(),
+      });
       html = response.data;
     } catch (error) {
       console.error(`Error getting articles from ${this.url} ${error}`);
