@@ -5,7 +5,7 @@ import { BhoeJaSeal } from '../components/bhoe-ja-seal';
 import { fetchDailySummary } from '../lib/api';
 import type { DailySummary } from '../types';
 
-const TEXT_YELLOW = '#fce650';
+const TEXT_ORANGE = '#E64C18';
 const ACCENT_CLOVER = '#7CB342';
 const GUTTER_WARM_WHITE = '#faf7ec';
 
@@ -71,7 +71,7 @@ export function DailyHomepage() {
       <div
         className="relative mx-auto h-[100dvh] w-full md:w-[50vw]"
         style={{
-          backgroundImage: 'url(/hero/daily-thangka.jpg)',
+          backgroundImage: 'url(/hero/daily-yak-field.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -88,11 +88,11 @@ export function DailyHomepage() {
 
         <div
           className="relative z-10 flex h-full flex-col"
-          style={{ color: TEXT_YELLOW }}
+          style={{ color: TEXT_ORANGE }}
         >
           {/* Header */}
           <header className="pt-[7vh] text-center">
-            <h1 className="daily-serif flex items-center justify-center gap-1 md:gap-2 text-5xl md:text-6xl">
+            <h1 className="daily-serif flex items-center justify-center gap-1 md:gap-2 text-6xl md:text-7xl">
               <span>daily</span>
               <span style={{ color: ACCENT_CLOVER }}>
                 <BhoeJaSeal className="h-12 w-12 md:h-14 md:w-14" />
@@ -110,11 +110,11 @@ export function DailyHomepage() {
           {/* Summary */}
           <section className="px-7 md:px-12">
             {summary ? (
-              <p className="text-left text-[13px] leading-relaxed md:text-base">
+              <p className="text-left text-[13px] leading-relaxed md:text-[20px]">
                 <CitedOverview text={summary.overview} />
               </p>
             ) : (
-              <p className="animate-pulse text-left text-[13px] leading-relaxed opacity-70 md:text-base">
+              <p className="animate-pulse text-left text-[13px] leading-relaxed opacity-70 md:text-[20px]">
                 {failed
                   ? "Today's briefing isn't ready yet."
                   : 'Preparing today\u2019s briefing\u2026'}
@@ -126,13 +126,13 @@ export function DailyHomepage() {
           <section className="mt-5 px-7 md:px-12">
             <hr
               className="border-t"
-              style={{ borderColor: TEXT_YELLOW, opacity: 0.35 }}
+              style={{ borderColor: TEXT_ORANGE, opacity: 0.35 }}
             />
-            <p className="mt-3 text-left text-[13px] leading-relaxed md:text-sm">
-              <span className="font-semibold">Sources:</span>{' '}
+            <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-left text-[13px] leading-relaxed md:text-sm">
+              <span>Sources:</span>
               {summary ? (
                 summary.sources.map((source) => (
-                  <span key={source.index} className="mr-3 whitespace-nowrap">
+                  <span key={source.index} className="whitespace-nowrap">
                     <a
                       href={source.link}
                       target="_blank"
@@ -146,14 +146,14 @@ export function DailyHomepage() {
                       >
                         [{source.index}]
                       </span>{' '}
-                      <span style={{ color: TEXT_YELLOW }}>{source.site}</span>
+                      <span style={{ color: TEXT_ORANGE }}>{source.site}</span>
                     </a>
                   </span>
                 ))
               ) : (
                 <span className="opacity-60">\u2026</span>
               )}
-            </p>
+            </div>
           </section>
 
           {/* Read more */}
@@ -166,7 +166,7 @@ export function DailyHomepage() {
             >
               <span
                 className="text-[11px] font-medium uppercase tracking-[0.25em]"
-                style={{ color: TEXT_YELLOW }}
+                style={{ color: TEXT_ORANGE }}
               >
                 read more
               </span>
