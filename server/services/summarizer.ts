@@ -130,7 +130,7 @@ export async function generateDailySummary(
   const input: any = buildDailySummaryInput(usableBriefs);
   const inputJson: string = JSON.stringify(input, null, 2);
   const systemPrompt: string =
-    'You write the "Last 24 Hours" overview for Bhoe Ja, a Tibet news aggregator. Use only the supplied article summaries and metadata. Do not invent facts, dates, quotes, locations, reactions, background, or significance that are not stated in the supplied summaries. Do not refer to any article that was not supplied.';
+    'You write the "Last 24 Hours" overview for BhoeJa, a Tibet news aggregator. Use only the supplied article summaries and metadata. Do not invent facts, dates, quotes, locations, reactions, background, or significance that are not stated in the supplied summaries. Do not refer to any article that was not supplied.';
   const userPrompt: string = `Write the overview for the English articles from the last 24 hours using only the JSON input below.
 
 Requirements:
