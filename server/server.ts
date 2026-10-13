@@ -24,6 +24,7 @@ import {
   getLatestDailySummary,
   updateDailySummary,
 } from './services/daily-summary-service';
+import { requireAppEngineCron } from './middleware/require-app-engine-cron';
 
 let supportedNewsSites: string[] = [
   CTAScraper.site,
@@ -94,7 +95,10 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
-  app.get('/api/scrape-articles/:newsSite', function (req: any, res: any) {
+  app.get(
+    '/api/scrape-articles/:newsSite',
+    requireAppEngineCron,
+    function (req: any, res: any) {
     let newsSites: string[] = [];
     if ('all' === req.params.newsSite) {
       newsSites = supportedNewsSites;
@@ -149,7 +153,7 @@ function initializeAppRoutes(app: express.Application): void {
       });
   });
 
-  app.get('/api/scrape-videos', function (req: any, res: any) {
+  app.get('/api/scrape-videos', requireAppEngineCron, function (req: any, res: any) {
     scrapeVideos()
       .then((videos) => {
         res.json(
