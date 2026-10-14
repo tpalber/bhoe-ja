@@ -1,4 +1,4 @@
-import type { Article, SearchFilters, Video } from '../types';
+import type { Article, DailyOverview, SearchFilters, Video } from '../types';
 
 function buildParams(
   offset: number,
@@ -51,4 +51,13 @@ export function fetchVideos(
 ): Promise<Video[]> {
   const qs = buildParams(offset, filters);
   return get<Video[]>(`/api/videos?${qs}`);
+}
+
+export async function fetchDailyOverview(): Promise<DailyOverview | null> {
+  const res = await fetch('/api/daily-summary');
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status} ${res.statusText}`);
+  }
+  return res.json() as Promise<DailyOverview>;
 }

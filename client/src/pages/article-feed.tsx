@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { fetchArticles } from '../lib/api';
-import type { Article, SearchFilters } from '../types';
+import { filtersAreEmpty, type Article, type SearchFilters } from '../types';
 import { ArticleCard } from '../components/article-card';
+import { DailyOverviewCard } from '../components/daily-overview-card';
 import { Button } from '../components/ui/button';
 import { Skeleton } from '../components/ui/skeleton';
 import { useInfiniteScroll } from '../hooks/use-infinite-scroll';
@@ -66,6 +67,8 @@ export function ArticleFeed({ inTibetan, filters }: ArticleFeedProps) {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-4">
+      {!inTibetan && filtersAreEmpty(filters) && <DailyOverviewCard />}
+
       {error && (
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm">
           <p className="font-medium">Something went wrong</p>
