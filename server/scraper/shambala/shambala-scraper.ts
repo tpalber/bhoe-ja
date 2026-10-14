@@ -5,26 +5,26 @@ import { Util } from '../../util';
 
 export class ShambalaScraper extends Scraper {
   public static site: string = 'Shambala';
-  public static baseUrl: string = 'http://www.shambalanews.com/world-news';
+  public static baseUrl: string = 'http://www.shambalanews.com';
 
   constructor(url: string) {
     super(url);
   }
 
   public static getSiteUrl(): string {
-    return `${ShambalaScraper.baseUrl}/22-more-news`;
+    return `${ShambalaScraper.baseUrl}/གསར་འགྱུར།`;
   }
 
   public static getTibetSiteUrl(): string {
-    return `${ShambalaScraper.baseUrl}/19-tibet`;
+    return `${ShambalaScraper.baseUrl}/གསར་འགྱུར།/བོད་ཡུལ།`;
   }
 
   public static getExileSiteUrl(): string {
-    return `${ShambalaScraper.baseUrl}/20-tibet-exile`;
+    return `${ShambalaScraper.baseUrl}/གསར་འགྱུར།/བཙན་བྱོལ།`;
   }
 
   public static getInternationalSiteUrl(): string {
-    return `${ShambalaScraper.baseUrl}/21-world`;
+    return `${ShambalaScraper.baseUrl}/གསར་འགྱུར།/རྒྱལ་སྤྱི།`;
   }
 
   getArticles(html: any): Promise<IArticle[]> {
@@ -32,14 +32,14 @@ export class ShambalaScraper extends Scraper {
     const currentDate: Date = Util.getCurrentDate();
     const $ = cheerio.load(html);
     $('article').each((i: number, elem: any) => {
-      if (
-        $(elem).find('h2 a').text() !== '' &&
-        $(elem).find('h2 a').attr('href')
-      ) {
+      const href: string | undefined = $(elem).find('h2 a').attr('href');
+      if ($(elem).find('h2 a').text() !== '' && href) {
         let article: IArticle = new Article({
           title: $(elem).find('h2 a').text().trim(),
           source: ShambalaScraper.site,
-          link: $(elem).find('h2 a').attr('href'),
+          link: href.startsWith('http')
+            ? href
+            : ShambalaScraper.baseUrl + href,
           date: this.parseDate($(elem).find('time').attr('datetime')),
           inTibetan: true,
           description: $(elem).find('section p').text().trim(),
