@@ -79,8 +79,49 @@
   }
 }
 
+/* Staggered page-load entrance: header, summary, sources, read more. */
+@keyframes daily-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Soft fade for the digest text when it replaces the skeleton. */
+@keyframes daily-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @layer utilities {
   .animate-daily-bounce {
     animation: daily-bounce 2.2s ease-in-out infinite;
+  }
+  /* Finite attention-draw: bounces 3 times, then rests. */
+  .animate-daily-bounce-once {
+    animation: daily-bounce 1.1s ease-in-out 3;
+  }
+  .daily-entrance {
+    animation: daily-entrance 0.45s ease-out both;
+  }
+  .daily-fade-in {
+    animation: daily-fade-in 0.4s ease-out both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-daily-bounce,
+  .animate-daily-bounce-once,
+  .daily-entrance,
+  .daily-fade-in {
+    animation: none;
   }
 }

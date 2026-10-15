@@ -190,8 +190,9 @@ export function DailyHomepage({
           <button
             type="button"
             aria-label="Bookmarks"
+            title="Bookmarks"
             onClick={() => navigate('/bookmark')}
-            className="relative rounded-full p-2 transition hover:opacity-80"
+            className="group relative rounded-full p-2 transition hover:scale-110 hover:opacity-80"
             style={{ color: TEXT_YELLOW }}
           >
             <Bookmark className="h-5 w-5" />
@@ -200,24 +201,35 @@ export function DailyHomepage({
                 {bookmarkCount}
               </span>
             )}
+            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 whitespace-nowrap rounded bg-black/70 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              Bookmarks
+            </span>
           </button>
           <button
             type="button"
             aria-label="Search"
+            title="Search"
             onClick={() => setSearchOpen(true)}
-            className="rounded-full p-2 transition hover:opacity-80"
+            className="group relative rounded-full p-2 transition hover:scale-110 hover:opacity-80"
             style={{ color: TEXT_YELLOW }}
           >
             <Search className="h-5 w-5" />
+            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 whitespace-nowrap rounded bg-black/70 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              Search
+            </span>
           </button>
           <button
             type="button"
             aria-label="About"
+            title="About"
             onClick={() => setAboutOpen(true)}
-            className="rounded-full p-2 transition hover:opacity-80"
+            className="group relative rounded-full p-2 transition hover:scale-110 hover:opacity-80"
             style={{ color: TEXT_YELLOW }}
           >
             <Info className="h-5 w-5" />
+            <span className="pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 whitespace-nowrap rounded bg-black/70 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              About
+            </span>
           </button>
         </div>
 
@@ -226,7 +238,10 @@ export function DailyHomepage({
           style={{ color: TEXT_YELLOW }}
         >
           {/* Header */}
-          <header className="shrink-0 pt-[7vh] text-center">
+          <header
+            className="daily-entrance shrink-0 pt-[7vh] text-center"
+            style={{ animationDelay: '0ms' }}
+          >
             <h1 className="daily-serif flex items-center justify-center gap-1 md:gap-2 text-6xl md:text-7xl">
               <span>daily</span>
               <span style={{ color: ACCENT_CLOVER }}>
@@ -246,12 +261,13 @@ export function DailyHomepage({
               so the full digest always fits on one screen */}
           <section
             ref={summarySectionRef}
-            className="min-h-0 flex-1 overflow-hidden px-7 md:px-12"
+            className="daily-entrance min-h-0 flex-1 overflow-hidden px-7 md:px-12"
+            style={{ animationDelay: '90ms' }}
           >
             {summary ? (
               <p
                 ref={summaryTextRef}
-                className="text-left leading-relaxed"
+                className="daily-fade-in text-left leading-relaxed"
               >
                 <CitedOverview text={summary.overview} />
               </p>
@@ -268,7 +284,10 @@ export function DailyHomepage({
           </section>
 
           {/* Divider + sources */}
-          <section className="mt-5 shrink-0 px-7 md:px-12">
+          <section
+            className="daily-entrance mt-5 shrink-0 px-7 md:px-12"
+            style={{ animationDelay: '180ms' }}
+          >
             <hr
               className="border-t"
               style={{ borderColor: TEXT_YELLOW, opacity: 0.35 }}
@@ -310,7 +329,10 @@ export function DailyHomepage({
           </section>
 
           {/* Read more */}
-          <div className="mt-4 shrink-0 pb-7 text-center">
+          <div
+            className="daily-entrance mt-4 shrink-0 pb-7 text-center"
+            style={{ animationDelay: '270ms' }}
+          >
             <button
               type="button"
               onClick={() => navigate('/articles')}
@@ -318,13 +340,13 @@ export function DailyHomepage({
               aria-label="Read all articles"
             >
               <span
-                className="text-[11px] font-medium uppercase tracking-[0.25em]"
+                className="text-[11px] font-medium uppercase tracking-[0.25em] transition group-hover:brightness-125"
                 style={{ color: TEXT_YELLOW }}
               >
                 read more
               </span>
               <ChevronDown
-                className="animate-daily-bounce h-6 w-6"
+                className={`h-6 w-6 transition-transform group-hover:-translate-y-0.5 ${summary ? 'animate-daily-bounce-once' : ''}`}
                 style={{ color: ACCENT_CLOVER }}
               />
             </button>
