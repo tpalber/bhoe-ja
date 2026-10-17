@@ -4,11 +4,11 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 47 58% 95%;
     --foreground: 20 14% 8%;
-    --card: 0 0% 100%;
+    --card: 47 58% 95%;
     --card-foreground: 20 14% 8%;
-    --popover: 0 0% 100%;
+    --popover: 47 58% 95%;
     --popover-foreground: 20 14% 8%;
     --primary: 114 45% 21%;
     --primary-foreground: 0 0% 100%;
@@ -56,5 +56,72 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+}
+
+@layer components {
+  /* Serif-italic treatment for the daily homepage headline words. */
+  .daily-serif {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-style: italic;
+  }
+}
+
+@keyframes daily-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.55;
+  }
+}
+
+/* Staggered page-load entrance: header, summary, sources, read more. */
+@keyframes daily-entrance {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Soft fade for the digest text when it replaces the skeleton. */
+@keyframes daily-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  .animate-daily-bounce {
+    animation: daily-bounce 2.2s ease-in-out infinite;
+  }
+  /* Finite attention-draw: bounces 3 times, then rests. */
+  .animate-daily-bounce-once {
+    animation: daily-bounce 1.1s ease-in-out 3;
+  }
+  .daily-entrance {
+    animation: daily-entrance 0.45s ease-out both;
+  }
+  .daily-fade-in {
+    animation: daily-fade-in 0.4s ease-out both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-daily-bounce,
+  .animate-daily-bounce-once,
+  .daily-entrance,
+  .daily-fade-in {
+    animation: none;
   }
 }

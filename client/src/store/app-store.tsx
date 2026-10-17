@@ -36,7 +36,7 @@ function saveBookmarks(bookmarks: Bookmark[]): void {
 function loadDarkMode(): boolean {
   try {
     const raw = localStorage.getItem(DARK_MODE_KEY);
-    if (!raw) return false;
+    if (!raw) return true;
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed.darkMode === 'boolean') {
       return parsed.darkMode;
@@ -44,7 +44,7 @@ function loadDarkMode(): boolean {
   } catch (e) {
     console.error(`Error restoring dark mode: ${e}`);
   }
-  return false;
+  return true;
 }
 
 interface AppStore {
