@@ -51,3 +51,22 @@ export function filtersAreEmpty(f: SearchFilters): boolean {
     (!f.sources || f.sources.length === 0)
   );
 }
+
+export interface DailySummarySource {
+  index: number;
+  articleId: string;
+  title: string;
+  site: string;
+  link: string;
+  publishedAt?: string;
+}
+
+export interface DailySummary {
+  overview: string;
+  sources: DailySummarySource[];
+  articleCount: number;
+  generatedAt: string;
+  windowStart: string;
+  windowEnd: string;
+  windowHours: number;
+}

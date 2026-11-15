@@ -71,7 +71,7 @@ function appStartup(): void {
   initializeAppRoutes(app);
   app.listen(port, function () {
     console.info(
-      `Bhoe Ja ☕️ app server is listening on http://localhost:${port}`
+      `BhoeJa ☕️ app server is listening on http://localhost:${port}`
     );
     console.info(`Make API requests on http://localhost:${port}/api`);
   });
@@ -305,6 +305,9 @@ function toDailySummaryResponse(summary: IDailySummary): any {
       title: source.title,
       site: source.site,
       link: source.link,
+      publishedAt: source.publishedAt
+        ? source.publishedAt.toISOString()
+        : undefined,
     })),
     articleCount: summary.articleCount,
     generatedAt: summary.generatedAt,

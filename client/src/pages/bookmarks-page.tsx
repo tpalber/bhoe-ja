@@ -88,7 +88,7 @@ export function BookmarksPage() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-4">
-      <h1 className="text-2xl font-bold tracking-tight">Bookmarks</h1>
+      <h1 className="text-center text-2xl font-bold tracking-tight">Bookmarks</h1>
       {bookmarks.length === 0 ? (
         <p className="py-12 text-center text-muted-foreground">
           No bookmarks yet. Tap the bookmark icon on any article or video to

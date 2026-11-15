@@ -150,6 +150,7 @@ export async function updateDailySummary(
           title: source.title,
           site: source.site,
           link: source.link,
+          publishedAt: source.publishedAt ? new Date(source.publishedAt) : undefined,
         })),
         articleIds: briefs.map((brief: ArticleBrief) => brief.id),
         articleCount: briefs.length,

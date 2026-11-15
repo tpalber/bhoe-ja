@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Bookmark, Info, SlidersHorizontal } from 'lucide-react';
 import { AboutSheet } from './about-sheet';
+import { BhoeJaSeal } from './bhoe-ja-seal';
 import { FilterDialog } from './filter-dialog';
 import { Button } from './ui/button';
 import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
@@ -41,20 +42,19 @@ export function Header({ filters, onFiltersChange }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4">
+      <div className="mx-auto grid h-14 max-w-5xl grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-4">
+        <div aria-hidden="true" />
+
         <button
           className="flex items-center gap-2"
-          onClick={() => navigate('/articles')}
-          aria-label="Bhoe Ja home"
+          onClick={() => navigate('/')}
+          aria-label="BhoeJa home"
         >
-          <img src="/favicon.ico" alt="bhoe-ja" className="h-8 w-8" />
-          <span className="text-lg font-bold tracking-tight text-primary">Bhoe Ja</span>
+          <BhoeJaSeal className="h-8 w-8 text-primary" />
+          <span className="text-lg font-bold tracking-tight text-primary">BhoeJa</span>
         </button>
-        <span className="ml-2 hidden text-sm text-muted-foreground md:inline">
-          All the latest Tibetan news in one place
-        </span>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="flex items-center justify-end gap-1">
           <Button
             variant="ghost"
             size="icon"
