@@ -33,17 +33,11 @@ function saveBookmarks(bookmarks: Bookmark[]): void {
   localStorage.setItem(BOOKMARK_KEY, JSON.stringify({ bookmarks }));
 }
 
+// Dark mode only for now (light mode removed Oct 2026, see Daily homepage
+// redesign). The toggle, the light-theme CSS variables, and setDarkMode all
+// stay in place so light mode comes back by restoring the toggle UI alone.
+// Until then, always return dark regardless of any stored preference.
 function loadDarkMode(): boolean {
-  try {
-    const raw = localStorage.getItem(DARK_MODE_KEY);
-    if (!raw) return true;
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed.darkMode === 'boolean') {
-      return parsed.darkMode;
-    }
-  } catch (e) {
-    console.error(`Error restoring dark mode: ${e}`);
-  }
   return true;
 }
 

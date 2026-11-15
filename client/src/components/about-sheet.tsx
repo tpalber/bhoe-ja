@@ -1,4 +1,3 @@
-import { Moon } from 'lucide-react';
 import { Separator } from './ui/separator';
 import {
   Sheet,
@@ -7,9 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from './ui/sheet';
-import { Switch } from './ui/switch';
 import { SourceType, sourceListing } from '../lib/sources';
-import { useAppStore } from '../store/app-store';
 
 const articleSources = sourceListing.filter(
   (s) => s.type === SourceType.Article
@@ -22,22 +19,12 @@ interface AboutSheetProps {
 }
 
 export function AboutSheet({ open, onOpenChange }: AboutSheetProps) {
-  const { darkMode, setDarkMode } = useAppStore();
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="sm:mx-auto sm:max-w-2xl">
         <SheetHeader className="text-left">
           <div className="flex items-center justify-between pr-8">
             <SheetTitle className="text-xl text-primary">About BhoeJa</SheetTitle>
-            <div className="flex items-center gap-2">
-              <Moon className="h-4 w-4 text-muted-foreground" />
-              <Switch
-                checked={darkMode}
-                onCheckedChange={setDarkMode}
-                aria-label="Dark mode"
-              />
-            </div>
           </div>
           <SheetDescription>
             <span className="italic">
